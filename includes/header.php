@@ -11,6 +11,7 @@
   <?php endforeach; endif; ?>
   <?php include __DIR__ . '/head-meta.php'; ?>
   <?php include __DIR__ . '/site-lock-head.php'; ?>
+  <?php include __DIR__ . '/back-to-top-head.php'; ?>
   <?php if (!empty($showHomeLoader)): ?>
   <link rel="stylesheet" href="<?= asset('assets/css/home-loader.css') ?>" />
   <link rel="preload" href="<?= asset($brand['favicon'] ?? 'assets/images/favicon.webp') ?>" as="image" />

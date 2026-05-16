@@ -16,7 +16,9 @@
       <p class="mt-6 text-sm text-body text-center sm:text-left">© <?= date('Y') ?> Manuelcode. All rights reserved.</p>
     </div>
   </footer>
+  <?php include __DIR__ . '/back-to-top.php'; ?>
   <?php include __DIR__ . '/site-lock-foot.php'; ?>
+  <script src="<?= asset('assets/js/back-to-top.js') ?>"></script>
   <script src="<?= asset('assets/js/theme.js') ?>"></script>
   <?php if (!empty($showHomeLoader)): ?>
   <script src="<?= asset('assets/js/home-loader.js') ?>"></script>

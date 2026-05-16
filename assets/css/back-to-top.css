@@ -1,0 +1,199 @@
+/* Back to top — water ripple button */
+
+.btt {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 45;
+  width: 3.25rem;
+  height: 3.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  background: #0b1e3a;
+  box-shadow:
+    0 14px 32px -12px rgb(11 30 58 / 0.45),
+    0 0 0 1px rgb(255 255 255 / 0.08) inset;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(0, 0.75rem, 0) scale(0.92);
+  transition:
+    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.4s,
+    box-shadow 0.25s ease;
+}
+
+.btt.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.btt:hover {
+  box-shadow:
+    0 18px 36px -10px rgb(11 30 58 / 0.5),
+    0 0 0 1px rgb(255 255 255 / 0.12) inset;
+}
+
+.btt:focus-visible {
+  outline: 2px solid #ff7a00;
+  outline-offset: 3px;
+}
+
+.btt__shine {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(circle at 30% 20%, rgb(255 255 255 / 0.14), transparent 55%);
+  pointer-events: none;
+}
+
+.btt__waves {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 58%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.btt__wave {
+  position: absolute;
+  left: -60%;
+  bottom: -35%;
+  width: 220%;
+  height: 220%;
+  border-radius: 42%;
+  background: linear-gradient(
+    180deg,
+    rgb(18 183 106 / 0.55) 0%,
+    rgb(56 189 248 / 0.4) 45%,
+    rgb(255 122 0 / 0.25) 100%
+  );
+  animation: btt-wave-drift 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.btt__wave--2 {
+  left: -40%;
+  bottom: -45%;
+  opacity: 0.85;
+  animation-name: btt-wave-drift-alt;
+  animation-duration: 7s;
+  animation-delay: -2.5s;
+}
+
+.btt__wave--3 {
+  left: -50%;
+  bottom: -50%;
+  height: 180%;
+  opacity: 0.5;
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.2) 0%,
+    rgb(18 183 106 / 0.35) 100%
+  );
+  animation-duration: 6s;
+  animation-delay: -1s;
+}
+
+@keyframes btt-wave-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-6%, 2%, 0) rotate(4deg);
+  }
+}
+
+@keyframes btt-wave-drift-alt {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(5%, 3%, 0) rotate(-3deg);
+  }
+}
+
+.btt__icon {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: #fff;
+  transform: translateY(-2px);
+  transition: transform 0.25s ease;
+}
+
+.btt:hover .btt__icon {
+  transform: translateY(-5px);
+}
+
+.btt__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.2));
+}
+
+.btt__ripple {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, rgb(255 255 255 / 0.35) 0%, transparent 70%);
+  transform: scale(0.4);
+}
+
+.btt.is-ripple .btt__ripple {
+  animation: btt-ripple 0.65s ease-out forwards;
+}
+
+@keyframes btt-ripple {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@media (min-width: 640px) {
+  .btt {
+    right: 1.75rem;
+    bottom: 1.75rem;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .btt__icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btt,
+  .btt__wave,
+  .btt__icon {
+    transition: none;
+    animation: none !important;
+  }
+
+  .btt.is-visible {
+    transform: none;
+  }
+}
