@@ -174,6 +174,76 @@ if ($action === 'save_maintenance') {
   admin_redirect(url('login') . '?p=settings', $msg);
 }
 
+if ($action === 'save_mail') {
+  cms_save_mail_config($pdo, [
+    'from_email' => trim($_POST['from_email'] ?? ''),
+    'from_name' => trim($_POST['from_name'] ?? ''),
+    'reply_to' => trim($_POST['reply_to'] ?? ''),
+    'notify_on_news' => !empty($_POST['notify_on_news']),
+    'newsletter_subject' => trim($_POST['newsletter_subject'] ?? ''),
+  ]);
+  admin_redirect(url('login') . '?p=settings', 'Mail settings saved.');
+}
+
+if ($action === 'save_newsletter_modal') {
+  cms_save_newsletter_modal_config($pdo, [
+    'enabled' => !empty($_POST['modal_enabled']),
+    'scroll_percent' => (int) ($_POST['scroll_percent'] ?? 85),
+    'title' => trim($_POST['modal_title'] ?? ''),
+    'subtitle' => trim($_POST['modal_subtitle'] ?? ''),
+    'button_text' => trim($_POST['modal_button_text'] ?? ''),
+    'image' => trim($_POST['modal_image'] ?? ''),
+    'success_message' => trim($_POST['modal_success_message'] ?? ''),
+  ]);
+  admin_redirect(url('login') . '?p=settings', 'Newsletter modal saved.');
+}
+
+if ($action === 'save_news') {
+  $id = (int) ($_POST['id'] ?? 0);
+  $title = trim($_POST['title'] ?? '');
+  if ($title === '') {
+    admin_redirect(url('login') . '?p=newsedit' . ($id ? '&id=' . $id : ''), 'Title is required.', 'err');
+  }
+  $wasPublished = false;
+  if ($id > 0) {
+    $existing = cms_news_post_by_id($pdo, $id);
+    $wasPublished = $existing && !empty($existing['is_published']);
+  }
+  $postId = cms_save_news_post($pdo, [
+    'id' => $id,
+    'title' => $title,
+    'slug' => trim($_POST['slug'] ?? ''),
+    'excerpt' => trim($_POST['excerpt'] ?? ''),
+    'content_html' => cms_sanitize_news_html($_POST['content_html'] ?? ''),
+    'cover_image' => trim($_POST['cover_image'] ?? ''),
+    'is_published' => !empty($_POST['is_published']),
+    'published_at' => trim($_POST['published_at'] ?? ''),
+  ]);
+  $saved = cms_news_post_by_id($pdo, $postId);
+  $flash = 'Post saved.';
+  if ($saved && !empty($saved['is_published']) && !empty($_POST['notify_subscribers'])) {
+    $sent = cms_broadcast_news_post($pdo, $saved);
+    $flash .= $sent > 0 ? " Emailed {$sent} subscriber(s)." : ' No emails sent (check mail settings or subscribers).';
+  }
+  admin_redirect(url('login') . '?p=newsedit&id=' . $postId, $flash);
+}
+
+if ($action === 'delete_news') {
+  $id = (int) ($_POST['id'] ?? 0);
+  if ($id > 0) {
+    cms_delete_news_post($pdo, $id);
+  }
+  admin_redirect(url('login') . '?p=news', 'Post deleted.');
+}
+
+if ($action === 'delete_subscriber') {
+  $id = (int) ($_POST['id'] ?? 0);
+  if ($id > 0) {
+    $pdo->prepare('DELETE FROM newsletter_subscribers WHERE id = ?')->execute([$id]);
+  }
+  admin_redirect(url('login') . '?p=news', 'Subscriber removed.');
+}
+
 if ($action === 'change_password') {
   $user = auth_user();
   $pass = $_POST['password'] ?? '';

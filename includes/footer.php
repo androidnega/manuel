@@ -16,6 +16,7 @@
       <p class="mt-6 text-sm text-body text-center sm:text-left">© <?= date('Y') ?> Manuelcode. All rights reserved.</p>
     </div>
   </footer>
+  <?php include __DIR__ . '/newsletter-modal.php'; ?>
   <?php include __DIR__ . '/back-to-top.php'; ?>
   <?php include __DIR__ . '/site-lock-foot.php'; ?>
   <script src="<?= asset('assets/js/lazy-media.js') ?>"></script>
@@ -27,6 +28,7 @@
   <?php if (!empty($pageScripts) && is_array($pageScripts)): foreach ($pageScripts as $scriptHref): ?>
   <script src="<?= asset($scriptHref) ?>"></script>
   <?php endforeach; endif; ?>
+  <script src="<?= asset('assets/js/newsletter-modal.js') ?>"></script>
   <script src="<?= asset('assets/js/app.js') ?>"></script>
 </body>
 </html>

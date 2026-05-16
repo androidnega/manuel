@@ -15,6 +15,9 @@ RewriteRule ^manuelcode/?(.*)$ /$1 [R=301,L]
 RewriteCond %{DOCUMENT_ROOT}/manuelcode%{REQUEST_URI} -f
 RewriteRule ^(.+)$ manuelcode/$1 [L]
 
+# News article: /news/post-slug
+RewriteRule ^news/([a-z0-9-]+)/?$ manuelcode/news-article.php?slug=$1 [L,QSA]
+
 # Extensionless pages → manuelcode/*.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

@@ -15,6 +15,9 @@ RewriteRule ^ /%1? [R=301,L]
 RewriteCond %{THE_REQUEST} \s/+((?:manuelcode/)?)index\.php[\s?] [NC]
 RewriteRule ^ /? [R=301,L]
 
+# News article: /news/my-post-slug
+RewriteRule ^news/([a-z0-9-]+)/?$ news-article.php?slug=$1 [L,QSA]
+
 # Extensionless → .php (internal)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

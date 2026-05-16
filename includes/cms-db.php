@@ -98,6 +98,9 @@ function cms_migrate(PDO $pdo): void
   )');
 
   cms_ensure_admin_user($pdo);
+
+  require_once __DIR__ . '/cms-content.php';
+  cms_content_migrate($pdo);
 }
 
 function cms_ensure_admin_user(PDO $pdo): void

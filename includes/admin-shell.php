@@ -6,6 +6,7 @@ $adminNavItems = [
   ['section' => 'pages', 'href' => url('login') . '?p=pages', 'label' => 'Pages', 'icon' => 'pages'],
   ['section' => 'lists', 'href' => url('login') . '?p=lists', 'label' => 'Lists & data', 'icon' => 'lists'],
   ['section' => 'team', 'href' => url('login') . '?p=team', 'label' => 'Team', 'icon' => 'team'],
+  ['section' => 'news', 'href' => url('login') . '?p=news', 'label' => 'News', 'icon' => 'news'],
   ['section' => 'messages', 'href' => url('login') . '?p=messages', 'label' => 'Messages', 'icon' => 'messages', 'badge' => $messagesUnread],
   ['section' => 'quoterequests', 'href' => url('login') . '?p=quoterequests', 'label' => 'Quote requests', 'icon' => 'quote', 'badge' => $quotesUnread],
   ['section' => 'settings', 'href' => url('login') . '?p=settings', 'label' => 'Settings', 'icon' => 'settings'],

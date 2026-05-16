@@ -33,6 +33,7 @@ $headerNav = [
 $footerNav = [
   'Projects' => 'projects.php',
   'Services' => 'services.php',
+  'News' => 'news.php',
   'Quotes' => 'quotes.php',
   'Designs' => 'designs.php',
   'About' => 'about.php',

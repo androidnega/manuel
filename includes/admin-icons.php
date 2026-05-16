@@ -10,6 +10,7 @@ function admin_nav_section(string $view): string
   $parents = [
     'page' => 'pages',
     'list' => 'lists',
+    'newsedit' => 'news',
   ];
   return $parents[$view] ?? $view;
 }
@@ -42,6 +43,7 @@ function admin_icon(string $name): string
     'back' => 'fa-arrow-left',
     'login' => 'fa-right-to-bracket',
     'quote' => 'fa-file-invoice-dollar',
+    'news' => 'fa-newspaper',
   ];
   $class = $icons[$name] ?? 'fa-circle';
   return '<i class="fa-solid ' . $class . '" aria-hidden="true"></i>';
