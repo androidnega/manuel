@@ -1,4 +1,8 @@
 <?php
+if (is_file(__DIR__ . '/site-config.php')) {
+  require_once __DIR__ . '/site-config.php';
+}
+
 require_once __DIR__ . '/icon.php';
 
 $site = [
@@ -138,6 +142,14 @@ $stats = [
   ['value' => '300+', 'label' => 'Creative works'],
   ['value' => 'GH', 'label' => 'Based in Ghana'],
 ];
+/** Production hosts always use domain-root URLs (/login not /manuelcode/login). */
+function site_is_live_domain(): bool
+{
+  $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+  $host = preg_replace('/:\d+$/', '', $host);
+  return $host === 'manuelcode.info' || $host === 'www.manuelcode.info';
+}
+
 /** Web path to site root from document root (empty string = domain root). */
 function base_path(): string
 {
@@ -148,6 +160,11 @@ function base_path(): string
 
   if (defined('SITE_BASE_PATH')) {
     $base = SITE_BASE_PATH;
+    return $base;
+  }
+
+  if (site_is_live_domain()) {
+    $base = '';
     return $base;
   }
 
@@ -285,8 +302,15 @@ function canonical_redirect_if_needed(): void
 
   $base = base_path();
 
-  // Site at domain root but old links still use /manuelcode/...
-  if ($base === '' && preg_match('#^/manuelcode(/.*)?$#i', $path, $m)) {
+  // Legacy /manuelcode/... → /... on live (e.g. /manuelcode/login.php → /login)
+  if (site_is_live_domain() && preg_match('#^/manuelcode(/.*)?$#i', $path, $m)) {
+    $rest = isset($m[1]) ? trim($m[1], '/') : '';
+    $rest = preg_replace('/\.php$/i', '', $rest);
+    header('Location: ' . site_url($rest) . $suffix, true, 301);
+    exit;
+  }
+
+  if ($base === '' && !site_is_live_domain() && preg_match('#^/manuelcode(/.*)?$#i', $path, $m)) {
     $rest = isset($m[1]) ? trim($m[1], '/') : '';
     header('Location: ' . site_url($rest) . $suffix, true, 301);
     exit;
@@ -297,6 +321,13 @@ function canonical_redirect_if_needed(): void
     header('Location: ' . site_url($rest) . $suffix, true, 301);
     exit;
   }
+
+  // Live: never expose .php in the browser (login.php → /login)
+  if (site_is_live_domain() && preg_match('#^/([^/]+)\.php$#i', $path, $m)) {
+    header('Location: ' . site_url(page_slug($m[1] . '.php')) . $suffix, true, 301);
+    exit;
+  }
+
   $basePrefix = $base === '' ? '' : $base;
   if (preg_match('#^' . preg_quote($basePrefix, '#') . '/(.+)\.php$#i', $path, $m)) {
     $slug = page_slug($m[1]);

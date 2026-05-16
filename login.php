@@ -9,7 +9,7 @@ require_once __DIR__ . '/includes/data.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'login') {
   if (auth_login(trim($_POST['username'] ?? ''), $_POST['password'] ?? '')) {
-    header('Location: ' . url('login'));
+    header('Location: ' . site_url('login'));
     exit;
   }
   $loginError = 'Invalid username or password.';
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') !== 'login
 
 if (isset($_GET['logout'])) {
   auth_logout();
-  header('Location: ' . url('login'));
+  header('Location: ' . site_url('login'));
   exit;
 }
 
@@ -57,7 +57,7 @@ if (!$user):
     <?php if (!empty($loginError)): ?>
       <p class="mt-4 admin-flash admin-flash--err"><?= htmlspecialchars($loginError) ?></p>
     <?php endif; ?>
-    <form class="mt-6 space-y-4" method="post">
+    <form class="mt-6 space-y-4" method="post" action="<?= htmlspecialchars(url('login'), ENT_QUOTES, 'UTF-8') ?>">
       <input type="hidden" name="action" value="login" />
       <label class="admin-field">
         <span class="admin-field__label"><i class="fa-solid fa-user mr-1" aria-hidden="true"></i> Username</span>

@@ -1,0 +1,21 @@
+# Copy to public_html/.htaccess when the PHP app lives in public_html/manuelcode/
+# but public URLs must be https://manuelcode.info/login (no /manuelcode prefix).
+#
+# Best option: move all app files into public_html/ and use only the project .htaccess.
+
+RewriteEngine On
+
+# Old links: /manuelcode/login.php → /login
+RewriteRule ^manuelcode/?(.*)$ /$1 [R=301,L]
+
+# Extensionless URLs at domain root → manuelcode/*.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/manuelcode/$1.php -f
+RewriteRule ^([a-z][a-z0-9-]*)/?$ manuelcode/$1.php [L]
+
+# Home
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/manuelcode/index.php -f
+RewriteRule ^$ manuelcode/index.php [L]

@@ -43,7 +43,10 @@ function auth_logout(): void
 function auth_require(): void
 {
   if (!auth_user()) {
-    header('Location: ' . url('login'));
+    if (!function_exists('site_url')) {
+      require_once __DIR__ . '/data.php';
+    }
+    header('Location: ' . site_url('login'));
     exit;
   }
 }
