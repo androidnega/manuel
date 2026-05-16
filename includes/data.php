@@ -138,11 +138,16 @@ $stats = [
   ['value' => '300+', 'label' => 'Creative works'],
   ['value' => 'GH', 'label' => 'Based in Ghana'],
 ];
-/** Web path to site root (e.g. /manuelcode) from document root — not the browser URL bar path. */
+/** Web path to site root from document root (empty string = domain root). */
 function base_path(): string
 {
   static $base = null;
   if ($base !== null) {
+    return $base;
+  }
+
+  if (defined('SITE_BASE_PATH')) {
+    $base = SITE_BASE_PATH;
     return $base;
   }
 
@@ -155,7 +160,12 @@ function base_path(): string
     $base = substr($projectDir, strlen($docRoot));
     $base = $base === '' ? '' : rtrim($base, '/');
   } else {
-    $base = '/manuelcode';
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
+    if ($scriptDir === '/' || $scriptDir === '.') {
+      $base = '';
+    } else {
+      $base = rtrim($scriptDir, '/');
+    }
   }
 
   return $base;
@@ -273,13 +283,20 @@ function canonical_redirect_if_needed(): void
     exit;
   }
 
-  if (preg_match('#(/manuelcode){2,}#', $path)) {
-    $fixed = preg_replace('#(/manuelcode)+#', '/manuelcode', $path);
-    header('Location: ' . request_scheme() . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . $fixed . $suffix, true, 301);
+  $base = base_path();
+
+  // Site at domain root but old links still use /manuelcode/...
+  if ($base === '' && preg_match('#^/manuelcode(/.*)?$#i', $path, $m)) {
+    $rest = isset($m[1]) ? trim($m[1], '/') : '';
+    header('Location: ' . site_url($rest) . $suffix, true, 301);
     exit;
   }
 
-  $base = base_path();
+  if ($base !== '' && preg_match('#^' . preg_quote($base, '#') . '/manuelcode(/.*)?$#i', $path, $m)) {
+    $rest = isset($m[1]) ? trim($m[1], '/') : '';
+    header('Location: ' . site_url($rest) . $suffix, true, 301);
+    exit;
+  }
   $basePrefix = $base === '' ? '' : $base;
   if (preg_match('#^' . preg_quote($basePrefix, '#') . '/(.+)\.php$#i', $path, $m)) {
     $slug = page_slug($m[1]);

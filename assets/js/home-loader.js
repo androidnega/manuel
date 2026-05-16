@@ -40,6 +40,7 @@
 
     window.setTimeout(function () {
       loader.classList.add('is-done');
+      loader.setAttribute('aria-busy', 'false');
       document.body.classList.remove('is-home-loading');
       window.setTimeout(function () {
         loader.remove();

@@ -1,21 +1,21 @@
 Options -Indexes
 RewriteEngine On
-RewriteBase /manuelcode/
 
-# /manuelcode/manuelcode/projects → /manuelcode/projects
+# Legacy /manuelcode/... → /... (when site is served from domain root)
 RewriteRule ^manuelcode/(.*)$ $1 [R=301,L]
 
-# Redirect .php URLs in the browser to clean paths
-RewriteCond %{THE_REQUEST} \s/+manuelcode/([^\s?]+)\.php[\s?] [NC]
+# Redirect visible .php URLs to clean paths
+RewriteCond %{THE_REQUEST} \s/+([^\s?]*?)\.php[\s?] [NC]
 RewriteRule ^ %1 [R=301,L]
-RewriteCond %{THE_REQUEST} \s/+manuelcode/index\.php[\s?] [NC]
-RewriteRule ^$ /manuelcode/ [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
+RewriteRule ^$ ./ [R=301,L]
 
 # Extensionless → .php (internal)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^([a-z]+)/?$ $1.php [L]
+RewriteRule ^([a-z][a-z0-9-]*)/?$ $1.php [L]
 
 <FilesMatch "\.(sql|env|ini|log)$">
   Require all denied

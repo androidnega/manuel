@@ -1,13 +1,15 @@
 Manuelcode portfolio — PHP + Tailwind CDN
 
-OPEN THE SITE WITH THIS URL ONLY:
+LOCAL (XAMPP subfolder):
   http://localhost/manuelcode/
-  http://localhost/manuelcode/index.php
-  http://localhost/manuelcode/services.php
-  http://localhost/manuelcode/contact.php
+  http://localhost/manuelcode/login
 
-DO NOT use the folder path in the browser (causes 404):
-  http://localhost/Applications/XAMPP/xamppfiles/htdocs/manuelcode/
+LIVE (domain root — no /manuelcode in URLs):
+  https://manuelcode.info/
+  https://manuelcode.info/login
+  https://manuelcode.info/about
+
+Old /manuelcode/... links redirect to the correct path automatically.
 
 Pages:
   index.php      — Home
