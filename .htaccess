@@ -5,6 +5,9 @@ RewriteBase /
 # Legacy /manuelcode/... → /... (301 to domain root)
 RewriteRule ^manuelcode/?(.*)$ /$1 [R=301,L]
 
+# Common mistyped slugs
+RewriteRule ^project/?$ /projects [R=301,L]
+
 # Browser request: strip .php from visible URL
 RewriteCond %{THE_REQUEST} \s/+((?:manuelcode/)?[^\s?]+)\.php[\s?] [NC]
 RewriteRule ^ /%1? [R=301,L]

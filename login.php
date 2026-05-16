@@ -71,7 +71,6 @@ if (!$user):
         <?= admin_icon('login') ?> Sign in
       </button>
     </form>
-    <p class="mt-4 text-[11px] text-body">Sign in with <strong>admin</strong> / <strong>admin123</strong></p>
     <a href="<?= page_url('index.php') ?>" class="mt-4 inline-flex items-center gap-1.5 admin-link"><?= admin_icon('back') ?> Back to site</a>
   </div>
   <script src="<?= asset('assets/js/site-lock.js') ?>"></script>

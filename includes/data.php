@@ -334,6 +334,14 @@ function serviceColorClasses($color)
   return $map[$color] ?? $map['blue'];
 }
 
+/** Extensionless slug → canonical slug (e.g. /project → /projects). */
+function slug_aliases(): array
+{
+  return [
+    'project' => 'projects',
+  ];
+}
+
 /** Send bad or extensionless paths to the correct canonical URL. */
 function canonical_redirect_if_needed(): void
 {
@@ -346,13 +354,24 @@ function canonical_redirect_if_needed(): void
   $qs = $_SERVER['QUERY_STRING'] ?? '';
   $suffix = $qs !== '' ? '?' . $qs : '';
 
+  $base = base_path();
+  $basePrefix = $base === '' ? '' : $base;
+  $relative = $path;
+  if ($basePrefix !== '' && str_starts_with($path, $basePrefix)) {
+    $relative = substr($path, strlen($basePrefix)) ?: '/';
+  }
+  $segment = strtolower(trim($relative, '/'));
+  $aliases = slug_aliases();
+  if ($segment !== '' && isset($aliases[$segment])) {
+    header('Location: ' . redirect_url($aliases[$segment]) . $suffix, true, 301);
+    exit;
+  }
+
   if (str_contains($path, '/xamppfiles/htdocs/') || str_contains($path, '/Applications/XAMPP/')) {
     $slug = page_slug(basename($_SERVER['SCRIPT_NAME'] ?? 'index.php'));
     header('Location: ' . redirect_url($slug) . $suffix, true, 301);
     exit;
   }
-
-  $base = base_path();
 
   // Legacy /manuelcode/... → /... on live (e.g. /manuelcode/login.php → /login)
   if (site_is_live_domain() && preg_match('#^/manuelcode(/.*)?$#i', $path, $m)) {
