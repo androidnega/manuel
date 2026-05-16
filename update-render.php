@@ -12,7 +12,7 @@ $pageTitle = htmlspecialchars($config['title']) . ' | ' . htmlspecialchars($site
   <meta charset="UTF-8" />
   <meta name="color-scheme" content="light" />
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
-  <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
+  <?php include __DIR__ . '/includes/site-lock-head.php'; ?>
   <title><?= $pageTitle ?></title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -63,6 +63,6 @@ $pageTitle = htmlspecialchars($config['title']) . ' | ' . htmlspecialchars($site
   <?php if ($hasCountdown): ?>
   <script src="<?= asset('assets/js/update-countdown.js') ?>"></script>
   <?php endif; ?>
-  <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
+  <?php include __DIR__ . '/includes/site-lock-foot.php'; ?>
 </body>
 </html>

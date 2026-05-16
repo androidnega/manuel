@@ -40,7 +40,7 @@ if (!$user):
   <meta charset="UTF-8" />
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($pageTitle) ?></title>
-  <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
+  <?php include __DIR__ . '/includes/site-lock-head.php'; ?>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
@@ -69,7 +69,7 @@ if (!$user):
     </form>
     <a href="<?= page_url('index.php') ?>" class="mt-4 inline-flex items-center gap-1.5 admin-link"><?= admin_icon('back') ?> Back to site</a>
   </div>
-  <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
+  <?php include __DIR__ . '/includes/site-lock-foot.php'; ?>
 </body>
 </html>
 <?php
@@ -104,7 +104,7 @@ $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
   <meta charset="UTF-8" />
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($adminPageTitle) ?> | Manuelcode Admin</title>
-  <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
+  <?php include __DIR__ . '/includes/site-lock-head.php'; ?>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>

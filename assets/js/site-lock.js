@@ -3,26 +3,20 @@
 
   var opts = { passive: false };
 
-  document.addEventListener(
-    'gesturestart',
-    function (e) {
-      e.preventDefault();
-    },
-    opts
-  );
+  function block(e) {
+    e.preventDefault();
+  }
+
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (type) {
+    document.addEventListener(type, block, opts);
+  });
 
   document.addEventListener(
-    'gesturechange',
+    'touchstart',
     function (e) {
-      e.preventDefault();
-    },
-    opts
-  );
-
-  document.addEventListener(
-    'gestureend',
-    function (e) {
-      e.preventDefault();
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
     },
     opts
   );
@@ -30,6 +24,10 @@
   document.addEventListener(
     'touchmove',
     function (e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+        return;
+      }
       if (e.scale !== undefined && e.scale !== 1) {
         e.preventDefault();
       }
@@ -40,7 +38,7 @@
   document.addEventListener(
     'wheel',
     function (e) {
-      if (e.ctrlKey) {
+      if (e.ctrlKey || e.metaKey) {
         e.preventDefault();
       }
     },
@@ -50,13 +48,23 @@
   document.addEventListener(
     'keydown',
     function (e) {
+      if (!(e.ctrlKey || e.metaKey)) {
+        return;
+      }
+      var k = e.key;
       if (
-        (e.ctrlKey || e.metaKey) &&
-        (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')
+        k === '+' ||
+        k === '-' ||
+        k === '=' ||
+        k === '0' ||
+        k === '_' ||
+        k === 'Add' ||
+        k === 'Subtract'
       ) {
         e.preventDefault();
       }
     },
     opts
   );
+
 })();

@@ -1,5 +1,5 @@
     </main>
   </div>
 </div>
-<script src="<?= asset('assets/js/site-lock.js') ?>"></script>
+<?php include __DIR__ . '/site-lock-foot.php'; ?>
 <script src="<?= asset('assets/js/admin.js') ?>"></script>

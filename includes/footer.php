@@ -16,11 +16,14 @@
       <p class="mt-6 text-sm text-body text-center sm:text-left">© <?= date('Y') ?> Manuelcode. All rights reserved.</p>
     </div>
   </footer>
-  <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
+  <?php include __DIR__ . '/site-lock-foot.php'; ?>
   <script src="<?= asset('assets/js/theme.js') ?>"></script>
   <?php if (!empty($showHomeLoader)): ?>
   <script src="<?= asset('assets/js/home-loader.js') ?>"></script>
   <?php endif; ?>
+  <?php if (!empty($pageScripts) && is_array($pageScripts)): foreach ($pageScripts as $scriptHref): ?>
+  <script src="<?= asset($scriptHref) ?>"></script>
+  <?php endforeach; endif; ?>
   <script src="<?= asset('assets/js/app.js') ?>"></script>
 </body>
 </html>

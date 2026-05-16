@@ -1,5 +1,8 @@
-/* Prevent pinch-zoom and double-tap zoom on touch devices */
+/* Lock zoom: viewport meta + touch/keyboard handlers in site-lock.js */
+
 html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   touch-action: manipulation;
   -ms-touch-action: manipulation;
 }
@@ -7,4 +10,11 @@ html {
 body {
   touch-action: manipulation;
   -ms-touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+/* Allow pinch on embedded maps/media only */
+.allow-zoom,
+.allow-zoom * {
+  touch-action: auto;
 }
