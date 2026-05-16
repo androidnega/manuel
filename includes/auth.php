@@ -46,7 +46,7 @@ function auth_require(): void
     if (!function_exists('site_url')) {
       require_once __DIR__ . '/data.php';
     }
-    header('Location: ' . site_url('login'));
+    header('Location: ' . redirect_url('login'));
     exit;
   }
 }

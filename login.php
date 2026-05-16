@@ -9,7 +9,7 @@ require_once __DIR__ . '/includes/data.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'login') {
   if (auth_login(trim($_POST['username'] ?? ''), $_POST['password'] ?? '')) {
-    header('Location: ' . site_url('login'));
+    header('Location: ' . redirect_url('login'));
     exit;
   }
   $loginError = 'Invalid username or password.';
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') !== 'login
 
 if (isset($_GET['logout'])) {
   auth_logout();
-  header('Location: ' . site_url('login'));
+  header('Location: ' . redirect_url('login'));
   exit;
 }
 

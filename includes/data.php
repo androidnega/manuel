@@ -142,11 +142,41 @@ $stats = [
   ['value' => '300+', 'label' => 'Creative works'],
   ['value' => 'GH', 'label' => 'Based in Ghana'],
 ];
+/** Host for this request (proxy-aware; optional SITE_CANONICAL_HOST override). */
+function request_host(): string
+{
+  if (defined('SITE_CANONICAL_HOST') && SITE_CANONICAL_HOST !== '') {
+    return strtolower(SITE_CANONICAL_HOST);
+  }
+
+  foreach (['HTTP_X_FORWARDED_HOST', 'HTTP_X_HOST'] as $key) {
+    if (!empty($_SERVER[$key])) {
+      $host = trim(explode(',', (string) $_SERVER[$key])[0]);
+      $host = preg_replace('/:\d+$/', '', $host);
+      if ($host !== '') {
+        return strtolower($host);
+      }
+    }
+  }
+
+  $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+  $host = preg_replace('/:\d+$/', '', $host);
+
+  if ($host === '' || $host === 'localhost' || $host === '127.0.0.1') {
+    $serverName = strtolower($_SERVER['SERVER_NAME'] ?? '');
+    $serverName = preg_replace('/:\d+$/', '', $serverName);
+    if ($serverName !== '' && $serverName !== 'localhost' && $serverName !== '127.0.0.1') {
+      return $serverName;
+    }
+  }
+
+  return $host !== '' ? $host : 'localhost';
+}
+
 /** Production hosts always use domain-root URLs (/login not /manuelcode/login). */
 function site_is_live_domain(): bool
 {
-  $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
-  $host = preg_replace('/:\d+$/', '', $host);
+  $host = request_host();
   return $host === 'manuelcode.info' || $host === 'www.manuelcode.info';
 }
 
@@ -207,14 +237,19 @@ function request_scheme(): string
   return 'http';
 }
 
-/** Full URL (scheme + host + path) — avoids broken relative resolution on bad entry URLs. */
+/** Root-relative path for redirects (keeps the browser on the current host). */
+function redirect_url(string $path = ''): string
+{
+  return url($path);
+}
+
+/** Full URL (scheme + host + path) when an absolute URL is required. */
 function site_url(string $path = ''): string
 {
   if (PHP_SAPI === 'cli') {
     return url($path);
   }
-  $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-  return request_scheme() . '://' . $host . url($path);
+  return request_scheme() . '://' . request_host() . url($path);
 }
 
 /** URL slug for a page (no .php). */
@@ -296,7 +331,7 @@ function canonical_redirect_if_needed(): void
 
   if (str_contains($path, '/xamppfiles/htdocs/') || str_contains($path, '/Applications/XAMPP/')) {
     $slug = page_slug(basename($_SERVER['SCRIPT_NAME'] ?? 'index.php'));
-    header('Location: ' . site_url($slug) . $suffix, true, 301);
+    header('Location: ' . redirect_url($slug) . $suffix, true, 301);
     exit;
   }
 
@@ -306,36 +341,36 @@ function canonical_redirect_if_needed(): void
   if (site_is_live_domain() && preg_match('#^/manuelcode(/.*)?$#i', $path, $m)) {
     $rest = isset($m[1]) ? trim($m[1], '/') : '';
     $rest = preg_replace('/\.php$/i', '', $rest);
-    header('Location: ' . site_url($rest) . $suffix, true, 301);
+    header('Location: ' . redirect_url($rest) . $suffix, true, 301);
     exit;
   }
 
   if ($base === '' && !site_is_live_domain() && preg_match('#^/manuelcode(/.*)?$#i', $path, $m)) {
     $rest = isset($m[1]) ? trim($m[1], '/') : '';
-    header('Location: ' . site_url($rest) . $suffix, true, 301);
+    header('Location: ' . redirect_url($rest) . $suffix, true, 301);
     exit;
   }
 
   if ($base !== '' && preg_match('#^' . preg_quote($base, '#') . '/manuelcode(/.*)?$#i', $path, $m)) {
     $rest = isset($m[1]) ? trim($m[1], '/') : '';
-    header('Location: ' . site_url($rest) . $suffix, true, 301);
+    header('Location: ' . redirect_url($rest) . $suffix, true, 301);
     exit;
   }
 
   // Live: never expose .php in the browser (login.php → /login)
   if (site_is_live_domain() && preg_match('#^/([^/]+)\.php$#i', $path, $m)) {
-    header('Location: ' . site_url(page_slug($m[1] . '.php')) . $suffix, true, 301);
+    header('Location: ' . redirect_url(page_slug($m[1] . '.php')) . $suffix, true, 301);
     exit;
   }
 
   $basePrefix = $base === '' ? '' : $base;
   if (preg_match('#^' . preg_quote($basePrefix, '#') . '/(.+)\.php$#i', $path, $m)) {
     $slug = page_slug($m[1]);
-    header('Location: ' . site_url($slug) . $suffix, true, 301);
+    header('Location: ' . redirect_url($slug) . $suffix, true, 301);
     exit;
   }
   if ($path === $basePrefix . '/index.php') {
-    header('Location: ' . site_url('') . $suffix, true, 301);
+    header('Location: ' . redirect_url('') . $suffix, true, 301);
     exit;
   }
 }
