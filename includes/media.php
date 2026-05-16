@@ -24,17 +24,17 @@ $boxPadding = (!$isNatural && in_array($fit, ['poster', 'wide', 'square'], true)
   <img
     src="<?= asset($src) ?>"
     alt="<?= htmlspecialchars($alt) ?>"
-    class="block w-auto max-w-full h-auto rounded-2xl border border-line shadow-sleek-sm <?= $imgClass ?>"
+    class="lazy-img block w-auto max-w-full h-auto rounded-2xl border border-line shadow-sleek-sm <?= $imgClass ?>"
     loading="lazy"
     decoding="async"
   />
 </figure>
 <?php else: ?>
-<div class="relative overflow-hidden flex items-center justify-center w-full bg-deep <?= $frameSize ?> <?= $frameClass ?>">
+<div class="media-frame relative overflow-hidden flex items-center justify-center w-full <?= $frameSize ?> <?= $frameClass ?>">
   <img
     src="<?= asset($src) ?>"
     alt="<?= htmlspecialchars($alt) ?>"
-    class="h-full w-full block <?= $objectFit ?><?= $boxPadding ?> <?= $imgClass ?>"
+    class="lazy-img h-full w-full block <?= $objectFit ?><?= $boxPadding ?> <?= $imgClass ?>"
     loading="lazy"
     decoding="async"
   />

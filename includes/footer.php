@@ -18,6 +18,7 @@
   </footer>
   <?php include __DIR__ . '/back-to-top.php'; ?>
   <?php include __DIR__ . '/site-lock-foot.php'; ?>
+  <script src="<?= asset('assets/js/lazy-media.js') ?>"></script>
   <script src="<?= asset('assets/js/back-to-top.js') ?>"></script>
   <script src="<?= asset('assets/js/theme.js') ?>"></script>
   <?php if (!empty($showHomeLoader)): ?>

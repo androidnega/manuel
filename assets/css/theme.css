@@ -135,12 +135,12 @@
 
 [data-theme="dark"] .team-card__avatar {
   color: #f0f2f5;
-  background: linear-gradient(145deg, #1a2438 0%, #243044 100%);
+  background: #1a2438;
 }
 
 [data-theme="dark"] .team-card:hover .team-card__avatar {
   color: #ff7a00;
-  background: linear-gradient(145deg, #2a1f14 0%, #1a2438 100%);
+  background: #1a2438;
 }
 
 [data-theme="dark"] .team-card__name {

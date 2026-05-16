@@ -1,0 +1,51 @@
+/* Lazy-loaded images: flat placeholder (no gradient shimmer) */
+
+.media-frame {
+  background: #f9fafb;
+  border: 1px solid #eaecf0;
+}
+
+[data-theme="dark"] .media-frame {
+  background: #1a2438;
+  border-color: #2a3548;
+}
+
+.media-frame::before,
+.media-frame::after {
+  content: none !important;
+  display: none !important;
+}
+
+img[loading="lazy"],
+.lazy-img {
+  background-color: #f9fafb;
+}
+
+[data-theme="dark"] img[loading="lazy"],
+[data-theme="dark"] .lazy-img {
+  background-color: #1a2438;
+}
+
+img[loading="lazy"]:not(.is-loaded),
+.lazy-img:not(.is-loaded) {
+  opacity: 0;
+}
+
+img.is-loaded,
+.lazy-img.is-loaded {
+  opacity: 1;
+  background-color: transparent;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  img.is-loaded,
+  .lazy-img.is-loaded {
+    transition: none;
+  }
+
+  img[loading="lazy"]:not(.is-loaded),
+  .lazy-img:not(.is-loaded) {
+    opacity: 1;
+  }
+}

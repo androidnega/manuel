@@ -79,7 +79,7 @@ body.is-home-loading {
   height: 100%;
   width: 0%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #0b1e3a 0%, #ff7a00 55%, #ff7a00 100%);
+  background: #ff7a00;
   box-shadow: 0 0 12px rgb(255 122 0 / 0.45);
   transition: width 0.12s linear;
 }

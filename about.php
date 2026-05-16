@@ -76,7 +76,7 @@ include 'includes/page-hero.php';
                 <img
                   src="<?= asset($photoPath) . $photoVer ?>"
                   alt="<?= htmlspecialchars($member['name']) ?>"
-                  class="team-card__img"
+                  class="team-card__img lazy-img"
                   loading="lazy"
                   decoding="async"
                 />

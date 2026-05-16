@@ -104,7 +104,7 @@
   font-size: 1.75rem;
   font-weight: 800;
   color: #0b1e3a;
-  background: linear-gradient(145deg, #f9fafb 0%, #eef2f6 100%);
+  background: #f9fafb;
   box-shadow: 0 8px 20px -12px rgb(11 30 58 / 0.2);
   transition:
     transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -116,7 +116,7 @@
 .team-card:hover .team-card__avatar {
   transform: scale(1.06);
   color: #ff7a00;
-  background: linear-gradient(145deg, #fff8f2 0%, #f9fafb 100%);
+  background: #fff8f2;
 }
 
 .team-card__content {
