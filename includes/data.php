@@ -173,10 +173,27 @@ function request_host(): string
   return $host !== '' ? $host : 'localhost';
 }
 
-/** Production hosts always use domain-root URLs (/login not /manuelcode/login). */
+/** True when the browser is on production (HTTP_HOST only — not SERVER_NAME). */
 function site_is_live_domain(): bool
 {
-  $host = request_host();
+  $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+  $host = preg_replace('/:\d+$/', '', $host);
+
+  if ($host === 'localhost' || $host === '127.0.0.1' || $host === '') {
+    return false;
+  }
+
+  foreach (['HTTP_X_FORWARDED_HOST', 'HTTP_X_HOST'] as $key) {
+    if (empty($_SERVER[$key])) {
+      continue;
+    }
+    $fwd = strtolower(trim(explode(',', (string) $_SERVER[$key])[0]));
+    $fwd = preg_replace('/:\d+$/', '', $fwd);
+    if ($fwd === 'manuelcode.info' || $fwd === 'www.manuelcode.info') {
+      return true;
+    }
+  }
+
   return $host === 'manuelcode.info' || $host === 'www.manuelcode.info';
 }
 
