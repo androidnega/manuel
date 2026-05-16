@@ -32,18 +32,18 @@ body.is-home-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(92vw, 22rem);
+  width: min(92vw, 24rem);
   padding: 1.5rem;
 }
 
 .home-loader__logo {
-  --brand-icon-size: 5.5rem;
-  padding: 4px;
+  --brand-icon-size: 7.75rem;
+  padding: 5px;
   animation: home-loader-float 2.4s ease-in-out infinite;
 }
 
 .home-loader__logo .brand-icon__img {
-  box-shadow: 0 20px 40px -20px rgb(11 30 58 / 0.35);
+  box-shadow: 0 24px 48px -22px rgb(11 30 58 / 0.32);
 }
 
 @keyframes home-loader-float {
@@ -57,8 +57,8 @@ body.is-home-loading {
 }
 
 .home-loader__bar-wrap {
-  width: 100%;
-  margin-top: 2rem;
+  width: min(100%, 14rem);
+  margin-top: 2.25rem;
 }
 
 .home-loader__bar {

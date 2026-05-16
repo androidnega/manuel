@@ -9,8 +9,8 @@ $loaderIcon = $brand['favicon'] ?? 'assets/images/favicon.webp';
         src="<?= asset($loaderIcon) ?>"
         alt=""
         class="brand-icon__img"
-        width="88"
-        height="88"
+        width="124"
+        height="124"
         decoding="async"
         fetchpriority="high"
       />
