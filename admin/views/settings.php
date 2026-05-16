@@ -16,7 +16,7 @@ if (!empty($maintenance['ends_at'])) {
 <form method="post" action="<?= url('login') ?>" class="admin-card max-w-xl space-y-4">
   <input type="hidden" name="action" value="save_maintenance" />
   <p class="admin-card__title">Site update mode</p>
-  <p class="text-sm text-body">When enabled, visitors see a sleek countdown page (logo header only). You stay signed in and can still use the admin.</p>
+  <p class="text-sm text-body">When enabled, visitors see a white countdown page (no site header). You stay signed in and can still use the admin.</p>
 
   <label class="admin-toggle">
     <input type="checkbox" name="maintenance_enabled" value="1" <?= $maintenance['enabled'] ? 'checked' : '' ?> />

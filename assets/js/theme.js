@@ -1,5 +1,5 @@
 /**
- * Theme: auto (6pm–6am dark) unless visitor picks light/dark (localStorage).
+ * Theme: light by default. Visitor can toggle to dark (saved in localStorage).
  */
 (function () {
   var STORAGE_KEY = 'manuelcode-theme-mode';
@@ -7,34 +7,27 @@
   function getStoredMode() {
     try {
       var m = localStorage.getItem(STORAGE_KEY);
-      if (m === 'light' || m === 'dark' || m === 'auto') {
-        return m;
+      if (m === 'dark') {
+        return 'dark';
+      }
+      if (m === 'light') {
+        return 'light';
+      }
+      if (m === 'auto') {
+        setStoredMode('light');
       }
     } catch (e) {}
-    return 'auto';
+    return 'light';
   }
 
   function setStoredMode(mode) {
     try {
-      localStorage.setItem(STORAGE_KEY, mode);
+      localStorage.setItem(STORAGE_KEY, mode === 'dark' ? 'dark' : 'light');
     } catch (e) {}
   }
 
-  function isDarkTime(date) {
-    var d = date || new Date();
-    var h = d.getHours();
-    return h >= 18 || h < 6;
-  }
-
-  function resolveTheme(mode) {
-    mode = mode || getStoredMode();
-    if (mode === 'light') {
-      return 'light';
-    }
-    if (mode === 'dark') {
-      return 'dark';
-    }
-    return isDarkTime() ? 'dark' : 'light';
+  function resolveTheme() {
+    return getStoredMode();
   }
 
   function updateToggleButtons(theme) {
@@ -77,54 +70,17 @@
   function toggle() {
     var next = resolveTheme() === 'dark' ? 'light' : 'dark';
     setStoredMode(next);
-    window.clearTimeout(window.__themeSwitchTimer);
     applyTheme(next);
-  }
-
-  function msUntilNextSwitch() {
-    var now = new Date();
-    var next = new Date(now);
-
-    if (isDarkTime(now)) {
-      next.setHours(6, 0, 0, 0);
-      if (now.getHours() >= 18) {
-        next.setDate(next.getDate() + 1);
-      }
-    } else {
-      next.setHours(18, 0, 0, 0);
-    }
-
-    var ms = next.getTime() - now.getTime();
-    return ms <= 0 ? 1000 : ms;
-  }
-
-  function scheduleThemeSwitch() {
-    if (getStoredMode() !== 'auto') {
-      return;
-    }
-    window.clearTimeout(window.__themeSwitchTimer);
-    window.__themeSwitchTimer = window.setTimeout(function () {
-      refresh();
-      scheduleThemeSwitch();
-    }, msUntilNextSwitch());
   }
 
   window.ManuelcodeTheme = {
     getMode: getStoredMode,
     setMode: function (mode) {
-      if (mode !== 'light' && mode !== 'dark' && mode !== 'auto') {
-        return;
-      }
-      setStoredMode(mode);
+      setStoredMode(mode === 'dark' ? 'dark' : 'light');
       refresh();
-      window.clearTimeout(window.__themeSwitchTimer);
-      if (mode === 'auto') {
-        scheduleThemeSwitch();
-      }
     },
     toggle: toggle,
     refresh: refresh,
-    isDarkTime: isDarkTime,
     apply: refresh,
   };
 
@@ -136,12 +92,4 @@
   });
 
   refresh();
-  scheduleThemeSwitch();
-
-  document.addEventListener('visibilitychange', function () {
-    if (!document.hidden && getStoredMode() === 'auto') {
-      refresh();
-      scheduleThemeSwitch();
-    }
-  });
 })();

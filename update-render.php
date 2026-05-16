@@ -7,9 +7,10 @@ $hasCountdown = $endsTs !== false && $endsTs > time();
 $pageTitle = htmlspecialchars($config['title']) . ' | ' . htmlspecialchars($site['name'] ?? 'Manuelcode');
 ?>
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-theme="light">
 <head>
   <meta charset="UTF-8" />
+  <meta name="color-scheme" content="light" />
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
   <title><?= $pageTitle ?></title>

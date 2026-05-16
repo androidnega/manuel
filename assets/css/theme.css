@@ -1,4 +1,4 @@
-/* Dark mode via html[data-theme="dark"]. Auto 6pm–6am unless user toggles. */
+/* Dark mode via html[data-theme="dark"] when the visitor toggles it. Default is light. */
 
 .theme-toggle [data-theme-icon] {
   display: grid;
