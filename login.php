@@ -38,9 +38,10 @@ if (!$user):
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($pageTitle) ?></title>
   <?php include __DIR__ . '/includes/theme-head.php'; ?>
+  <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
@@ -73,6 +74,7 @@ if (!$user):
     <p class="mt-4 text-[11px] text-body">Sign in with <strong>admin</strong> / <strong>admin123</strong></p>
     <a href="<?= page_url('index.php') ?>" class="mt-4 inline-flex items-center gap-1.5 admin-link"><?= admin_icon('back') ?> Back to site</a>
   </div>
+  <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
   <script src="<?= asset('assets/js/theme.js') ?>"></script>
 </body>
 </html>
@@ -106,9 +108,10 @@ $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($adminPageTitle) ?> | Manuelcode Admin</title>
   <?php include __DIR__ . '/includes/theme-head.php'; ?>
+  <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>

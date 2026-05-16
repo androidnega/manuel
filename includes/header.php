@@ -3,13 +3,18 @@
 <html lang="en" class="scroll-smooth" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <?php include __DIR__ . '/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($pageTitle ?? 'Manuelcode.info') ?></title>
   <?php include __DIR__ . '/theme-head.php'; ?>
   <?php if (!empty($pageStyles) && is_array($pageStyles)): foreach ($pageStyles as $styleHref): ?>
   <link rel="stylesheet" href="<?= asset($styleHref) ?>" />
   <?php endforeach; endif; ?>
   <?php include __DIR__ . '/head-meta.php'; ?>
+  <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
+  <?php if (!empty($showHomeLoader)): ?>
+  <link rel="stylesheet" href="<?= asset('assets/css/home-loader.css') ?>" />
+  <link rel="preload" href="<?= asset($brand['favicon'] ?? 'assets/images/favicon.webp') ?>" as="image" />
+  <?php endif; ?>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -124,6 +129,7 @@
   </style>
 </head>
 <body class="bg-[#fafbfc] text-ink font-sans antialiased selection:bg-blue/20">
+  <?php if (!empty($showHomeLoader)): include __DIR__ . '/home-loader.php'; endif; ?>
   <header class="sticky top-0 z-50 pt-3 sm:pt-4">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="w-full rounded-2xl border border-line/80 bg-white/95 backdrop-blur-xl shadow-sleek-sm">

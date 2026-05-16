@@ -18,7 +18,8 @@ $pageTitle = htmlspecialchars($config['title']) . ' | ' . htmlspecialchars($site
 <html lang="en" class="scroll-smooth" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
+  <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
   <title><?= $pageTitle ?></title>
   <meta name="robots" content="noindex, nofollow" />
   <?php include __DIR__ . '/includes/theme-head.php'; ?>
@@ -86,6 +87,7 @@ $pageTitle = htmlspecialchars($config['title']) . ' | ' . htmlspecialchars($site
   <?php if ($hasCountdown): ?>
   <script src="<?= asset('assets/js/update-countdown.js') ?>"></script>
   <?php endif; ?>
+  <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
   <script src="<?= asset('assets/js/theme.js') ?>"></script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+/* Prevent pinch-zoom and double-tap zoom on touch devices */
+html {
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
+}
+
+body {
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
+}

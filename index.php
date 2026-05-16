@@ -19,6 +19,7 @@ $home = cms_page('home', [
 ]);
 $hb = $home['body'];
 $pageTitle = 'Manuelcode.info | Home';
+$showHomeLoader = true;
 include 'includes/header.php';
 ?>
 <main>

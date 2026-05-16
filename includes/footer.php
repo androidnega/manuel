@@ -16,7 +16,11 @@
       <p class="mt-6 text-sm text-body text-center sm:text-left">© <?= date('Y') ?> Manuelcode. All rights reserved.</p>
     </div>
   </footer>
+  <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
   <script src="<?= asset('assets/js/theme.js') ?>"></script>
+  <?php if (!empty($showHomeLoader)): ?>
+  <script src="<?= asset('assets/js/home-loader.js') ?>"></script>
+  <?php endif; ?>
   <script src="<?= asset('assets/js/app.js') ?>"></script>
 </body>
 </html>
