@@ -26,7 +26,7 @@ include 'includes/page-hero.php';
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-6 items-start">
         <div class="reveal reveal-left rounded-2xl bg-cloud border border-line p-2.5 max-w-md mx-auto lg:mx-0 w-full">
-          <?php $src = 'assets/images/manuel-portrait.png'; $alt = 'Manuel Kwofie'; $fit = 'portrait'; $frameClass = 'rounded-xl'; include 'includes/media.php'; ?>
+          <?php $src = 'assets/images/manuel-portrait.jpg'; $alt = 'Manuel Kwofie'; $fit = 'portrait'; $frameClass = 'rounded-xl'; include 'includes/media.php'; ?>
         </div>
         <div class="reveal reveal-right">
           <p class="text-[0.9375rem] leading-relaxed text-body"><?= htmlspecialchars($pageBody['paragraph1'] ?? '') ?></p>

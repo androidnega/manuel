@@ -128,8 +128,9 @@
   box-shadow: 0 20px 40px -22px rgb(0 0 0 / 0.45);
 }
 
-[data-theme="dark"] .team-card__media {
-  background: #1a2438;
+[data-theme="dark"] .team-card__img,
+[data-theme="dark"] .team-card__avatar {
+  border-color: #2a3548;
 }
 
 [data-theme="dark"] .team-card__avatar {

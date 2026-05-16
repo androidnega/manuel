@@ -4,8 +4,8 @@ global $brand;
 if (!isset($brand) || !is_array($brand)) {
   $brand = [
     'logo' => 'assets/images/main-logo.png',
-    'logo_dark' => 'assets/images/dark-logo.png',
-    'favicon' => 'assets/images/favicon.png',
+    'logo_dark' => 'assets/images/dark-logo.webp',
+    'favicon' => 'assets/images/favicon.webp',
   ];
 }
 

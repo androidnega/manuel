@@ -29,10 +29,10 @@
 
 .team-card__shine {
   position: absolute;
-  top: 0;
+  top: 1.25rem;
   left: -80%;
-  width: 50%;
-  height: 55%;
+  width: 40%;
+  height: 6.5rem;
   background: linear-gradient(
     105deg,
     transparent 0%,
@@ -65,61 +65,56 @@
 
 .team-card__media {
   position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: #f9fafb;
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem 1.25rem 0;
+  overflow: visible;
+  background: transparent;
 }
 
 .team-card__media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    to top,
-    rgb(11 30 58 / 0.42) 0%,
-    rgb(11 30 58 / 0.08) 38%,
-    transparent 68%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.team-card:hover .team-card__media::after {
-  opacity: 1;
+  content: none;
 }
 
 .team-card__img {
-  width: 100%;
-  height: 100%;
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: 1rem;
+  border: 1px solid #eaecf0;
   object-fit: cover;
   object-position: center top;
   display: block;
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 20px -12px rgb(11 30 58 / 0.25);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
 
 .team-card:hover .team-card__img {
-  transform: scale(1.07);
+  transform: scale(1.06);
+  box-shadow: 0 12px 28px -14px rgb(11 30 58 / 0.32);
 }
 
 .team-card__avatar {
-  width: 100%;
-  height: 100%;
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: 1rem;
+  border: 1px solid #eaecf0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(2rem, 8vw, 2.75rem);
+  font-size: 1.75rem;
   font-weight: 800;
   color: #0b1e3a;
   background: linear-gradient(145deg, #f9fafb 0%, #eef2f6 100%);
+  box-shadow: 0 8px 20px -12px rgb(11 30 58 / 0.2);
   transition:
     transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.4s ease,
-    color 0.35s ease;
+    color 0.35s ease,
+    box-shadow 0.4s ease;
 }
 
 .team-card:hover .team-card__avatar {
-  transform: scale(1.04);
+  transform: scale(1.06);
   color: #ff7a00;
   background: linear-gradient(145deg, #fff8f2 0%, #f9fafb 100%);
 }
@@ -128,8 +123,10 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  align-items: center;
+  text-align: center;
   gap: 0.125rem;
-  padding: 1.25rem 1.375rem 1.5rem;
+  padding: 1rem 1.25rem 1.375rem;
 }
 
 .team-card--no-bio .team-card__content {

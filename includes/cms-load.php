@@ -28,6 +28,7 @@ function cms_bootstrap(): void
   cms_sync_list_defaults($pdo, 'projects', $projects);
   cms_sync_list_defaults($pdo, 'clientLogos', $clientLogos);
   cms_sync_quotes_page_copy($pdo);
+  cms_sync_image_paths($pdo);
 
   $site = cms_get_list($pdo, 'site', $site);
   $services = cms_get_list($pdo, 'services', $services);

@@ -8,7 +8,7 @@
   "theme_color": "#0B1E3A",
   "icons": [
     {
-      "src": "assets/images/favicon.png",
+      "src": "assets/images/favicon.webp",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

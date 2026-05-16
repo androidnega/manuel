@@ -391,3 +391,34 @@ function cms_save_maintenance_config(PDO $pdo, array $config): void
   $payload['enabled'] = !empty($payload['enabled']);
   cms_set_setting($pdo, 'maintenance', json_encode($payload, JSON_UNESCAPED_UNICODE));
 }
+
+/** One-time path fixes after image compression renames. */
+function cms_sync_image_paths(PDO $pdo): void
+{
+  if (cms_get_setting($pdo, 'image_paths_v') === '1') {
+    return;
+  }
+
+  $map = [
+    'assets/images/dark-logo.png' => 'assets/images/dark-logo.webp',
+    'assets/images/favicon.png' => 'assets/images/favicon.webp',
+    'assets/images/brand-guide.png' => 'assets/images/brand-guide.jpg',
+    'assets/images/quote-poster-original.png' => 'assets/images/quote-poster-original.jpg',
+    'assets/images/manuel-portrait.png' => 'assets/images/manuel-portrait.jpg',
+  ];
+
+  $designs = cms_get_list($pdo, 'designs', []);
+  $changed = false;
+  foreach ($designs as &$item) {
+    if (!empty($item['image']) && isset($map[$item['image']])) {
+      $item['image'] = $map[$item['image']];
+      $changed = true;
+    }
+  }
+  unset($item);
+  if ($changed) {
+    cms_save_list($pdo, 'designs', $designs);
+  }
+
+  cms_set_setting($pdo, 'image_paths_v', '1');
+}

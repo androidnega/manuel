@@ -12,9 +12,9 @@ $site = [
 ];
 $brand = [
   'logo' => 'assets/images/main-logo.png',
-  'logo_dark' => 'assets/images/dark-logo.png',
-  'favicon' => 'assets/images/favicon.png',
-  'guide' => 'assets/images/brand-guide.png',
+  'logo_dark' => 'assets/images/dark-logo.webp',
+  'favicon' => 'assets/images/favicon.webp',
+  'guide' => 'assets/images/brand-guide.jpg',
   'hero_promo' => 'assets/images/bring-me-work-promo.png',
 ];
 /** Primary header navigation (kept minimal). */
@@ -118,12 +118,12 @@ $projects = [
 /** Legacy CMS list key (unused on public site; quote requests use the form). */
 $quotes = [];
 $designs = [
-  ['title' => 'Leadership Poster', 'type' => 'Quote design', 'image' => 'assets/images/quote-poster-original.png', 'fit' => 'poster'],
+  ['title' => 'Leadership Poster', 'type' => 'Quote design', 'image' => 'assets/images/quote-poster-original.jpg', 'fit' => 'poster'],
   ['title' => 'Campaign Concept', 'type' => 'Bold identity', 'variant' => 'campaign'],
   ['title' => 'System Interface', 'type' => 'Dashboard layouts', 'variant' => 'ui'],
   ['title' => 'Brand Post', 'type' => 'Personal identity', 'variant' => 'brand'],
-  ['title' => 'Portrait Feature', 'type' => 'Personal brand visual', 'image' => 'assets/images/manuel-portrait.png', 'fit' => 'portrait'],
-  ['title' => 'Brand Identity', 'type' => 'Logo system & guidelines', 'image' => 'assets/images/brand-guide.png', 'fit' => 'wide'],
+  ['title' => 'Portrait Feature', 'type' => 'Personal brand visual', 'image' => 'assets/images/manuel-portrait.jpg', 'fit' => 'portrait'],
+  ['title' => 'Brand Identity', 'type' => 'Logo system & guidelines', 'image' => 'assets/images/brand-guide.jpg', 'fit' => 'wide'],
 ];
 $companies = [
   ['name' => 'GNAAS', 'role' => 'Web Developer & Manager'],

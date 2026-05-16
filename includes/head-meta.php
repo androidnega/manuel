@@ -1,7 +1,8 @@
 <?php
 $metaDesc = $metaDesc ?? 'Manuelcode — software engineering, web development, UI design, graphics, photography and media production based in Ghana.';
 ?>
-<link rel="icon" href="<?= asset($brand['favicon']) ?>" type="image/png" />
+<?php $faviconMime = str_ends_with($brand['favicon'] ?? '', '.webp') ? 'image/webp' : 'image/png'; ?>
+<link rel="icon" href="<?= asset($brand['favicon']) ?>" type="<?= $faviconMime ?>" />
 <link rel="apple-touch-icon" href="<?= asset($brand['favicon']) ?>" />
 <link rel="manifest" href="<?= asset('site.webmanifest') ?>" />
 <meta name="theme-color" content="#0B1E3A" />
