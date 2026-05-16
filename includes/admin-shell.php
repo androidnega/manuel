@@ -58,7 +58,6 @@ $adminNavItems = [
         <?php if ($maintenance['enabled']): ?>
           <span class="admin-badge-live hidden sm:inline-flex">Update mode on</span>
         <?php endif; ?>
-        <?php require_once __DIR__ . '/icon.php'; include __DIR__ . '/theme-toggle.php'; ?>
         <a href="<?= page_url('index.php') ?>" target="_blank" rel="noopener noreferrer" class="admin-btn admin-btn--ghost admin-btn--sm">
           <?= admin_icon('site') ?> <span class="hidden sm:inline">View site</span>
         </a>

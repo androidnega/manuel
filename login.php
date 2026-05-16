@@ -40,16 +40,12 @@ if (!$user):
   <meta charset="UTF-8" />
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($pageTitle) ?></title>
-  <?php include __DIR__ . '/includes/theme-head.php'; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
 </head>
-<body class="admin-login-wrap bg-cloud font-sans text-ink">
-  <div class="absolute top-4 right-4 z-10">
-    <?php require_once __DIR__ . '/includes/icon.php'; include __DIR__ . '/includes/theme-toggle.php'; ?>
-  </div>
+<body class="admin-login-wrap font-sans text-ink">
   <div class="admin-login-card">
     <p class="text-xs font-extrabold text-blue uppercase tracking-widest"><i class="fa-solid fa-lock mr-1.5" aria-hidden="true"></i> Admin</p>
     <h1 class="mt-2 text-2xl font-extrabold">Sign in</h1>
@@ -74,7 +70,6 @@ if (!$user):
     <a href="<?= page_url('index.php') ?>" class="mt-4 inline-flex items-center gap-1.5 admin-link"><?= admin_icon('back') ?> Back to site</a>
   </div>
   <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
-  <script src="<?= asset('assets/js/theme.js') ?>"></script>
 </body>
 </html>
 <?php
@@ -109,13 +104,12 @@ $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
   <meta charset="UTF-8" />
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($adminPageTitle) ?> | Manuelcode Admin</title>
-  <?php include __DIR__ . '/includes/theme-head.php'; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
 </head>
-<body class="font-sans text-ink">
+<body class="font-sans text-ink admin-dashboard">
 <?php include __DIR__ . '/includes/admin-shell.php'; ?>
 <?php
 $viewFile = __DIR__ . '/admin/views/' . preg_replace('/[^a-z]/', '', $view) . '.php';

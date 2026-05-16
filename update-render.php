@@ -1,13 +1,5 @@
 <?php
 /** @var array $config @var array $site */
-global $brand;
-if (!isset($brand) || !is_array($brand)) {
-  $brand = [
-    'logo' => 'assets/images/main-logo.png',
-    'logo_dark' => 'assets/images/dark-logo.webp',
-    'favicon' => 'assets/images/favicon.webp',
-  ];
-}
 
 $endsAt = $config['ends_at'] ?? '';
 $endsTs = $endsAt !== '' ? strtotime($endsAt) : false;
@@ -15,37 +7,20 @@ $hasCountdown = $endsTs !== false && $endsTs > time();
 $pageTitle = htmlspecialchars($config['title']) . ' | ' . htmlspecialchars($site['name'] ?? 'Manuelcode');
 ?>
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth" data-theme="light">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/site-lock.css') ?>" />
   <title><?= $pageTitle ?></title>
   <meta name="robots" content="noindex, nofollow" />
-  <?php include __DIR__ . '/includes/theme-head.php'; ?>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="<?= asset('assets/css/update.css') ?>" />
 </head>
 <body class="update-page">
-  <header class="update-header">
-    <div class="update-header__inner">
-      <a href="<?= page_url('index.php') ?>" class="update-header__brand" aria-label="<?= htmlspecialchars($site['name'] ?? 'Manuelcode') ?> home">
-        <?php
-        $logoVariant = 'wordmark';
-        $logoTheme = 'light';
-        $showIcon = true;
-        $showTagline = false;
-        include __DIR__ . '/includes/logo.php';
-        ?>
-      </a>
-    </div>
-  </header>
-
   <main class="update-main">
-    <div class="update-main__glow" aria-hidden="true"></div>
-
     <p class="update-eyebrow">Site update in progress</p>
     <h1 class="update-title"><?= htmlspecialchars($config['title']) ?></h1>
     <p class="update-caption"><?= htmlspecialchars($config['caption']) ?></p>
@@ -88,6 +63,5 @@ $pageTitle = htmlspecialchars($config['title']) . ' | ' . htmlspecialchars($site
   <script src="<?= asset('assets/js/update-countdown.js') ?>"></script>
   <?php endif; ?>
   <script src="<?= asset('assets/js/site-lock.js') ?>"></script>
-  <script src="<?= asset('assets/js/theme.js') ?>"></script>
 </body>
 </html>
