@@ -1,0 +1,23 @@
+# Add inside the server { } block for manuelcode.info (adjust root path).
+# cPanel: MultiPHP / Nginx Configuration, or include via custom snippet.
+
+root /home/USER/public_html;
+
+location = /project {
+    return 301 /projects;
+}
+
+location / {
+    try_files $uri $uri/ @manuelcode;
+}
+
+location @manuelcode {
+    rewrite ^/([a-z][a-z0-9-]*)/?$ /manuelcode/$1.php last;
+    rewrite ^$ /manuelcode/index.php last;
+}
+
+location ~ ^/manuelcode/.+\.php$ {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass unix:/run/php/php-fpm.sock;
+}

@@ -1,0 +1,33 @@
+# Use when PHP files live in public_html/manuelcode/ but URLs must be at the domain root.
+# Copy to public_html/.htaccess (same level as the manuelcode/ folder).
+#
+# Also copy deploy/public_html.index.php → public_html/index.php as a fallback
+# when rewrite rules are ignored.
+
+Options -Indexes
+RewriteEngine On
+RewriteBase /
+
+RewriteRule ^project/?$ /projects [R=301,L]
+RewriteRule ^manuelcode/?(.*)$ /$1 [R=301,L]
+
+# Static files (assets, favicon, manifest, …)
+RewriteCond %{DOCUMENT_ROOT}/manuelcode%{REQUEST_URI} -f
+RewriteRule ^(.+)$ manuelcode/$1 [L]
+
+# Extensionless pages → manuelcode/*.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/manuelcode/$1.php -f
+RewriteRule ^([a-z][a-z0-9-]*)/?$ manuelcode/$1.php [L]
+
+# Home
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^$ manuelcode/index.php [L]
+
+# Fallback front controller (if host allows)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}index.php -f
+RewriteRule ^ index.php [L]
