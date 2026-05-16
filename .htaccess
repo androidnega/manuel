@@ -1,0 +1,22 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /manuelcode/
+
+# /manuelcode/manuelcode/projects → /manuelcode/projects
+RewriteRule ^manuelcode/(.*)$ $1 [R=301,L]
+
+# Redirect .php URLs in the browser to clean paths
+RewriteCond %{THE_REQUEST} \s/+manuelcode/([^\s?]+)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+manuelcode/index\.php[\s?] [NC]
+RewriteRule ^$ /manuelcode/ [R=301,L]
+
+# Extensionless → .php (internal)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([a-z]+)/?$ $1.php [L]
+
+<FilesMatch "\.(sql|env|ini|log)$">
+  Require all denied
+</FilesMatch>

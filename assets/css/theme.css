@@ -1,0 +1,163 @@
+/* Dark mode via html[data-theme="dark"]. Auto 6pm–6am unless user toggles. */
+
+.theme-toggle [data-theme-icon] {
+  display: grid;
+  place-items: center;
+}
+
+.theme-toggle [data-theme-icon].hidden {
+  display: none;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body {
+  background-color: #0a111f !important;
+  color: #e8eaed;
+}
+
+[data-theme="dark"] .bg-\[\#fafbfc\] {
+  background-color: #0a111f !important;
+}
+
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-white\/95 {
+  background-color: #131c2e !important;
+}
+
+[data-theme="dark"] .bg-cloud {
+  background-color: #1a2438 !important;
+}
+
+[data-theme="dark"] .text-ink {
+  color: #f0f2f5 !important;
+}
+
+[data-theme="dark"] .text-body {
+  color: #9ca3af !important;
+}
+
+[data-theme="dark"] .text-body\/80 {
+  color: rgb(156 163 175 / 0.85) !important;
+}
+
+[data-theme="dark"] .border-line,
+[data-theme="dark"] .border-line\/80,
+[data-theme="dark"] .border-line\/90 {
+  border-color: #2a3548 !important;
+}
+
+[data-theme="dark"] .ring-line {
+  --tw-ring-color: #2a3548 !important;
+}
+
+[data-theme="dark"] .soft-grid {
+  background-image:
+    linear-gradient(#1e2a3d 1px, transparent 1px),
+    linear-gradient(90deg, #1e2a3d 1px, transparent 1px);
+}
+
+[data-theme="dark"] [class*="from-white"] {
+  --tw-gradient-from: #131c2e var(--tw-gradient-from-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+[data-theme="dark"] [class*="via-white"] {
+  --tw-gradient-via: rgba(19, 28, 46, 0.95) var(--tw-gradient-via-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to) !important;
+}
+
+[data-theme="dark"] [class*="to-white"] {
+  --tw-gradient-to: #131c2e var(--tw-gradient-to-position) !important;
+}
+
+[data-theme="dark"] .shadow-sleek-sm {
+  box-shadow: 0 12px 28px -16px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .shadow-sleek {
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .hover\:bg-cloud:hover {
+  background-color: #243044 !important;
+}
+
+[data-theme="dark"] .hover\:border-ink:hover {
+  border-color: #4b5563 !important;
+}
+
+[data-theme="dark"] .hover\:text-ink:hover {
+  color: #f9fafb !important;
+}
+
+[data-theme="dark"] nav .bg-white {
+  background-color: #1e293b !important;
+}
+
+[data-theme="dark"] .brand-manuel {
+  color: #f9fafb !important;
+}
+
+[data-theme="dark"] .brand-tagline-site {
+  color: rgb(255 255 255 / 0.75) !important;
+}
+
+[data-theme="dark"] .brand-icon__img {
+  background: #1a2438;
+}
+
+/* Quote cards that stay light in CMS */
+[data-theme="dark"] article.bg-white.border {
+  background-color: #131c2e !important;
+}
+
+[data-theme="dark"] .hero-promo-wrap {
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .team-card {
+  background: #131c2e;
+  border-color: #2a3548;
+}
+
+[data-theme="dark"] .team-card:hover {
+  border-color: rgb(255 122 0 / 0.35);
+  box-shadow: 0 20px 40px -22px rgb(0 0 0 / 0.45);
+}
+
+[data-theme="dark"] .team-card__media {
+  background: #1a2438;
+}
+
+[data-theme="dark"] .team-card__avatar {
+  color: #f0f2f5;
+  background: linear-gradient(145deg, #1a2438 0%, #243044 100%);
+}
+
+[data-theme="dark"] .team-card:hover .team-card__avatar {
+  color: #ff7a00;
+  background: linear-gradient(145deg, #2a1f14 0%, #1a2438 100%);
+}
+
+[data-theme="dark"] .team-card__name {
+  color: #f0f2f5;
+}
+
+[data-theme="dark"] .team-card__role {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .team-card:hover .team-card__role {
+  color: #ff7a00;
+}
+
+[data-theme="dark"] .team-card__bio {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .team-card:hover .team-card__bio {
+  border-top-color: #2a3548;
+}

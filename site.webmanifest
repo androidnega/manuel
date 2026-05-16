@@ -1,0 +1,17 @@
+{
+  "name": "Manuelcode",
+  "short_name": "Manuelcode",
+  "description": "Software engineering, design and media production",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0B1E3A",
+  "icons": [
+    {
+      "src": "assets/images/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
