@@ -3,6 +3,7 @@
 $maintenance = cms_maintenance_config($pdo);
 $adminNavItems = [
   ['section' => 'dashboard', 'href' => url('login'), 'label' => 'Dashboard', 'icon' => 'dashboard'],
+  ['section' => 'homehero', 'href' => url('login') . '?p=homehero', 'label' => 'Home hero', 'icon' => 'homehero'],
   ['section' => 'pages', 'href' => url('login') . '?p=pages', 'label' => 'Pages', 'icon' => 'pages'],
   ['section' => 'lists', 'href' => url('login') . '?p=lists', 'label' => 'Lists & data', 'icon' => 'lists'],
   ['section' => 'gallery', 'href' => url('login') . '?p=gallery', 'label' => 'Design gallery', 'icon' => 'gallery'],

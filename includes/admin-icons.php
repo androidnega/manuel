@@ -45,6 +45,7 @@ function admin_icon(string $name): string
     'quote' => 'fa-file-invoice-dollar',
     'news' => 'fa-newspaper',
     'gallery' => 'fa-images',
+    'homehero' => 'fa-panorama',
   ];
   $class = $icons[$name] ?? 'fa-circle';
   return '<i class="fa-solid ' . $class . '" aria-hidden="true"></i>';

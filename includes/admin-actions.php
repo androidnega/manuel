@@ -174,6 +174,63 @@ if ($action === 'save_maintenance') {
   admin_redirect(url('login') . '?p=settings', $msg);
 }
 
+if ($action === 'save_home_hero_slide') {
+  $all = cms_home_hero_slides($pdo);
+  $id = trim($_POST['id'] ?? '');
+  $alt = trim($_POST['alt'] ?? '');
+  $existing = $id !== '' ? cms_home_hero_by_id($all, $id) : null;
+  $image = trim($_POST['image'] ?? '');
+  if ($existing && $image === '') {
+    $image = trim($existing['image'] ?? '');
+  }
+  if (!empty($_FILES['image_file']['tmp_name'])) {
+    $uploaded = cms_upload_home_hero_image($_FILES['image_file'], $alt ?: 'home-hero');
+    if ($uploaded === null) {
+      admin_redirect(url('login') . '?p=homehero' . ($id ? '&id=' . urlencode($id) : ''), 'image must be JPG, PNG or WebP.', 'err');
+    }
+    if ($existing && !empty($existing['image']) && $existing['image'] !== $uploaded) {
+      $oldFile = dirname(__DIR__) . '/' . ltrim($existing['image'], '/');
+      if (is_file($oldFile)) {
+        @unlink($oldFile);
+      }
+    }
+    $image = $uploaded;
+  }
+  if ($image === '') {
+    admin_redirect(url('login') . '?p=homehero' . ($id ? '&id=' . urlencode($id) : ''), 'Image is required.', 'err');
+  }
+  $item = [
+    'id' => $id !== '' ? $id : bin2hex(random_bytes(8)),
+    'image' => $image,
+    'alt' => $alt,
+    'sort_order' => (int) ($_POST['sort_order'] ?? 0),
+    'published' => !empty($_POST['published']),
+  ];
+  $found = false;
+  foreach ($all as $i => $row) {
+    if (($row['id'] ?? '') === $item['id']) {
+      $all[$i] = $item;
+      $found = true;
+      break;
+    }
+  }
+  if (!$found) {
+    $all[] = $item;
+  }
+  cms_save_home_hero_slides($pdo, $all);
+  $sec = max(3, min(600, (int) ($_POST['slide_interval'] ?? 180)));
+  cms_set_setting($pdo, 'home_hero_interval', (string) ($sec * 1000));
+  admin_redirect(url('login') . '?p=homehero&id=' . urlencode($item['id']), 'Home hero slide saved.');
+}
+
+if ($action === 'delete_home_hero_slide') {
+  $id = trim($_POST['id'] ?? '');
+  $all = cms_home_hero_slides($pdo);
+  $all = array_values(array_filter($all, static fn($row) => ($row['id'] ?? '') !== $id));
+  cms_save_home_hero_slides($pdo, $all);
+  admin_redirect(url('login') . '?p=homehero', 'Slide removed.');
+}
+
 if ($action === 'save_design') {
   global $designs;
   $all = cms_designs_all($pdo, $designs);

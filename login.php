@@ -98,6 +98,7 @@ $adminTitles = [
   'news' => 'News',
   'newsedit' => 'Edit news post',
   'gallery' => 'Design gallery',
+  'homehero' => 'Home hero slideshow',
 ];
 $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
 ?>

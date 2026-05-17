@@ -20,8 +20,11 @@ $home = cms_page('home', [
 $hb = $home['body'];
 $pageTitle = 'Manuelcode.info | Home';
 $showHomeLoader = true;
-$pageStyles = ['assets/css/hero-promo-bw.css'];
-$pageScripts = ['assets/js/hero-promo-bw.js'];
+$pdo = cms_db();
+$homeHeroSlides = cms_home_hero_public($pdo);
+$homeHeroInterval = cms_home_hero_interval_ms($pdo);
+$pageStyles = ['assets/css/home-hero-slideshow.css'];
+$pageScripts = ['assets/js/home-hero-slideshow.js'];
 include 'includes/header.php';
 ?>
 <main>
@@ -69,33 +72,8 @@ include 'includes/header.php';
           </div>
         </div>
 
-        <div class="order-1 lg:order-2 flex justify-center lg:justify-end reveal reveal-right reveal-delay-2">
-          <figure class="hero-promo-wrap hero-promo-bw-effect relative w-full max-w-[420px] lg:max-w-[480px] rounded-2xl border border-line bg-[#eeedea] p-2 sm:p-2.5 shadow-sleek overflow-hidden" oncontextmenu="return false;">
-            <div class="hero-promo-bw-effect__stage" data-hero-promo-bw>
-              <img
-                src="<?= asset($brand['hero_promo']) ?>"
-                alt="Bring Me Work — Manuelcode promo: web development, mobile apps, custom software."
-                class="hero-promo-img hero-promo-bw-effect__color relative z-0"
-                width="1080"
-                height="1080"
-                fetchpriority="high"
-                decoding="async"
-                draggable="false"
-                oncontextmenu="return false;"
-              />
-              <img
-                src="<?= asset($brand['hero_promo']) ?>"
-                alt=""
-                aria-hidden="true"
-                class="hero-promo-bw-effect__gray"
-                width="1080"
-                height="1080"
-                decoding="async"
-                draggable="false"
-              />
-            </div>
-            <figcaption class="sr-only">Promotional graphic: Bring Me Work.</figcaption>
-          </figure>
+        <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+          <?php include __DIR__ . '/includes/home-hero-slideshow.php'; ?>
         </div>
       </div>
     </div>

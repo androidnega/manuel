@@ -42,6 +42,12 @@
     "action": "ok"
   },
   {
+    "path": "/Applications/XAMPP/xamppfiles/htdocs/manuelcode/assets/images/manuelcode-build-your-ideas-online-hero-ghana.jpg",
+    "before": 189981,
+    "after": 189981,
+    "action": "ok"
+  },
+  {
     "path": "/Applications/XAMPP/xamppfiles/htdocs/manuelcode/assets/images/manuel-portrait.jpg",
     "before": 226421,
     "after": 226421,
@@ -87,6 +93,12 @@
     "path": "/Applications/XAMPP/xamppfiles/htdocs/manuelcode/assets/images/manuelcode-brand-identity-design-guide.jpg",
     "before": 209607,
     "after": 209607,
+    "action": "ok"
+  },
+  {
+    "path": "/Applications/XAMPP/xamppfiles/htdocs/manuelcode/assets/images/manuelcode-how-i-work-on-projects-laptop-ghana.jpg",
+    "before": 138104,
+    "after": 138104,
     "action": "ok"
   },
   {

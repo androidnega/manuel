@@ -24,7 +24,7 @@ $trendUp = $stats['trend_pct'] >= 0;
   </div>
   <a href="<?= url('login') ?>?p=messages" class="admin-card admin-stat">
     <p class="admin-stat__label">Messages</p>
-    <p class="admin-stat__value"><?= (int) $unread ?> <span class="text-sm font-bold text-body">unread</span></p>
+    <p class="admin-stat__value"><?= (int) $messagesUnread ?> <span class="text-sm font-bold text-body">unread</span></p>
     <p class="admin-stat__meta"><?= $msgTotal ?> total</p>
   </a>
   <a href="<?= url('login') ?>?p=pages" class="admin-card admin-stat">
