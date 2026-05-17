@@ -4,11 +4,12 @@ seo_apply_globals();
 
 $metaDesc = $metaDesc ?? 'Manuelcode — software engineering, web development, UI design, graphics, photography and media production based in Ghana.';
 $metaKeywords = $metaKeywords ?? seo_default_keywords();
-$ogImage = $ogImage ?? null;
 $ogType = $ogType ?? 'website';
 $metaRobots = $metaRobots ?? 'index, follow, max-image-preview:large';
 $canonicalUrl = $canonicalUrl ?? seo_canonical_url();
-$ogImageUrl = seo_og_image_url($ogImage);
+$socialImageUrl = seo_social_image_url();
+$socialImageType = seo_social_image_type();
+$socialImageAlt = seo_site_name() . ' logo';
 $jsonLd = seo_json_ld();
 ?>
 <?php $faviconMime = str_ends_with($brand['favicon'] ?? '', '.webp') ? 'image/webp' : 'image/png'; ?>
@@ -26,14 +27,19 @@ $jsonLd = seo_json_ld();
 <meta property="og:title" content="<?= htmlspecialchars($pageTitle ?? 'Manuelcode.info') ?>" />
 <meta property="og:description" content="<?= htmlspecialchars($metaDesc) ?>" />
 <meta property="og:url" content="<?= htmlspecialchars($canonicalUrl, ENT_QUOTES, 'UTF-8') ?>" />
-<meta property="og:image" content="<?= htmlspecialchars($ogImageUrl, ENT_QUOTES, 'UTF-8') ?>" />
-<meta property="og:image:alt" content="<?= htmlspecialchars($pageTitle ?? 'Manuelcode') ?>" />
+<meta property="og:image" content="<?= htmlspecialchars($socialImageUrl, ENT_QUOTES, 'UTF-8') ?>" />
+<meta property="og:image:secure_url" content="<?= htmlspecialchars($socialImageUrl, ENT_QUOTES, 'UTF-8') ?>" />
+<meta property="og:image:type" content="<?= htmlspecialchars($socialImageType) ?>" />
+<meta property="og:image:width" content="1024" />
+<meta property="og:image:height" content="1024" />
+<meta property="og:image:alt" content="<?= htmlspecialchars($socialImageAlt) ?>" />
 <meta property="og:type" content="<?= htmlspecialchars($ogType) ?>" />
 <meta property="og:locale" content="en_GH" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="<?= htmlspecialchars($pageTitle ?? 'Manuelcode.info') ?>" />
 <meta name="twitter:description" content="<?= htmlspecialchars($metaDesc) ?>" />
-<meta name="twitter:image" content="<?= htmlspecialchars($ogImageUrl, ENT_QUOTES, 'UTF-8') ?>" />
+<meta name="twitter:image" content="<?= htmlspecialchars($socialImageUrl, ENT_QUOTES, 'UTF-8') ?>" />
+<meta name="twitter:image:alt" content="<?= htmlspecialchars($socialImageAlt) ?>" />
 <?php if (defined('GOOGLE_SITE_VERIFICATION') && GOOGLE_SITE_VERIFICATION !== ''): ?>
 <meta name="google-site-verification" content="<?= htmlspecialchars(GOOGLE_SITE_VERIFICATION) ?>" />
 <?php endif; ?>

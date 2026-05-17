@@ -41,70 +41,59 @@ function seo_page_config(string $slug): array
 {
   global $brand, $site;
 
-  $ogDefault = $brand['og_default'] ?? $brand['hero_promo'] ?? $brand['logo'] ?? '';
-
   $pages = [
     'home' => [
       'title' => 'Manuelcode.info | Software, Design & Media — Ghana',
       'description' => 'Manuel Kwofie (Manuelcode) — software engineer, web developer, UI designer, graphic design, photography and media production in Ghana. Websites, apps, campus systems and creative work.',
       'keywords' => seo_default_keywords() . ', portfolio, freelance developer',
-      'og_image' => $brand['hero_promo'] ?? $ogDefault,
       'type' => 'website',
     ],
     'about' => [
       'title' => 'About Manuel Kwofie | Software & Creative — Manuelcode',
       'description' => 'About Manuel Kwofie — computer software engineer and multimedia creative in Ghana. Web systems, databases, photography, video and graphic design.',
       'keywords' => 'Manuel Kwofie, about Manuelcode, software engineer bio Ghana, creative developer',
-      'og_image' => 'assets/images/manuel-kwofie-software-engineer-portrait-ghana.jpg',
       'type' => 'profile',
     ],
     'projects' => [
       'title' => 'Projects | Web & Campus Systems — Manuelcode',
       'description' => 'Software projects by Manuelcode — Kuukuacares, Go Ahanta, KTI, Quizsnap, Documento, SellApp and more. Live websites and campus platforms.',
       'keywords' => 'Manuelcode projects, Ghana web projects, campus software, MP website, school website',
-      'og_image' => $ogDefault,
       'type' => 'website',
     ],
     'services' => [
       'title' => 'Services | Web, UI, Design & Systems — Manuelcode',
       'description' => 'Web development, UI design, graphic design, photo & video, and business systems — services by Manuelcode in Ghana.',
       'keywords' => 'web development services Ghana, graphic design services, UI design freelancer',
-      'og_image' => $ogDefault,
       'type' => 'website',
     ],
     'designs' => [
       'title' => 'Design Gallery | Posters & Graphics — Manuelcode',
       'description' => 'Graphic design gallery by Manuelcode — quote posters, campaign visuals, brand identity and social graphics. Ghana creative work.',
       'keywords' => 'graphic design Ghana, poster design, quote graphics, brand design, Manuelcode designs',
-      'og_image' => 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg',
       'type' => 'website',
     ],
     'quotes' => [
       'title' => 'Request a Quote | Websites & Apps — Manuelcode',
       'description' => 'Request a project quote from Manuelcode — websites, mobile apps, campus systems, design and timelines for Ghana and international clients.',
       'keywords' => 'web development quote Ghana, app development quote, project estimate',
-      'og_image' => $ogDefault,
       'type' => 'website',
     ],
     'contact' => [
       'title' => 'Contact Manuelcode | Start a Project',
       'description' => 'Contact Manuel Kwofie for websites, software, UI design and creative work. Email, phone and WhatsApp — based in Ghana.',
       'keywords' => 'contact Manuelcode, hire web developer Ghana, software developer contact',
-      'og_image' => $ogDefault,
       'type' => 'website',
     ],
     'news' => [
       'title' => 'News & Updates | Manuelcode',
       'description' => 'News and updates from Manuelcode — launches, projects and notes on software and creative work.',
       'keywords' => 'Manuelcode news, developer blog Ghana, project updates',
-      'og_image' => $ogDefault,
       'type' => 'website',
     ],
     'login' => [
       'title' => 'Admin | Manuelcode',
       'description' => 'Manuelcode site administration.',
       'keywords' => '',
-      'og_image' => null,
       'type' => 'website',
       'robots' => 'noindex, nofollow',
     ],
@@ -114,7 +103,6 @@ function seo_page_config(string $slug): array
     'title' => 'Manuelcode.info',
     'description' => 'Manuelcode — software engineering, design and media in Ghana.',
     'keywords' => seo_default_keywords(),
-    'og_image' => $ogDefault,
     'type' => 'website',
   ];
 
@@ -136,6 +124,38 @@ function seo_canonical_url(): string
   return site_url(ltrim($path, '/'));
 }
 
+/** Favicon / logo mark used for WhatsApp, Facebook, Twitter, etc. */
+function seo_social_image_path(): string
+{
+  global $brand;
+  $jpg = dirname(__DIR__) . '/assets/images/manuelcode-favicon-social.jpg';
+  if (is_file($jpg)) {
+    return 'assets/images/manuelcode-favicon-social.jpg';
+  }
+  $path = $brand['favicon'] ?? 'assets/images/manuelcode-favicon.webp';
+  return seo_resolve_image_path($path);
+}
+
+function seo_social_image_url(): string
+{
+  return site_url(ltrim(seo_social_image_path(), '/'));
+}
+
+function seo_social_image_type(): string
+{
+  $path = seo_social_image_path();
+  if (str_ends_with($path, '.webp')) {
+    return 'image/webp';
+  }
+  if (str_ends_with($path, '.png')) {
+    return 'image/png';
+  }
+  if (str_ends_with($path, '.jpg') || str_ends_with($path, '.jpeg')) {
+    return 'image/jpeg';
+  }
+  return 'image/png';
+}
+
 function seo_og_image_url(?string $path): string
 {
   if ($path === null || $path === '') {
@@ -145,7 +165,7 @@ function seo_og_image_url(?string $path): string
   if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
     return $path;
   }
-  return site_url(ltrim($path, '/'));
+  return site_url(ltrim(seo_resolve_image_path($path), '/'));
 }
 
 function seo_apply_globals(): void
@@ -153,7 +173,7 @@ function seo_apply_globals(): void
   $slug = seo_current_slug();
   $config = seo_page_config($slug);
 
-  global $pageTitle, $metaDesc, $metaKeywords, $ogImage, $ogType, $metaRobots, $canonicalUrl;
+  global $pageTitle, $metaDesc, $metaKeywords, $ogType, $metaRobots, $canonicalUrl;
 
   if (empty($pageTitle)) {
     $pageTitle = $config['title'];
@@ -163,9 +183,6 @@ function seo_apply_globals(): void
   }
   if (empty($metaKeywords)) {
     $metaKeywords = $config['keywords'] ?? seo_default_keywords();
-  }
-  if (empty($ogImage)) {
-    $ogImage = $config['og_image'] ?? null;
   }
   if (empty($ogType)) {
     $ogType = $config['type'] ?? 'website';

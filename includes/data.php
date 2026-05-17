@@ -20,7 +20,7 @@ $brand = [
   'favicon' => 'assets/images/manuelcode-favicon.webp',
   'guide' => 'assets/images/manuelcode-brand-identity-design-guide.jpg',
   'hero_promo' => 'assets/images/manuelcode-bring-me-work-promo-software-ghana.png',
-  'og_default' => 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg',
+  'og_default' => 'assets/images/manuelcode-favicon.webp',
 ];
 /** Primary header navigation (kept minimal). */
 $headerNav = [

@@ -9,7 +9,6 @@ $cms = cms_page('designs', [
 $pageTitle = 'Design Gallery | Posters & Graphics — Manuelcode';
 $metaDesc = 'Graphic design gallery by Manuelcode — quote posters, campaign visuals, brand identity and social graphics. Creative work from Ghana.';
 $metaKeywords = 'graphic design Ghana, poster design, quote graphics, Manuelcode designs, brand identity';
-$ogImage = 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg';
 $pageStyles = ['assets/css/designs-feed.css'];
 $pageScripts = ['assets/js/designs-feed.js'];
 $designs = cms_designs_public($designs);

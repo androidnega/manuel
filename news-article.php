@@ -28,7 +28,6 @@ $dateLabel = $ts ? date('F j, Y', $ts) : '';
 $cover = trim($post['cover_image'] ?? '');
 $pageTitle = htmlspecialchars($post['title']) . ' | News | Manuelcode.info';
 $metaDesc = trim($post['excerpt'] ?? '') ?: strip_tags($post['title']) . ' — news from Manuelcode, software and design in Ghana.';
-$ogImage = $cover !== '' ? seo_resolve_image_path($cover) : 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg';
 $canonicalUrl = site_url('news/' . $post['slug']);
 $heroLabel = 'News';
 $heroTitle = $post['title'];
