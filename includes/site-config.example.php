@@ -7,3 +7,4 @@
  */
 // define('SITE_BASE_PATH', '');
 // define('SITE_CANONICAL_HOST', 'manuelcode.info');
+// define('GOOGLE_SITE_VERIFICATION', 'paste-token-from-search-console');

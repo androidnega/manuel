@@ -1,16 +1,17 @@
 {
-  "name": "Manuelcode",
+  "name": "Manuelcode — Software, Design & Media",
   "short_name": "Manuelcode",
-  "description": "Software engineering, design and media production",
+  "description": "Manuel Kwofie — software engineering, web development, graphic design and media production in Ghana.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0B1E3A",
+  "lang": "en-GH",
   "icons": [
     {
-      "src": "assets/images/favicon.webp",
+      "src": "assets/images/manuelcode-favicon.webp",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/webp",
       "purpose": "any maskable"
     }
   ]

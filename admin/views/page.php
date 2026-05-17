@@ -21,6 +21,13 @@ $fields = [
     'cta_text' => 'Bottom CTA text',
   ],
   'about' => ['paragraph1' => 'First paragraph', 'paragraph2' => 'Second paragraph', 'technical' => 'Technical skills', 'creative' => 'Creative skills', 'experience_title' => 'Experience section title'],
+  'projects' => [
+    'work_eyebrow' => 'How I work — eyebrow',
+    'work_title' => 'How I work — title',
+    'work_lead' => 'How I work — intro',
+    'work_image' => 'How I work — image path',
+    'work_image_alt' => 'How I work — image alt text',
+  ],
   'contact' => ['intro_left' => 'Left intro', 'intro_right' => 'Form intro'],
   'services' => ['cta_title' => 'CTA title', 'cta_text' => 'CTA text'],
   'quotes' => [

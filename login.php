@@ -97,6 +97,7 @@ $adminTitles = [
   'quoterequests' => 'Quote requests',
   'news' => 'News',
   'newsedit' => 'Edit news post',
+  'gallery' => 'Design gallery',
 ];
 $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
 ?>

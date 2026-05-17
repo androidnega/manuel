@@ -1,0 +1,65 @@
+/* Hero promo: B&W spotlight under cursor (homepage) */
+
+.hero-promo-bw-effect__stage {
+  position: relative;
+  z-index: 0;
+  line-height: 0;
+}
+
+.hero-promo-bw-effect__color,
+.hero-promo-bw-effect__gray {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  background: #eeedea;
+}
+
+.hero-promo-bw-effect__gray {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  filter: grayscale(100%) contrast(1.05);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  -webkit-mask-image: radial-gradient(
+    circle var(--bw-spot-size, 0px) at var(--bw-x, 50%) var(--bw-y, 50%),
+    #000 0%,
+    #000 72%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle var(--bw-spot-size, 0px) at var(--bw-x, 50%) var(--bw-y, 50%),
+    #000 0%,
+    #000 72%,
+    transparent 100%
+  );
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.hero-promo-bw-effect.is-active .hero-promo-bw-effect__gray {
+  opacity: 1;
+}
+
+[data-theme="dark"] .hero-promo-bw-effect__color,
+[data-theme="dark"] .hero-promo-bw-effect__gray {
+  background: #1a2438;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-promo-bw-effect__stage {
+    cursor: crosshair;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-promo-bw-effect__gray {
+    transition: none;
+  }
+}

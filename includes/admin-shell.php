@@ -5,6 +5,7 @@ $adminNavItems = [
   ['section' => 'dashboard', 'href' => url('login'), 'label' => 'Dashboard', 'icon' => 'dashboard'],
   ['section' => 'pages', 'href' => url('login') . '?p=pages', 'label' => 'Pages', 'icon' => 'pages'],
   ['section' => 'lists', 'href' => url('login') . '?p=lists', 'label' => 'Lists & data', 'icon' => 'lists'],
+  ['section' => 'gallery', 'href' => url('login') . '?p=gallery', 'label' => 'Design gallery', 'icon' => 'gallery'],
   ['section' => 'team', 'href' => url('login') . '?p=team', 'label' => 'Team', 'icon' => 'team'],
   ['section' => 'news', 'href' => url('login') . '?p=news', 'label' => 'News', 'icon' => 'news'],
   ['section' => 'messages', 'href' => url('login') . '?p=messages', 'label' => 'Messages', 'icon' => 'messages', 'badge' => $messagesUnread],

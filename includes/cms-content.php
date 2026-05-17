@@ -56,7 +56,7 @@ function cms_newsletter_modal_defaults(): array
     'title' => 'Get updates from Manuelcode',
     'subtitle' => 'Projects, news and creative work — no spam.',
     'button_text' => 'Subscribe',
-    'image' => 'assets/images/quote-poster-original.jpg',
+    'image' => 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg',
     'success_message' => "You're subscribed. Thank you!",
   ];
 }

@@ -425,3 +425,52 @@ function cms_sync_image_paths(PDO $pdo): void
 
   cms_set_setting($pdo, 'image_paths_v', '1');
 }
+
+/** SEO-friendly image filenames (v2). */
+function cms_sync_seo_image_paths(PDO $pdo): void
+{
+  if (cms_get_setting($pdo, 'image_paths_seo_v') === '2') {
+    return;
+  }
+
+  require_once __DIR__ . '/seo.php';
+  $map = seo_image_paths_map();
+
+  $designs = cms_get_list($pdo, 'designs', []);
+  $changed = false;
+  foreach ($designs as &$item) {
+    if (!empty($item['image']) && isset($map[$item['image']])) {
+      $item['image'] = $map[$item['image']];
+      $changed = true;
+    }
+  }
+  unset($item);
+  if ($changed) {
+    cms_save_list($pdo, 'designs', $designs);
+  }
+
+  $siteRow = cms_get_list($pdo, 'site', []);
+  if (is_array($siteRow)) {
+    $siteChanged = false;
+    foreach (['logo', 'logo_dark', 'favicon', 'guide', 'hero_promo', 'og_default'] as $key) {
+      if (!empty($siteRow[$key]) && isset($map[$siteRow[$key]])) {
+        $siteRow[$key] = $map[$siteRow[$key]];
+        $siteChanged = true;
+      }
+    }
+    if ($siteChanged) {
+      cms_save_list($pdo, 'site', $siteRow);
+    }
+  }
+
+  $modalRaw = cms_get_setting($pdo, 'newsletter_modal', '');
+  if ($modalRaw !== '') {
+    $modal = json_decode($modalRaw, true);
+    if (is_array($modal) && !empty($modal['image']) && isset($map[$modal['image']])) {
+      $modal['image'] = $map[$modal['image']];
+      cms_set_setting($pdo, 'newsletter_modal', json_encode($modal, JSON_UNESCAPED_UNICODE));
+    }
+  }
+
+  cms_set_setting($pdo, 'image_paths_seo_v', '2');
+}

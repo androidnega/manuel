@@ -174,6 +174,68 @@ if ($action === 'save_maintenance') {
   admin_redirect(url('login') . '?p=settings', $msg);
 }
 
+if ($action === 'save_design') {
+  global $designs;
+  $all = cms_designs_all($pdo, $designs);
+  $id = trim($_POST['id'] ?? '');
+  $title = trim($_POST['title'] ?? '');
+  $type = trim($_POST['type'] ?? '');
+  if ($title === '' || $type === '') {
+    admin_redirect(url('login') . '?p=gallery' . ($id ? '&id=' . urlencode($id) : ''), 'Title and type are required.', 'err');
+  }
+  $existing = $id !== '' ? cms_design_by_id($all, $id) : null;
+  $image = trim($_POST['image'] ?? '');
+  if ($existing && $image === '') {
+    $image = trim($existing['image'] ?? '');
+  }
+  if (!empty($_FILES['image_file']['tmp_name'])) {
+    $uploaded = cms_upload_design_image($_FILES['image_file'], $title);
+    if ($uploaded === null) {
+      admin_redirect(url('login') . '?p=gallery' . ($id ? '&id=' . urlencode($id) : ''), 'Image must be JPG, PNG or WebP.', 'err');
+    }
+    if ($existing && !empty($existing['image']) && $existing['image'] !== $uploaded) {
+      $oldFile = dirname(__DIR__) . '/' . ltrim($existing['image'], '/');
+      if (is_file($oldFile)) {
+        @unlink($oldFile);
+      }
+    }
+    $image = $uploaded;
+  }
+  $item = [
+    'id' => $id !== '' ? $id : bin2hex(random_bytes(8)),
+    'title' => $title,
+    'type' => $type,
+    'alt' => trim($_POST['alt'] ?? ''),
+    'share_text' => trim($_POST['share_text'] ?? ''),
+    'variant' => trim($_POST['variant'] ?? ''),
+    'image' => $image,
+    'sort_order' => (int) ($_POST['sort_order'] ?? 0),
+    'published' => !empty($_POST['published']),
+  ];
+  $found = false;
+  foreach ($all as $i => $row) {
+    if (($row['id'] ?? '') === $item['id']) {
+      $all[$i] = $item;
+      $found = true;
+      break;
+    }
+  }
+  if (!$found) {
+    $all[] = $item;
+  }
+  cms_save_designs_list($pdo, $all);
+  admin_redirect(url('login') . '?p=gallery&id=' . urlencode($item['id']), 'Design saved.');
+}
+
+if ($action === 'delete_design') {
+  global $designs;
+  $id = trim($_POST['id'] ?? '');
+  $all = cms_designs_all($pdo, $designs);
+  $all = array_values(array_filter($all, static fn($row) => ($row['id'] ?? '') !== $id));
+  cms_save_designs_list($pdo, $all);
+  admin_redirect(url('login') . '?p=gallery', 'Design removed.');
+}
+
 if ($action === 'save_mail') {
   cms_save_mail_config($pdo, [
     'from_email' => trim($_POST['from_email'] ?? ''),

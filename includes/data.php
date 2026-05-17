@@ -15,11 +15,12 @@ $site = [
   'whatsapp' => 'https://wa.me/233541069241',
 ];
 $brand = [
-  'logo' => 'assets/images/main-logo.png',
-  'logo_dark' => 'assets/images/dark-logo.webp',
-  'favicon' => 'assets/images/favicon.webp',
-  'guide' => 'assets/images/brand-guide.jpg',
-  'hero_promo' => 'assets/images/bring-me-work-promo.png',
+  'logo' => 'assets/images/manuelcode-logo-main.png',
+  'logo_dark' => 'assets/images/manuelcode-logo-dark.webp',
+  'favicon' => 'assets/images/manuelcode-favicon.webp',
+  'guide' => 'assets/images/manuelcode-brand-identity-design-guide.jpg',
+  'hero_promo' => 'assets/images/manuelcode-bring-me-work-promo-software-ghana.png',
+  'og_default' => 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg',
 ];
 /** Primary header navigation (kept minimal). */
 $headerNav = [
@@ -123,12 +124,33 @@ $projects = [
 /** Legacy CMS list key (unused on public site; quote requests use the form). */
 $quotes = [];
 $designs = [
-  ['title' => 'Leadership Poster', 'type' => 'Quote design', 'image' => 'assets/images/quote-poster-original.jpg', 'fit' => 'poster'],
+  [
+    'title' => 'Leadership Poster',
+    'type' => 'Quote design',
+    'image' => 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg',
+    'alt' => 'Manuelcode leadership quote poster graphic design Ghana',
+  ],
+  [
+    'title' => 'Bring Me Work',
+    'type' => 'Promo graphic',
+    'image' => 'assets/images/manuelcode-bring-me-work-promo-software-ghana.png',
+    'alt' => 'Manuelcode Bring Me Work promo — web development Ghana',
+  ],
+  [
+    'title' => 'Portrait Feature',
+    'type' => 'Personal brand',
+    'image' => 'assets/images/manuel-kwofie-software-engineer-portrait-ghana.jpg',
+    'alt' => 'Manuel Kwofie software engineer portrait Ghana',
+  ],
+  [
+    'title' => 'Brand Identity',
+    'type' => 'Logo & guidelines',
+    'image' => 'assets/images/manuelcode-brand-identity-design-guide.jpg',
+    'alt' => 'Manuelcode brand identity design guide',
+  ],
   ['title' => 'Campaign Concept', 'type' => 'Bold identity', 'variant' => 'campaign'],
   ['title' => 'System Interface', 'type' => 'Dashboard layouts', 'variant' => 'ui'],
   ['title' => 'Brand Post', 'type' => 'Personal identity', 'variant' => 'brand'],
-  ['title' => 'Portrait Feature', 'type' => 'Personal brand visual', 'image' => 'assets/images/manuel-portrait.jpg', 'fit' => 'portrait'],
-  ['title' => 'Brand Identity', 'type' => 'Logo system & guidelines', 'image' => 'assets/images/brand-guide.jpg', 'fit' => 'wide'],
 ];
 $companies = [
   ['name' => 'GNAAS', 'role' => 'Web Developer & Manager'],

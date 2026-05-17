@@ -14,6 +14,15 @@ if (preg_match('/\.php$/i', $uri)) {
 
 $root = __DIR__;
 
+if ($uri === '/robots.txt') {
+    require $root . '/robots.php';
+    return true;
+}
+if ($uri === '/sitemap.xml') {
+    require $root . '/sitemap.php';
+    return true;
+}
+
 if ($uri !== '/' && is_file($root . $uri)) {
     return false;
 }

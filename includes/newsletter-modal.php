@@ -9,7 +9,7 @@ if (!$modal['enabled']) {
 }
 $img = trim($modal['image'] ?? '');
 if ($img === '') {
-  $img = 'assets/images/quote-poster-original.jpg';
+  $img = 'assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg';
 }
 ?>
 <link rel="stylesheet" href="<?= asset('assets/css/newsletter-modal.css') ?>" />

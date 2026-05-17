@@ -4,38 +4,35 @@ $cms = cms_page('projects', [
   'label' => 'Selected work',
   'title' => 'Projects and systems I’ve worked on.',
   'desc' => 'Practical systems for schools, students, businesses and organizations.',
-  'body' => [],
+  'body' => [
+    'work_eyebrow' => 'How I work',
+    'work_title' => 'From brief to launch — clear, practical and shipped.',
+    'work_lead' => 'Every project gets the same focus: understand the real problem, design something people can use, build it properly, and deliver on time with room to grow.',
+    'work_image' => 'assets/images/manuelcode-how-i-work-on-projects-laptop-ghana.jpg',
+    'work_image_alt' => 'Manuel Kwofie working on Manuelcode projects — web and software development in Ghana',
+  ],
 ]);
 $pageTitle = 'Projects | Manuelcode.info';
+$pageStyles = ['assets/css/work-process.css'];
 $heroLabel = $cms['label'];
 $heroTitle = $cms['title'];
 $heroDesc = $cms['desc'];
+$pageBody = $cms['body'];
+$workProcess = [
+  'eyebrow' => $pageBody['work_eyebrow'] ?? 'How I work',
+  'title' => $pageBody['work_title'] ?? 'From brief to launch — clear, practical and shipped.',
+  'lead' => $pageBody['work_lead'] ?? '',
+  'image' => $pageBody['work_image'] ?? 'assets/images/manuelcode-how-i-work-on-projects-laptop-ghana.jpg',
+  'image_alt' => $pageBody['work_image_alt'] ?? '',
+];
+$others = array_values(array_filter($projects, fn($p) => empty($p['featured'])));
 include 'includes/header.php';
 include 'includes/page-hero.php';
-$featured = array_values(array_filter($projects, fn($p) => !empty($p['featured'])))[0] ?? $projects[0];
-$others = array_values(array_filter($projects, fn($p) => empty($p['featured'])));
 ?>
 <main>
   <section class="py-10 sm:py-12 bg-white">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <article class="reveal rounded-2xl bg-deep text-white p-5 sm:p-6 overflow-hidden relative mb-4">
-        <div class="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-blue/25"></div>
-        <div class="relative z-10">
-          <span class="inline-flex rounded-full bg-white/10 px-3 py-1 text-[10px] font-extrabold"><?= htmlspecialchars($featured['category']) ?></span>
-          <h2 class="mt-3 text-2xl sm:text-3xl font-extrabold"><?= htmlspecialchars($featured['title']) ?></h2>
-          <p class="mt-2 text-sm text-white/70 leading-relaxed max-w-lg"><?= htmlspecialchars($featured['desc']) ?></p>
-          <?php if (!empty($featured['tags'])): ?>
-            <div class="mt-3 flex flex-wrap gap-1.5">
-              <?php foreach ($featured['tags'] as $tag): ?>
-                <span class="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold"><?= htmlspecialchars($tag) ?></span>
-              <?php endforeach; ?>
-            </div>
-          <?php endif; ?>
-          <?php if ($featured['link'] !== '#'): ?>
-            <a href="<?= htmlspecialchars($featured['link']) ?>" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 rounded-full bg-white text-deep px-5 py-2 text-xs font-extrabold hover:shadow-sleek-sm transition-all">Visit project <?= icon('external-link', 'w-4 h-4') ?></a>
-          <?php endif; ?>
-        </div>
-      </article>
+      <?php include __DIR__ . '/includes/work-process-section.php'; ?>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <?php foreach ($others as $i => $p): ?>

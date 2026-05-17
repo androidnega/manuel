@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/cms-db.php';
+require_once __DIR__ . '/cms-designs.php';
 require_once __DIR__ . '/analytics.php';
 
 function cms_bootstrap(): void
@@ -29,12 +30,14 @@ function cms_bootstrap(): void
   cms_sync_list_defaults($pdo, 'clientLogos', $clientLogos);
   cms_sync_quotes_page_copy($pdo);
   cms_sync_image_paths($pdo);
+  cms_sync_seo_image_paths($pdo);
+  cms_sync_design_ids($pdo, $designs);
 
   $site = cms_get_list($pdo, 'site', $site);
   $services = cms_get_list($pdo, 'services', $services);
   $projects = cms_get_list($pdo, 'projects', $projects);
   $quotes = cms_get_list($pdo, 'quotes', $quotes);
-  $designs = cms_get_list($pdo, 'designs', $designs);
+  $designs = cms_designs_all($pdo, $designs);
   $companies = cms_get_list($pdo, 'companies', $companies);
   $stats = cms_get_list($pdo, 'stats', $stats);
   $clientLogos = cms_get_list($pdo, 'clientLogos', $clientLogos);

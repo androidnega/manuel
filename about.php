@@ -13,7 +13,8 @@ $cms = cms_page('about', [
   ],
 ]);
 $pageTitle = 'About | Manuelcode.info';
-$pageStyles = ['assets/css/team-cards.css'];
+$pageStyles = ['assets/css/team-cards.css', 'assets/css/about-intro.css', 'assets/css/about-code-demo.css'];
+$pageScripts = ['assets/js/about-code-demo.js'];
 $heroLabel = $cms['label'];
 $heroTitle = $cms['title'];
 $heroDesc = $cms['desc'];
@@ -24,14 +25,14 @@ include 'includes/page-hero.php';
 <main>
   <section class="py-10 sm:py-12 bg-white">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-2 gap-6 items-start">
-        <div class="reveal reveal-left rounded-2xl bg-cloud border border-line p-2.5 max-w-md mx-auto lg:mx-0 w-full">
-          <?php $src = 'assets/images/manuel-portrait.jpg'; $alt = 'Manuel Kwofie'; $fit = 'portrait'; $frameClass = 'rounded-xl'; include 'includes/media.php'; ?>
+      <div class="about-intro grid gap-6 items-start lg:items-stretch">
+        <div class="about-intro__media reveal reveal-left rounded-2xl bg-cloud border border-line p-2.5 max-w-md mx-auto lg:max-w-none lg:mx-0 w-full">
+          <?php $src = 'assets/images/manuel-kwofie-software-engineer-portrait-ghana.jpg'; $alt = 'Manuel Kwofie — software engineer and creative, Ghana'; $fit = 'portrait'; $frameClass = 'rounded-xl h-full min-h-[280px] lg:min-h-0'; include 'includes/media.php'; ?>
         </div>
-        <div class="reveal reveal-right">
+        <div class="about-intro__content reveal reveal-right flex flex-col min-h-0">
           <p class="text-[0.9375rem] leading-relaxed text-body"><?= htmlspecialchars($pageBody['paragraph1'] ?? '') ?></p>
           <p class="text-[0.9375rem] leading-relaxed mt-4 text-body"><?= htmlspecialchars($pageBody['paragraph2'] ?? '') ?></p>
-          <div class="mt-5 grid sm:grid-cols-2 gap-3">
+          <div class="mt-5 grid sm:grid-cols-2 gap-3 flex-1 min-h-0">
             <div class="reveal reveal-scale reveal-delay-1 rounded-2xl bg-cloud border border-line p-5 sm:p-6">
               <h3 class="font-extrabold text-sm">Technical</h3>
               <p class="mt-2 text-xs text-body leading-relaxed"><?= htmlspecialchars($pageBody['technical'] ?? '') ?></p>
@@ -40,12 +41,15 @@ include 'includes/page-hero.php';
               <h3 class="font-extrabold text-sm">Creative</h3>
               <p class="mt-2 text-xs text-body leading-relaxed"><?= htmlspecialchars($pageBody['creative'] ?? '') ?></p>
             </div>
+            <?php include __DIR__ . '/includes/about-code-demo.php'; ?>
           </div>
-          <?php if (file_exists(__DIR__ . '/assets/Emmanuel_Kofi_Kwofie_CV.pdf')): ?>
-            <a href="<?= asset('assets/Emmanuel_Kofi_Kwofie_CV.pdf') ?>" class="mt-5 inline-flex items-center gap-2 rounded-full bg-deep text-white px-6 py-3 text-sm font-extrabold hover:bg-ink shadow-sleek-sm transition-all">Download CV <?= icon('download', 'w-4 h-4') ?></a>
-          <?php endif; ?>
         </div>
       </div>
+      <?php if (file_exists(__DIR__ . '/assets/Emmanuel_Kofi_Kwofie_CV.pdf')): ?>
+        <div class="about-intro__cv-row mt-5">
+          <a href="<?= asset('assets/Emmanuel_Kofi_Kwofie_CV.pdf') ?>" class="inline-flex items-center gap-2 rounded-full bg-deep text-white px-6 py-3 text-sm font-extrabold hover:bg-ink shadow-sleek-sm transition-all">Download CV <?= icon('download', 'w-4 h-4') ?></a>
+        </div>
+      <?php endif; ?>
     </div>
   </section>
 

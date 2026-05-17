@@ -15,6 +15,19 @@ RewriteRule ^ /%1? [R=301,L]
 RewriteCond %{THE_REQUEST} \s/+((?:manuelcode/)?)index\.php[\s?] [NC]
 RewriteRule ^ /? [R=301,L]
 
+# SEO
+RewriteRule ^robots\.txt$ robots.php [L]
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# Legacy image paths → SEO filenames
+RewriteRule ^assets/images/quote-poster-original\.(jpg|png)$ /assets/images/manuelcode-leadership-quote-poster-design-ghana.jpg [R=301,L]
+RewriteRule ^assets/images/manuel-portrait\.(jpg|png)$ /assets/images/manuel-kwofie-software-engineer-portrait-ghana.jpg [R=301,L]
+RewriteRule ^assets/images/brand-guide\.(jpg|png)$ /assets/images/manuelcode-brand-identity-design-guide.jpg [R=301,L]
+RewriteRule ^assets/images/main-logo\.png$ /assets/images/manuelcode-logo-main.png [R=301,L]
+RewriteRule ^assets/images/dark-logo\.(png|webp)$ /assets/images/manuelcode-logo-dark.webp [R=301,L]
+RewriteRule ^assets/images/favicon\.(png|webp)$ /assets/images/manuelcode-favicon.webp [R=301,L]
+RewriteRule ^assets/images/bring-me-work-promo\.png$ /assets/images/manuelcode-bring-me-work-promo-software-ghana.png [R=301,L]
+
 # News article: /news/my-post-slug
 RewriteRule ^news/([a-z0-9-]+)/?$ news-article.php?slug=$1 [L,QSA]
 
