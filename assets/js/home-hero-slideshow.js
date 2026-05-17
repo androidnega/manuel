@@ -10,7 +10,7 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
 
-  var interval = parseInt(root.getAttribute('data-interval') || '180000', 10);
+  var interval = parseInt(root.getAttribute('data-interval') || '180000', 10); // 180s default, matches CMS
   if (interval < 3000) interval = 180000;
 
   var index = 0;

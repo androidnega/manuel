@@ -2,6 +2,12 @@
 
 /** Homepage hero slideshow slides (admin-managed). */
 
+/** Default ms between slide changes (180s = 3 minutes). */
+function cms_home_hero_interval_default_ms(): int
+{
+  return 180000;
+}
+
 function cms_home_hero_timezone(): DateTimeZone
 {
   return new DateTimeZone('Africa/Accra');
@@ -49,6 +55,24 @@ function cms_home_hero_defaults(): array
       'sort_order' => 1,
       'published' => true,
     ],
+    [
+      'id' => 'slide-digital-presence',
+      'image' => 'assets/images/manuelcode-build-your-digital-presence-hero-ghana.jpg',
+      'alt' => 'Build your digital presence — Manuelcode developer creating clean digital solutions in Ghana.',
+      'sort_order' => 2,
+      'published' => true,
+    ],
+  ];
+}
+
+function cms_home_hero_digital_presence_slide(): array
+{
+  return [
+    'id' => 'slide-digital-presence',
+    'image' => 'assets/images/manuelcode-build-your-digital-presence-hero-ghana.jpg',
+    'alt' => 'Build your digital presence — Manuelcode developer creating clean digital solutions in Ghana.',
+    'sort_order' => 2,
+    'published' => true,
   ];
 }
 
@@ -324,7 +348,7 @@ function cms_sync_home_hero_slides(PDO $pdo): void
   cms_save_home_hero_slides($pdo, cms_home_hero_defaults());
   cms_set_setting($pdo, 'home_hero_v', '1');
   if (cms_get_setting($pdo, 'home_hero_interval', '') === '') {
-    cms_set_setting($pdo, 'home_hero_interval', '180000');
+    cms_set_setting($pdo, 'home_hero_interval', (string) cms_home_hero_interval_default_ms());
   }
 }
 
@@ -348,10 +372,31 @@ function cms_sync_home_hero_monday_slide(PDO $pdo): void
   cms_set_setting($pdo, 'home_hero_monday_v', '1');
 }
 
+function cms_sync_home_hero_digital_presence_slide(PDO $pdo): void
+{
+  if (cms_get_setting($pdo, 'home_hero_digital_v') === '1') {
+    return;
+  }
+  $all = cms_home_hero_slides($pdo);
+  $found = false;
+  foreach ($all as $slide) {
+    if (($slide['id'] ?? '') === 'slide-digital-presence') {
+      $found = true;
+      break;
+    }
+  }
+  if (!$found) {
+    $all[] = cms_home_hero_digital_presence_slide();
+    cms_save_home_hero_slides($pdo, $all);
+  }
+  cms_set_setting($pdo, 'home_hero_digital_v', '1');
+}
+
 function cms_home_hero_interval_ms(PDO $pdo): int
 {
-  $ms = (int) cms_get_setting($pdo, 'home_hero_interval', '180000');
-  return $ms >= 3000 ? $ms : 180000;
+  $default = cms_home_hero_interval_default_ms();
+  $ms = (int) cms_get_setting($pdo, 'home_hero_interval', (string) $default);
+  return $ms >= 3000 ? $ms : $default;
 }
 
 function cms_upload_home_hero_image(array $file, string $title = ''): ?string

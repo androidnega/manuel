@@ -4,9 +4,9 @@ $slides = $homeHeroSlides ?? [];
 if ($slides === []) {
   return;
 }
-$interval = (int) ($homeHeroInterval ?? 180000);
+$interval = (int) ($homeHeroInterval ?? cms_home_hero_interval_default_ms());
 if ($interval < 3000) {
-  $interval = 180000;
+  $interval = cms_home_hero_interval_default_ms();
 }
 $slideCount = 0;
 foreach ($slides as $slide) {
