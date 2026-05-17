@@ -175,7 +175,7 @@ if ($action === 'save_maintenance') {
 }
 
 if ($action === 'save_home_hero_settings') {
-  $sec = max(3, min(600, (int) ($_POST['slide_interval'] ?? 180)));
+  $sec = max(3, min(600, (int) ($_POST['slide_interval'] ?? 6)));
   cms_set_setting($pdo, 'home_hero_interval', (string) ($sec * 1000));
   admin_redirect(url('login') . '?p=homehero', 'Slideshow timing saved.');
 }

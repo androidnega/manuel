@@ -2,10 +2,10 @@
 
 /** Homepage hero slideshow slides (admin-managed). */
 
-/** Default ms between slide changes (180s = 3 minutes). */
+/** Default ms between slide changes (6s — visible auto-advance). */
 function cms_home_hero_interval_default_ms(): int
 {
-  return 180000;
+  return 6000;
 }
 
 function cms_home_hero_timezone(): DateTimeZone
@@ -390,6 +390,19 @@ function cms_sync_home_hero_digital_presence_slide(PDO $pdo): void
     cms_save_home_hero_slides($pdo, $all);
   }
   cms_set_setting($pdo, 'home_hero_digital_v', '1');
+}
+
+/** One-time: restore sensible auto-slide speed if still on old 3-minute default. */
+function cms_sync_home_hero_interval(PDO $pdo): void
+{
+  if (cms_get_setting($pdo, 'home_hero_interval_v2') === '1') {
+    return;
+  }
+  $current = (int) cms_get_setting($pdo, 'home_hero_interval', '0');
+  if ($current === 180000 || $current < 3000) {
+    cms_set_setting($pdo, 'home_hero_interval', (string) cms_home_hero_interval_default_ms());
+  }
+  cms_set_setting($pdo, 'home_hero_interval_v2', '1');
 }
 
 function cms_home_hero_interval_ms(PDO $pdo): int

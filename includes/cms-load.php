@@ -37,6 +37,7 @@ function cms_bootstrap(): void
   cms_sync_home_hero_slides($pdo);
   cms_sync_home_hero_monday_slide($pdo);
   cms_sync_home_hero_digital_presence_slide($pdo);
+  cms_sync_home_hero_interval($pdo);
 
   $site = cms_get_list($pdo, 'site', $site);
   $services = cms_get_list($pdo, 'services', $services);

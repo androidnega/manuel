@@ -62,6 +62,15 @@
   z-index: 0;
 }
 
+.home-hero-slideshow--reduced .home-hero-slideshow__slide {
+  transition: opacity 0.35s ease;
+  transform: none;
+}
+
+.home-hero-slideshow--reduced .home-hero-slideshow__slide.is-active {
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-hero-slideshow__slide {
     transition: opacity 0.35s ease;

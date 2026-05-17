@@ -27,20 +27,24 @@ $isMondayOnly = cms_home_hero_is_monday() && $slideCount === 1;
 >
   <div class="home-hero-slideshow__frame">
     <div class="home-hero-slideshow__track">
-      <?php foreach ($slides as $i => $slide):
+      <?php
+      $slideIndex = 0;
+      foreach ($slides as $slide):
         $path = seo_resolve_image_path($slide['image'] ?? '');
         if ($path === '') {
           continue;
         }
         $alt = trim($slide['alt'] ?? '') ?: 'Manuelcode — web developer and software engineer';
+        $isFirst = $slideIndex === 0;
+        $slideIndex++;
       ?>
       <img
         src="<?= asset($path) ?>"
         alt="<?= htmlspecialchars($alt) ?>"
-        class="home-hero-slideshow__slide<?= $i === 0 ? ' is-active' : '' ?>"
+        class="home-hero-slideshow__slide<?= $isFirst ? ' is-active' : '' ?>"
         width="1024"
         height="1024"
-        <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
+        <?= $isFirst ? 'fetchpriority="high"' : 'loading="lazy"' ?>
         decoding="async"
         draggable="false"
       />
