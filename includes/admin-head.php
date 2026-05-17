@@ -4,7 +4,10 @@
   tailwind.config = {
     theme: {
       extend: {
-        fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+        fontFamily: {
+          sans: ['Plus Jakarta Sans', 'sans-serif'],
+          brand: ['Fredoka', 'Plus Jakarta Sans', 'sans-serif'],
+        },
         colors: {
           ink: '#101828',
           body: '#475467',
@@ -24,4 +27,7 @@
   .admin-nav-link.is-active { font-weight: 800; }
   .admin-nav-link.is-active i { opacity: 1; }
   .admin-nav-link.is-active .rounded-full { background-color: #ff7a00 !important; color: #fff !important; }
+  .brand-wordmark, .font-brand { font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif; }
+  .brand-manuel { font-weight: 600; }
+  .brand-code { font-weight: 700; }
 </style>

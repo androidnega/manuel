@@ -236,7 +236,7 @@ function cms_seed_from_globals(PDO $pdo, array $lists): void
   $defaultPages = [
     'home' => ['label' => '', 'title' => 'Building practical software with energy, clarity and care.', 'desc' => 'I’m Manuel — web and software developer in Ghana.', 'body' => [
       'badge' => 'Open for websites, apps, systems & creative work',
-      'intro' => 'I’m Manuel — web and software developer in Ghana. Explore work, services, quotes, designs and about on their own pages, or reach out to start a project.',
+      'intro' => 'I’m Manuel — I build websites and apps from Ghana. Browse projects, services, quotes and designs, or reach out when you’re ready to start something.',
       'cta_title' => 'Need a website, app or system?',
       'cta_text' => 'Same energy as the poster — let’s make it happen.',
       'clients_label' => 'Live work',

@@ -101,6 +101,10 @@
   color: #f9fafb !important;
 }
 
+[data-theme="dark"] .brand-code {
+  color: #ff7a00 !important;
+}
+
 [data-theme="dark"] .brand-tagline-site {
   color: rgb(255 255 255 / 0.75) !important;
 }

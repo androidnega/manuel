@@ -18,7 +18,7 @@ $adminNavItems = [
   <div id="adminOverlay" class="admin-overlay" aria-hidden="true"></div>
 
   <aside id="adminSidebar" class="admin-sidebar" aria-label="Admin navigation">
-    <p class="text-xs font-extrabold uppercase tracking-widest text-blue"><i class="fa-solid fa-code mr-1" aria-hidden="true"></i> Manuelcode</p>
+    <p class="text-sm font-brand font-semibold tracking-tight text-deep"><i class="fa-solid fa-code mr-1 text-blue" aria-hidden="true"></i> <span class="brand-manuel">Manuel</span><span class="brand-code text-blue">code</span></p>
     <p class="mt-1 text-sm font-extrabold">Admin</p>
     <nav class="mt-6 flex flex-1 flex-col gap-1 overflow-y-auto text-sm font-semibold">
       <?php foreach ($adminNavItems as $item):

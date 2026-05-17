@@ -13,8 +13,8 @@ if ($logoVariant === 'wordmark' || $logoVariant === 'light' || $logoVariant === 
   $isDark = $logoTheme === 'dark';
   $iconSizeClass = $iconSizeClass ?? ($isDark ? 'brand-icon brand-icon--lg' : 'brand-icon');
   $textClass = $textClass ?? ($isDark
-    ? 'text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] leading-none'
-    : 'text-xl sm:text-2xl lg:text-[1.7rem] font-extrabold tracking-[-0.03em] leading-none');
+    ? 'brand-wordmark text-2xl sm:text-3xl'
+    : 'brand-wordmark text-[1.35rem] sm:text-2xl lg:text-[1.85rem]');
   $taglineClass = $taglineClass ?? ($isDark
     ? 'text-[9px] sm:text-[10px] font-medium tracking-[0.26em] text-white/80 lowercase leading-none'
     : 'text-[9px] sm:text-[10px] font-medium tracking-[0.26em] text-deep lowercase leading-none');
@@ -38,8 +38,8 @@ if ($logoVariant === 'wordmark' || $logoVariant === 'light' || $logoVariant === 
       </span>
     <?php endif; ?>
     <span class="inline-flex flex-col min-w-0 gap-0 <?= $colClass ?>">
-      <span class="<?= htmlspecialchars(trim($textClass)) ?> leading-none" aria-hidden="true">
-        <span class="brand-manuel <?= $isDark ? 'text-white' : 'text-deep' ?>">Manuel</span><span class="text-blue">code</span>
+      <span class="<?= htmlspecialchars(trim($textClass)) ?>" aria-hidden="true">
+        <span class="brand-manuel <?= $isDark ? 'text-white' : 'text-deep' ?>">Manuel</span><span class="brand-code text-blue">code</span>
       </span>
       <?php if ($showTagline): ?>
         <span class="brand-tagline flex items-center gap-1.5 <?= $taglineRow ?>" aria-hidden="true">

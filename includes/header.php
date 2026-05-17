@@ -20,12 +20,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            brand: ['Fredoka', 'Plus Jakarta Sans', 'sans-serif'],
+          },
           colors: {
             ink: '#101828',
             body: '#475467',
@@ -127,6 +130,85 @@
         margin-top: 0.125rem;
         line-height: 1;
       }
+      /* Rounded heavy sans — matches “Bring Me Work” promo headline */
+      .brand-wordmark {
+        font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 0.92;
+      }
+      .brand-wordmark .brand-manuel {
+        font-weight: 600;
+      }
+      .brand-wordmark .brand-code {
+        font-weight: 700;
+      }
+      .cta-talk {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        animation: cta-talk-pulse 2.6s ease-in-out infinite;
+      }
+      .cta-talk::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: linear-gradient(
+          105deg,
+          transparent 38%,
+          rgba(255, 255, 255, 0.14) 50%,
+          transparent 62%
+        );
+        transform: translateX(-120%);
+        animation: cta-talk-shine 3.2s ease-in-out infinite;
+        pointer-events: none;
+      }
+      .cta-talk__inner {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+      }
+      .cta-talk__arrow {
+        display: inline-flex;
+        animation: cta-talk-arrow 1.35s ease-in-out infinite;
+      }
+      @keyframes cta-talk-pulse {
+        0%, 100% {
+          box-shadow: 0 0 0 0 rgba(255, 122, 0, 0);
+        }
+        50% {
+          box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.22);
+        }
+      }
+      @keyframes cta-talk-shine {
+        0%, 72%, 100% {
+          transform: translateX(-120%);
+        }
+        28% {
+          transform: translateX(120%);
+        }
+      }
+      @keyframes cta-talk-arrow {
+        0%, 100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(4px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .cta-talk,
+        .cta-talk::after,
+        .cta-talk__arrow {
+          animation: none;
+        }
+        .cta-talk:hover .cta-talk__arrow {
+          transform: translateX(2px);
+        }
+      }
     }
   </style>
 </head>
@@ -154,9 +236,12 @@
           <?php include __DIR__ . '/theme-toggle.php'; ?>
           <a
             href="<?= page_url('contact.php') ?>"
-            class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-deep text-white px-4 py-2 text-xs sm:text-sm font-extrabold hover:bg-ink transition-colors"
+            class="cta-talk hidden sm:inline-flex items-center rounded-full bg-deep text-white px-4 py-2 text-xs sm:text-sm font-extrabold hover:bg-ink transition-colors"
           >
-            Let’s talk <?= icon('arrow-right', 'w-3.5 h-3.5 sm:w-4 sm:h-4') ?>
+            <span class="cta-talk__inner">
+              <span>Let’s talk</span>
+              <span class="cta-talk__arrow"><?= icon('arrow-right', 'w-3.5 h-3.5 sm:w-4 sm:h-4') ?></span>
+            </span>
           </a>
           <button
             id="menuBtn"
@@ -180,8 +265,11 @@
             ><?= htmlspecialchars($label) ?></a>
           <?php endforeach; ?>
         </div>
-        <a href="<?= page_url('contact.php') ?>" class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-deep text-white py-2.5 text-sm font-extrabold">
-          Let’s talk <?= icon('arrow-right', 'w-4 h-4') ?>
+        <a href="<?= page_url('contact.php') ?>" class="cta-talk mt-2 flex w-full items-center justify-center rounded-xl bg-deep text-white py-2.5 text-sm font-extrabold hover:bg-ink transition-colors">
+          <span class="cta-talk__inner gap-2">
+            <span>Let’s talk</span>
+            <span class="cta-talk__arrow"><?= icon('arrow-right', 'w-4 h-4') ?></span>
+          </span>
         </a>
       </div>
       </div>

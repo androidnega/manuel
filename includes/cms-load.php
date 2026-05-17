@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/cms-db.php';
+require_once __DIR__ . '/seo.php';
 require_once __DIR__ . '/cms-designs.php';
 require_once __DIR__ . '/cms-home-hero.php';
 require_once __DIR__ . '/analytics.php';
@@ -34,6 +35,7 @@ function cms_bootstrap(): void
   cms_sync_seo_image_paths($pdo);
   cms_sync_design_ids($pdo, $designs);
   cms_sync_home_hero_slides($pdo);
+  cms_sync_home_hero_monday_slide($pdo);
 
   $site = cms_get_list($pdo, 'site', $site);
   $services = cms_get_list($pdo, 'services', $services);

@@ -42,7 +42,7 @@ if (!$user):
   <title><?= htmlspecialchars($pageTitle) ?></title>
   <?php include __DIR__ . '/includes/site-lock-head.php'; ?>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
 </head>
 <body class="admin-login-wrap font-sans text-ink">
@@ -110,7 +110,7 @@ $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
   <title><?= htmlspecialchars($adminPageTitle) ?> | Manuelcode Admin</title>
   <?php include __DIR__ . '/includes/site-lock-head.php'; ?>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
 </head>
 <body class="font-sans text-ink admin-dashboard">
