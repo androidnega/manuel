@@ -334,6 +334,32 @@ body.admin-dashboard {
   box-shadow: 0 0 0 3px rgb(255 122 0 / 0.12);
 }
 
+.admin-btn,
+a.admin-btn,
+button.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  padding: 0.55rem 1rem;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  box-sizing: border-box;
+}
+
+button.admin-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 .admin-btn--primary {
   background: #0b1e3a;
@@ -358,6 +384,28 @@ body.admin-dashboard {
 .admin-btn--sm {
   padding: 0.45rem 0.75rem;
   font-size: 0.75rem;
+}
+
+.admin-btn--success {
+  border-color: #abefc6;
+  background: #fff;
+  color: #027a48;
+}
+
+.admin-btn--success:hover {
+  background: #ecfdf3;
+  color: #05603a;
+}
+
+.admin-btn--danger {
+  border-color: #fecdca;
+  background: #fff;
+  color: #b42318;
+}
+
+.admin-btn--danger:hover {
+  background: #fef3f2;
+  color: #912018;
 }
 
 .admin-link {
@@ -448,6 +496,63 @@ body.admin-shell-lock {
 }
 
 /* Industrial attachments admin */
+.admin-attachments-page {
+  color: #101828;
+}
+
+.admin-attachments-settings > * + * {
+  margin-top: 1rem;
+}
+
+.admin-attachments-settings__status {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #475467;
+}
+
+.admin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+
+.admin-status--open {
+  color: #027a48;
+}
+
+.admin-status--closed {
+  color: #b42318;
+}
+
+.admin-attachments-toolbar__title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #101828;
+}
+
+.admin-attachments-toolbar__meta {
+  margin: 0.125rem 0 0;
+  font-size: 0.75rem;
+  color: #475467;
+}
+
+.admin-attachments-empty {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #475467;
+}
+
+.admin-field__hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #475467;
+}
+
 .admin-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -540,8 +645,14 @@ body.admin-shell-lock {
   padding: 0.85rem 1rem;
   border: none;
   background: transparent;
+  font: inherit;
+  color: inherit;
   text-align: left;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .admin-attachments-item__summary:hover {
@@ -698,22 +809,6 @@ body.admin-shell-lock {
 
 .admin-table tr.is-unread td {
   background: rgb(255 122 0 / 0.04);
-}
-
-.admin-attachments-row-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.65rem;
-}
-
-.admin-attachments-row-actions form {
-  display: inline;
-}
-
-.admin-attachments-cards {
-  display: none;
-  gap: 0.75rem;
 }
 
 @media (max-width: 900px) {

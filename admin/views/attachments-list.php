@@ -3,8 +3,8 @@
 ?>
 <div class="admin-card admin-attachments-toolbar">
   <div class="admin-attachments-toolbar__stats">
-    <p class="text-sm font-extrabold"><?= $totalCount ?> total registration<?= $totalCount === 1 ? '' : 's' ?></p>
-    <p class="text-xs text-body mt-0.5">
+    <p class="admin-attachments-toolbar__title"><?= $totalCount ?> total registration<?= $totalCount === 1 ? '' : 's' ?></p>
+    <p class="admin-attachments-toolbar__meta">
       <?php foreach ($classGroups as $key => $label): ?>
         <?= htmlspecialchars($label) ?>: <?= $counts[$key] ?><?= $key === 'group_e' ? '' : ' · ' ?>
       <?php endforeach; ?>
@@ -32,7 +32,7 @@
 </div>
 
 <?php if (!$records): ?>
-  <p class="admin-card text-sm text-body">
+  <p class="admin-card admin-attachments-empty">
     No registrations yet<?= $filterLabel !== '' ? ' for ' . htmlspecialchars($filterLabel) : '' ?>.
   </p>
 <?php else: ?>
@@ -81,13 +81,13 @@
               <form method="post" action="<?= url('login') ?>">
                 <input type="hidden" name="action" value="attachment_read" />
                 <input type="hidden" name="id" value="<?= (int) $row['id'] ?>" />
-                <button type="submit" class="admin-btn admin-btn--ghost admin-btn--sm text-mint">Mark read</button>
+                <button type="submit" class="admin-btn admin-btn--success admin-btn--sm">Mark read</button>
               </form>
             <?php endif; ?>
             <form method="post" action="<?= url('login') ?>" onsubmit="return confirm('Delete this registration?');">
               <input type="hidden" name="action" value="attachment_delete" />
               <input type="hidden" name="id" value="<?= (int) $row['id'] ?>" />
-              <button type="submit" class="admin-btn admin-btn--ghost admin-btn--sm text-red-600">Delete</button>
+              <button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Delete</button>
             </form>
           </div>
         </div>
