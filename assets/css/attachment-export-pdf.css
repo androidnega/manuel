@@ -1,0 +1,245 @@
+/* Tailwind-style utilities for attachment PDF export (Dompdf) */
+@page {
+  margin: 10mm 12mm;
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm 12mm;
+  }
+}
+
+.page-portrait {
+  page: portrait-page;
+}
+
+@page portrait-page {
+  size: A4 portrait;
+  margin: 14mm;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: DejaVu Sans, sans-serif;
+  font-size: 9px;
+  line-height: 1.45;
+  color: #101828;
+}
+
+.font-sans {
+  font-family: DejaVu Sans, sans-serif;
+}
+
+.text-ink {
+  color: #101828;
+}
+
+.text-body {
+  color: #475467;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.text-blue {
+  color: #ff7a00;
+}
+
+.bg-deep {
+  background-color: #0b1e3a;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.bg-cloud {
+  background-color: #f9fafb;
+}
+
+.bg-row-alt {
+  background-color: #fcfcfd;
+}
+
+.border-line {
+  border-color: #eaecf0;
+}
+
+.rounded-xl {
+  border-radius: 10px;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.doc-header {
+  background-color: #0b1e3a;
+  color: #ffffff;
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.doc-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.doc-subtitle {
+  margin: 4px 0 0;
+  font-size: 10px;
+  color: #d0d5dd;
+  text-transform: uppercase;
+}
+
+.doc-meta {
+  margin: 6px 0 0;
+  font-size: 8px;
+  color: #98a2b3;
+}
+
+.pdf-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.pdf-table th,
+.pdf-table td {
+  border: 1px solid #eaecf0;
+  padding: 6px 7px;
+  vertical-align: top;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.pdf-table thead th {
+  background-color: #f2f4f7;
+  color: #344054;
+  font-size: 7px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pdf-table tbody tr:nth-child(even) td {
+  background-color: #fcfcfd;
+}
+
+.col-num {
+  width: 3%;
+}
+
+.col-name {
+  width: 14%;
+}
+
+.col-index {
+  width: 11%;
+}
+
+.col-contact {
+  width: 9%;
+}
+
+.col-company {
+  width: 16%;
+}
+
+.col-location {
+  width: 12%;
+}
+
+.col-official {
+  width: 11%;
+}
+
+.col-group {
+  width: 14%;
+}
+
+.col-level {
+  width: 5%;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.font-mono {
+  font-family: DejaVu Sans Mono, monospace;
+  font-size: 8px;
+}
+
+.text-xs {
+  font-size: 8px;
+}
+
+.text-sm {
+  font-size: 9px;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.empty-state {
+  border: 1px dashed #d0d5dd;
+  border-radius: 10px;
+  padding: 28px 16px;
+  text-align: center;
+  color: #475467;
+  background-color: #f9fafb;
+}
+
+.detail-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.detail-grid th,
+.detail-grid td {
+  border-bottom: 1px solid #eaecf0;
+  padding: 10px 0;
+  vertical-align: top;
+  text-align: left;
+}
+
+.detail-grid th {
+  width: 34%;
+  font-size: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #667085;
+}
+
+.detail-grid td {
+  font-size: 10px;
+  font-weight: bold;
+  color: #101828;
+  word-wrap: break-word;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: #fff4eb;
+  color: #0b1e3a;
+  font-size: 8px;
+  font-weight: bold;
+}
