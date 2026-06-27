@@ -101,28 +101,52 @@ function cms_attachment_pdf_hline(float $x1, float $y, float $x2): string
   return "0.5 w 0.82 0.84 0.86 RG\n{$x1} {$y} m\n{$x2} {$y} l\nS\n";
 }
 
+function cms_attachment_pdf_vline(float $x, float $y1, float $y2): string
+{
+  return "0.5 w 0.82 0.84 0.86 RG\n{$x} {$y1} m\n{$x} {$y2} l\nS\n";
+}
+
+function cms_attachment_pdf_short_date(string $iso): string
+{
+  if ($iso === '') {
+    return '';
+  }
+  $ts = strtotime($iso);
+  if ($ts === false) {
+    return '';
+  }
+  return date('d M Y', $ts);
+}
+
 /** @param array<int, array{stream: string, width: int, height: int}> $pages */
 function cms_attachment_pdf_build(array $pages): string
 {
   $objects = [];
-  $pageObjectIds = [];
+  $pageRefs = [];
   $nextId = 3;
 
   foreach ($pages as $page) {
     $contentId = $nextId++;
     $pageId = $nextId++;
-    $pageObjectIds[] = $pageId;
+    $pageRefs[] = ['pageId' => $pageId, 'contentId' => $contentId, 'width' => $page['width'], 'height' => $page['height']];
     $stream = $page['stream'];
-    $width = $page['width'];
-    $height = $page['height'];
     $objects[$contentId] = "<< /Length " . strlen($stream) . " >>\nstream\n" . $stream . "\nendstream";
-    $objects[$pageId] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {$width} {$height}] /Contents {$contentId} 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>";
   }
 
+  $fontRegularId = $nextId++;
+  $fontBoldId = $nextId++;
+  $objects[$fontRegularId] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  $objects[$fontBoldId] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+
+  foreach ($pageRefs as $ref) {
+    $width = $ref['width'];
+    $height = $ref['height'];
+    $objects[$ref['pageId']] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {$width} {$height}] /Contents {$ref['contentId']} 0 R /Resources << /Font << /F1 {$fontRegularId} 0 R /F2 {$fontBoldId} 0 R >> >> >>";
+  }
+
+  $pageObjectIds = array_map(static fn(array $ref): int => $ref['pageId'], $pageRefs);
   $objects[1] = '<< /Type /Catalog /Pages 2 0 R >>';
   $objects[2] = '<< /Type /Pages /Kids [' . implode(' ', array_map(static fn(int $id): string => "{$id} 0 R", $pageObjectIds)) . '] /Count ' . count($pageObjectIds) . ' >>';
-  $objects[5] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
-  $objects[6] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
 
   ksort($objects);
   $pdf = "%PDF-1.4\n";
@@ -181,70 +205,100 @@ function cms_attachment_export_pdf_single(array $row, string $filename, string $
 
 function cms_attachment_export_pdf_table(array $rows, string $filename, string $title, string $subtitle = ''): void
 {
-  $labels = cms_attachment_row_labels();
-  $keys = array_keys($labels);
-  $headings = array_merge(['#'], array_values($labels));
-  $widths = [28, 82, 76, 64, 92, 76, 72, 76, 88];
-  $startX = 22;
-  $tableWidth = array_sum($widths);
-  $rowHeight = 15;
+  $columns = [
+    ['key' => '_num', 'label' => '#', 'width' => 22],
+    ['key' => 'full_name', 'label' => 'NAME', 'width' => 92],
+    ['key' => 'index_number', 'label' => 'INDEX NO.', 'width' => 78],
+    ['key' => 'contact', 'label' => 'CONTACT', 'width' => 62],
+    ['key' => 'company_name', 'label' => 'COMPANY', 'width' => 96],
+    ['key' => 'location', 'label' => 'LOCATION', 'width' => 68],
+    ['key' => 'official_position', 'label' => 'OFFICIAL', 'width' => 62],
+    ['key' => 'class_group', 'label' => 'GROUP', 'width' => 72],
+    ['key' => 'level', 'label' => 'LVL', 'width' => 28],
+    ['key' => 'created_at', 'label' => 'SUBMITTED', 'width' => 68],
+  ];
+
   $pageWidth = 842;
   $pageHeight = 595;
-  $topY = 548;
-  $rowsPerPage = 28;
+  $marginX = 28;
+  $startX = $marginX;
+  $tableWidth = array_sum(array_column($columns, 'width'));
+  $rowHeight = 14;
+  $headerBandHeight = 52;
+  $tableTopY = 498;
+  $tableBottomY = 36;
+  $rowsPerPage = (int) floor(($tableTopY - $tableBottomY - 20) / $rowHeight);
 
   $tableRows = [];
   foreach ($rows as $i => $row) {
     $formatted = cms_attachment_format_row($row);
-    $cells = [(string) ($i + 1)];
-    foreach ($keys as $key) {
-      $idx = count($cells);
-      $max = (int) floor(($widths[$idx] ?? 60) / 3.8);
-      $cells[] = cms_attachment_pdf_truncate($formatted[$key] ?? '', max(6, $max));
-    }
-    $tableRows[] = $cells;
+    $formatted['_num'] = (string) ($i + 1);
+    $formatted['created_at'] = cms_attachment_pdf_short_date($row['created_at'] ?? '');
+    $tableRows[] = $formatted;
   }
 
+  $totalRecords = count($tableRows);
+  $pageCount = max(1, (int) ceil($totalRecords / max(1, $rowsPerPage)));
+
   $pages = [];
-  if ($tableRows === []) {
-    $stream = cms_attachment_pdf_cell($startX, $topY, strtoupper($title), 14, true);
-    $pages[] = ['stream' => $stream, 'width' => $pageWidth, 'height' => $pageHeight];
-  } else {
-    $chunks = array_chunk($tableRows, $rowsPerPage);
-    foreach ($chunks as $pageIndex => $chunk) {
-      $stream = cms_attachment_pdf_rect(22, 520, 798, 58, [0.04, 0.12, 0.23]);
-      $stream .= cms_attachment_pdf_cell(32, 552, strtoupper($title), 14, true);
-      if ($subtitle !== '') {
-        $stream .= cms_attachment_pdf_cell(32, 534, strtoupper($subtitle), 10, false);
-      }
-      $stream .= cms_attachment_pdf_cell(32, 508, 'Generated ' . date('M j, Y g:i A') . '  |  Page ' . ($pageIndex + 1), 8, false);
+  $chunks = $tableRows === [] ? [[]] : array_chunk($tableRows, max(1, $rowsPerPage));
 
-      $headerY = 488;
-      $stream .= cms_attachment_pdf_rect($startX, $headerY - 2, $tableWidth, $rowHeight + 4, [0.95, 0.96, 0.98]);
-      $x = $startX;
-      foreach ($headings as $ci => $heading) {
-        $stream .= cms_attachment_pdf_cell($x + 2, $headerY, strtoupper($heading), 6, true);
-        $x += $widths[$ci] ?? 60;
-      }
-      $stream .= cms_attachment_pdf_hline($startX, $headerY - 4, $startX + $tableWidth);
+  foreach ($chunks as $pageIndex => $chunk) {
+    $stream = cms_attachment_pdf_rect($marginX, $pageHeight - $marginX - $headerBandHeight, $pageWidth - ($marginX * 2), $headerBandHeight, [0.04, 0.12, 0.23]);
+    $stream .= cms_attachment_pdf_cell($marginX + 8, $pageHeight - 36, strtoupper($title), 13, true);
+    if ($subtitle !== '') {
+      $stream .= cms_attachment_pdf_cell($marginX + 8, $pageHeight - 52, strtoupper($subtitle), 9, false);
+    }
+    $meta = 'Generated ' . date('M j, Y g:i A') . '  |  ' . $totalRecords . ' record' . ($totalRecords === 1 ? '' : 's') . '  |  Page ' . ($pageIndex + 1) . ' of ' . $pageCount;
+    $stream .= cms_attachment_pdf_cell($marginX + 8, $pageHeight - 68, $meta, 7, false);
 
-      $y = $headerY - $rowHeight - 4;
-      foreach ($chunk as $rowIndex => $cells) {
+    $headerY = $tableTopY;
+    $headerBoxHeight = $rowHeight + 6;
+    $stream .= cms_attachment_pdf_rect($startX, $headerY - 4, $tableWidth, $headerBoxHeight, [0.93, 0.94, 0.96]);
+
+    $x = $startX;
+    foreach ($columns as $column) {
+      $stream .= cms_attachment_pdf_cell($x + 3, $headerY, $column['label'], 6, true);
+      $x += $column['width'];
+    }
+
+    $gridTop = $headerY + $headerBoxHeight - 4;
+    $gridBottom = $tableBottomY;
+    $stream .= cms_attachment_pdf_hline($startX, $gridTop, $startX + $tableWidth);
+    $stream .= cms_attachment_pdf_hline($startX, $headerY - 4, $startX + $tableWidth);
+
+    $x = $startX;
+    foreach ($columns as $column) {
+      $stream .= cms_attachment_pdf_vline($x, $headerY - 4, $gridBottom);
+      $x += $column['width'];
+    }
+    $stream .= cms_attachment_pdf_vline($startX + $tableWidth, $headerY - 4, $gridBottom);
+
+    if ($chunk === []) {
+      $emptyY = $headerY - $rowHeight - 8;
+      $stream .= cms_attachment_pdf_cell($startX + 8, $emptyY, 'No registrations in this list yet.', 9, false);
+      $stream .= cms_attachment_pdf_hline($startX, $emptyY - 6, $startX + $tableWidth);
+    } else {
+      $y = $headerY - $rowHeight - 6;
+      foreach ($chunk as $rowIndex => $formatted) {
         if ($rowIndex % 2 === 1) {
-          $stream .= cms_attachment_pdf_rect($startX, $y - 2, $tableWidth, $rowHeight, [0.98, 0.99, 1.0]);
+          $stream .= cms_attachment_pdf_rect($startX, $y - 3, $tableWidth, $rowHeight, [0.98, 0.99, 1.0]);
         }
-        $stream .= cms_attachment_pdf_hline($startX, $y + $rowHeight - 2, $startX + $tableWidth);
+        $stream .= cms_attachment_pdf_hline($startX, $y - 3, $startX + $tableWidth);
+
         $x = $startX;
-        foreach ($cells as $ci => $cell) {
-          $stream .= cms_attachment_pdf_cell($x + 2, $y, $cell, 6, false);
-          $x += $widths[$ci] ?? 60;
+        foreach ($columns as $column) {
+          $maxChars = max(4, (int) floor($column['width'] / 3.6));
+          $value = cms_attachment_pdf_truncate($formatted[$column['key']] ?? '', $maxChars);
+          $stream .= cms_attachment_pdf_cell($x + 3, $y, $value, 6, false);
+          $x += $column['width'];
         }
         $y -= $rowHeight;
       }
-      $stream .= cms_attachment_pdf_hline($startX, $y + $rowHeight - 2, $startX + $tableWidth);
-
-      $pages[] = ['stream' => $stream, 'width' => $pageWidth, 'height' => $pageHeight];
+      $stream .= cms_attachment_pdf_hline($startX, $y - 3, $startX + $tableWidth);
     }
+
+    $pages[] = ['stream' => $stream, 'width' => $pageWidth, 'height' => $pageHeight];
   }
 
   $pdf = cms_attachment_pdf_build($pages);

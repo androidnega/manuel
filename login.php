@@ -153,6 +153,7 @@ if ($view === 'attachments' && isset($_GET['export'])) {
     $suffix = $id > 0 ? 'student-' . $id : ($filterGroup !== '' ? $filterGroup : 'all');
     cms_attachment_export_pdf($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.pdf', $docTitle, $docSubtitle);
   }
+  exit;
 }
 ?>
 <!DOCTYPE html>
