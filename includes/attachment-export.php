@@ -84,16 +84,27 @@ function cms_attachment_pdf_truncate(string $text, int $max): string
   return substr($text, 0, max(0, $max - 3)) . '...';
 }
 
-function cms_attachment_pdf_cell(float $x, float $y, string $text, int $size, bool $bold = false): string
+function cms_attachment_pdf_cell(float $x, float $y, string $text, int $size, bool $bold = false, array $rgb = [0.07, 0.09, 0.16]): string
 {
   $font = $bold ? 'F2' : 'F1';
-  return "BT\n/{$font} {$size} Tf\n{$x} {$y} Td\n(" . cms_attachment_pdf_escape($text) . ") Tj\nET\n";
+  [$r, $g, $b] = $rgb;
+  return sprintf("%.3f %.3f %.3f rg\nBT\n/{$font} %d Tf\n%.2f %.2f Td\n(%s) Tj\nET\n", $r, $g, $b, $size, $x, $y, cms_attachment_pdf_escape($text));
+}
+
+function cms_attachment_pdf_cell_white(float $x, float $y, string $text, int $size, bool $bold = false): string
+{
+  return cms_attachment_pdf_cell($x, $y, $text, $size, $bold, [1, 1, 1]);
+}
+
+function cms_attachment_pdf_cell_muted(float $x, float $y, string $text, int $size, bool $bold = false): string
+{
+  return cms_attachment_pdf_cell($x, $y, $text, $size, $bold, [0.82, 0.86, 0.92]);
 }
 
 function cms_attachment_pdf_rect(float $x, float $y, float $w, float $h, array $rgb): string
 {
   [$r, $g, $b] = $rgb;
-  return "{$r} {$g} {$b} rg\n{$x} {$y} {$w} {$h} re\nf\n";
+  return sprintf("%.3f %.3f %.3f rg\n%.2f %.2f %.2f %.2f re\nf\n", $r, $g, $b, $x, $y, $w, $h);
 }
 
 function cms_attachment_pdf_hline(float $x1, float $y, float $x2): string
@@ -176,17 +187,17 @@ function cms_attachment_export_pdf_single(array $row, string $filename, string $
   $labels = cms_attachment_row_labels();
   $formatted = cms_attachment_format_row($row);
   $stream = cms_attachment_pdf_rect(36, 720, 540, 56, [0.04, 0.12, 0.23]);
-  $stream .= cms_attachment_pdf_cell(48, 752, strtoupper($title), 13, true);
+  $stream .= cms_attachment_pdf_cell_white(48, 752, strtoupper($title), 13, true);
   if ($subtitle !== '') {
-    $stream .= cms_attachment_pdf_cell(48, 734, strtoupper($subtitle), 10, false);
+    $stream .= cms_attachment_pdf_cell_muted(48, 734, strtoupper($subtitle), 10, false);
   }
-  $stream .= cms_attachment_pdf_cell(48, 700, 'Generated ' . date('M j, Y g:i A'), 9, false);
+  $stream .= cms_attachment_pdf_cell_muted(48, 700, 'Generated ' . date('M j, Y g:i A'), 9, false);
 
   $y = 670;
   foreach ($labels as $key => $label) {
     $value = $formatted[$key] ?? '';
     $stream .= cms_attachment_pdf_hline(48, $y + 10, 564);
-    $stream .= cms_attachment_pdf_cell(48, $y - 4, strtoupper($label), 9, true);
+    $stream .= cms_attachment_pdf_cell(48, $y - 4, strtoupper($label), 9, true, [0.45, 0.48, 0.55]);
     $stream .= cms_attachment_pdf_cell(190, $y - 4, $value, 9, false);
     $y -= 28;
   }
@@ -244,13 +255,14 @@ function cms_attachment_export_pdf_table(array $rows, string $filename, string $
   $chunks = $tableRows === [] ? [[]] : array_chunk($tableRows, max(1, $rowsPerPage));
 
   foreach ($chunks as $pageIndex => $chunk) {
-    $stream = cms_attachment_pdf_rect($marginX, $pageHeight - $marginX - $headerBandHeight, $pageWidth - ($marginX * 2), $headerBandHeight, [0.04, 0.12, 0.23]);
-    $stream .= cms_attachment_pdf_cell($marginX + 8, $pageHeight - 36, strtoupper($title), 13, true);
+    $headerTopY = $pageHeight - $marginX - $headerBandHeight;
+    $stream = cms_attachment_pdf_rect($startX, $headerTopY, $tableWidth, $headerBandHeight, [0.04, 0.12, 0.23]);
+    $stream .= cms_attachment_pdf_cell_white($startX + 8, $pageHeight - 36, strtoupper($title), 13, true);
     if ($subtitle !== '') {
-      $stream .= cms_attachment_pdf_cell($marginX + 8, $pageHeight - 52, strtoupper($subtitle), 9, false);
+      $stream .= cms_attachment_pdf_cell_muted($startX + 8, $pageHeight - 52, strtoupper($subtitle), 9, false);
     }
     $meta = 'Generated ' . date('M j, Y g:i A') . '  |  ' . $totalRecords . ' record' . ($totalRecords === 1 ? '' : 's') . '  |  Page ' . ($pageIndex + 1) . ' of ' . $pageCount;
-    $stream .= cms_attachment_pdf_cell($marginX + 8, $pageHeight - 68, $meta, 7, false);
+    $stream .= cms_attachment_pdf_cell_muted($startX + 8, $pageHeight - 68, $meta, 7, false);
 
     $headerY = $tableTopY;
     $headerBoxHeight = $rowHeight + 6;
@@ -258,7 +270,7 @@ function cms_attachment_export_pdf_table(array $rows, string $filename, string $
 
     $x = $startX;
     foreach ($columns as $column) {
-      $stream .= cms_attachment_pdf_cell($x + 3, $headerY, $column['label'], 6, true);
+      $stream .= cms_attachment_pdf_cell($x + 3, $headerY, $column['label'], 6, true, [0.16, 0.20, 0.28]);
       $x += $column['width'];
     }
 
