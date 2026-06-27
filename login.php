@@ -41,7 +41,7 @@ if (!$user):
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($pageTitle) ?></title>
   <?php include __DIR__ . '/includes/site-lock-head.php'; ?>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <?php include __DIR__ . '/includes/tailwind-cdn.php'; ?>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
 </head>
@@ -162,7 +162,7 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   <?php include __DIR__ . '/includes/viewport-meta.php'; ?>
   <title><?= htmlspecialchars($adminPageTitle) ?> | Manuelcode Admin</title>
   <?php include __DIR__ . '/includes/site-lock-head.php'; ?>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <?php include __DIR__ . '/includes/tailwind-cdn.php'; ?>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
   <link rel="stylesheet" href="<?= asset('assets/css/form-uppercase.css') ?>" />

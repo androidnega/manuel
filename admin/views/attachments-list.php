@@ -31,7 +31,7 @@
     No registrations yet<?= $filterLabel !== '' ? ' for ' . htmlspecialchars($filterLabel) : '' ?>.
   </p>
 <?php else: ?>
-  <div class="overflow-hidden rounded-lg border border-line bg-white" data-attachment-list>
+  <div class="overflow-hidden rounded-lg border border-line bg-white">
     <?php foreach ($records as $i => $row): ?>
       <?php
       $groupLabel = $classGroups[$row['class_group']] ?? $row['class_group'];
@@ -39,26 +39,20 @@
       $detailId = 'attachment-detail-' . (int) $row['id'];
       $submittedTs = strtotime($row['created_at']);
       ?>
-      <div
-        class="border-b border-line last:border-b-0 <?= $unread ? 'bg-orange-50/40' : '' ?>"
-        data-attachment-item
+      <details
+        id="<?= htmlspecialchars($detailId) ?>"
+        class="group border-b border-line last:border-b-0 <?= $unread ? 'bg-orange-50/40' : '' ?>"
       >
-        <button
-          type="button"
-          class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-cloud"
-          aria-expanded="false"
-          aria-controls="<?= htmlspecialchars($detailId) ?>"
-          data-attachment-toggle
-        >
+        <summary class="flex cursor-pointer list-none items-center gap-2 px-3 py-2 text-left text-sm hover:bg-cloud [&::-webkit-details-marker]:hidden">
           <span class="w-5 shrink-0 text-[11px] font-bold text-body"><?= $i + 1 ?></span>
           <span class="min-w-0 flex-1 truncate font-bold text-ink"><?= htmlspecialchars(strtoupper($row['full_name'])) ?></span>
           <span class="hidden shrink-0 font-mono text-[11px] text-deep sm:inline"><?= htmlspecialchars(strtoupper($row['index_number'])) ?></span>
           <span class="hidden shrink-0 text-[10px] font-bold uppercase text-body md:inline"><?= htmlspecialchars(strtoupper($groupLabel)) ?></span>
           <span class="shrink-0 text-[11px] text-body"><?= htmlspecialchars(date('M j', $submittedTs)) ?></span>
-          <i class="fa-solid fa-chevron-down shrink-0 text-[9px] text-body transition-transform duration-200" data-attachment-chevron aria-hidden="true"></i>
-        </button>
+          <i class="fa-solid fa-chevron-down shrink-0 text-[9px] text-body transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></i>
+        </summary>
 
-        <div id="<?= htmlspecialchars($detailId) ?>" data-attachment-panel hidden class="border-t border-line bg-cloud/60 px-3 py-2.5 text-xs">
+        <div class="border-t border-line bg-cloud/60 px-3 py-2.5 text-xs">
           <dl class="grid gap-1.5 sm:grid-cols-2">
             <div><dt class="font-bold uppercase tracking-wide text-body">Index</dt><dd class="font-mono text-ink"><?= htmlspecialchars(strtoupper($row['index_number'])) ?></dd></div>
             <div><dt class="font-bold uppercase tracking-wide text-body">Group</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($groupLabel)) ?></dd></div>
@@ -85,7 +79,7 @@
             </form>
           </div>
         </div>
-      </div>
+      </details>
     <?php endforeach; ?>
   </div>
 <?php endif; ?>
