@@ -151,6 +151,9 @@ function cms_sync_list_defaults(PDO $pdo, string $key, array $defaults): void
     if (!empty($item['url'])) {
       $keys[strtolower($item['url'])] = true;
     }
+    if (!empty($item['href'])) {
+      $keys[strtolower($item['href'])] = true;
+    }
     if (!empty($item['title'])) {
       $keys['t:' . strtolower($item['title'])] = true;
     }
@@ -166,6 +169,9 @@ function cms_sync_list_defaults(PDO $pdo, string $key, array $defaults): void
       $match = true;
     }
     if (!empty($item['url']) && isset($keys[strtolower($item['url'])])) {
+      $match = true;
+    }
+    if (!empty($item['href']) && isset($keys[strtolower($item['href'])])) {
       $match = true;
     }
     if (!empty($item['title']) && isset($keys['t:' . strtolower($item['title'])])) {

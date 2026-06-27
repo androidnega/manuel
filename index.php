@@ -53,7 +53,10 @@ include 'includes/header.php';
             <li class="inline-flex items-center gap-1.5 rounded-full bg-white border border-line px-3 py-1.5 shadow-sleek-sm"><?= icon('pen', 'w-3.5 h-3.5 text-amber') ?> Design & media</li>
           </ul>
 
-          <div class="reveal reveal-delay-3 mt-6 flex flex-col sm:flex-row gap-3">
+          <div class="reveal reveal-delay-3 mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
+            <a href="<?= page_url('attachment.php') ?>" class="inline-flex items-center justify-center gap-2 rounded-full bg-mint text-white px-6 py-3 text-sm font-extrabold hover:bg-mint/90 shadow-sleek-sm transition-all hover:-translate-y-0.5">
+              Register attachment <?= icon('arrow-right', 'w-4 h-4') ?>
+            </a>
             <a href="<?= page_url('contact.php') ?>" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue text-white px-6 py-3 text-sm font-extrabold hover:bg-blue/90 shadow-sleek-sm transition-all hover:-translate-y-0.5">
               Let’s work <?= icon('arrow-right', 'w-4 h-4') ?>
             </a>

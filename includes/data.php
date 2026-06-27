@@ -36,6 +36,7 @@ $footerNav = [
   'Services' => 'services.php',
   'News' => 'news.php',
   'Quotes' => 'quotes.php',
+  'Attachment register' => 'attachment.php',
   'Designs' => 'designs.php',
   'About' => 'about.php',
   'Contact' => 'contact.php',
@@ -43,6 +44,14 @@ $footerNav = [
 
 /** Homepage cards — titles match each real page (see pageTitle / hero on each .php file). */
 $homePages = [
+  [
+    'title' => 'Industrial attachment',
+    'desc' => 'Register your end-of-semester placement — company, location and supervisor details for Group A or Group E.',
+    'href' => 'attachment.php',
+    'icon' => 'file-text',
+    'color' => 'mint',
+    'cta' => 'Register now',
+  ],
   [
     'title' => 'Projects',
     'desc' => 'Projects and systems I’ve worked on — campus platforms, apps and live links.',

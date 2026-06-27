@@ -30,6 +30,8 @@ function cms_bootstrap(): void
 
   cms_sync_list_defaults($pdo, 'projects', $projects);
   cms_sync_list_defaults($pdo, 'clientLogos', $clientLogos);
+  cms_sync_list_defaults($pdo, 'homePages', $homePages);
+  cms_sync_list_defaults($pdo, 'footerNav', cms_nav_to_list($footerNav));
   cms_sync_quotes_page_copy($pdo);
   cms_sync_image_paths($pdo);
   cms_sync_seo_image_paths($pdo);
