@@ -187,6 +187,41 @@ if ($action === 'save_attachment_registration') {
   admin_redirect(url('login') . '?p=attachments&tab=settings', 'Registration settings saved.');
 }
 
+if ($action === 'save_attachment_groups') {
+  $config = cms_attachment_registration_config($pdo);
+  $groups = $config['groups'] ?? cms_attachment_default_groups();
+  $labels = is_array($_POST['group_label'] ?? null) ? $_POST['group_label'] : [];
+  $remove = is_array($_POST['remove_group'] ?? null) ? $_POST['remove_group'] : [];
+
+  foreach ($labels as $key => $label) {
+    $key = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $key));
+    $label = trim((string) $label);
+    if ($key !== '' && isset($groups[$key]) && $label !== '') {
+      $groups[$key] = cms_form_upper($label);
+    }
+  }
+
+  foreach ($remove as $key) {
+    $key = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $key));
+    if ($key === '' || !isset($groups[$key]) || count($groups) <= 1) {
+      continue;
+    }
+    if (cms_attachment_group_count($pdo, $key) > 0) {
+      admin_redirect(url('login') . '?p=attachments&tab=settings', 'Cannot remove a group that still has registrations.', 'err');
+    }
+    unset($groups[$key]);
+  }
+
+  $newLabel = trim((string) ($_POST['new_group_label'] ?? ''));
+  if ($newLabel !== '') {
+    $newKey = cms_attachment_group_key($newLabel, $groups);
+    $groups[$newKey] = cms_form_upper($newLabel);
+  }
+
+  cms_save_attachment_registration_config($pdo, ['groups' => $groups]);
+  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Class groups updated. The registration form has been refreshed.');
+}
+
 if ($action === 'save_maintenance') {
   $enabled = !empty($_POST['maintenance_enabled']);
   $endsRaw = trim($_POST['maintenance_ends_at'] ?? '');

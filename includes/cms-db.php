@@ -353,7 +353,7 @@ function cms_unread_attachments_count(PDO $pdo): int
   return (int) $pdo->query('SELECT COUNT(*) FROM industrial_attachments WHERE is_read = 0')->fetchColumn();
 }
 
-function cms_attachment_class_groups(): array
+function cms_attachment_default_groups(): array
 {
   return [
     'group_a' => 'BTECH IT GROUP A',
@@ -361,11 +361,60 @@ function cms_attachment_class_groups(): array
   ];
 }
 
+function cms_attachment_class_groups(?PDO $pdo = null): array
+{
+  if ($pdo === null) {
+    $pdo = cms_db();
+  }
+  $defaults = cms_attachment_default_groups();
+  $config = cms_attachment_registration_config($pdo);
+  $groups = $config['groups'] ?? [];
+  if (!is_array($groups) || $groups === []) {
+    return $defaults;
+  }
+  $out = [];
+  foreach ($groups as $key => $label) {
+    $key = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $key));
+    $label = trim((string) $label);
+    if ($key !== '' && $label !== '') {
+      $out[$key] = $label;
+    }
+  }
+  return $out !== [] ? $out : $defaults;
+}
+
+function cms_attachment_group_key(string $label, array $existing): string
+{
+  $base = strtolower(preg_replace('/[^a-z0-9]+/', '_', $label));
+  $base = trim($base, '_');
+  if ($base === '') {
+    $base = 'group';
+  }
+  if (!str_starts_with($base, 'group')) {
+    $base = 'group_' . $base;
+  }
+  $key = $base;
+  $n = 2;
+  while (isset($existing[$key])) {
+    $key = $base . '_' . $n;
+    $n++;
+  }
+  return $key;
+}
+
+function cms_attachment_group_count(PDO $pdo, string $groupKey): int
+{
+  $stmt = $pdo->prepare('SELECT COUNT(*) FROM industrial_attachments WHERE class_group = ?');
+  $stmt->execute([$groupKey]);
+  return (int) $stmt->fetchColumn();
+}
+
 function cms_attachment_registration_defaults(): array
 {
   return [
     'closes_at' => '',
     'closed_message' => 'Registration for industrial attachment is now closed. Contact your class representative if you still need help.',
+    'groups' => cms_attachment_default_groups(),
   ];
 }
 
@@ -395,7 +444,19 @@ function cms_attachment_registration_is_open(PDO $pdo): bool
 
 function cms_save_attachment_registration_config(PDO $pdo, array $config): void
 {
-  $payload = array_merge(cms_attachment_registration_defaults(), $config);
+  $current = cms_attachment_registration_config($pdo);
+  $payload = array_merge(cms_attachment_registration_defaults(), $current, $config);
+  if (isset($payload['groups']) && is_array($payload['groups'])) {
+    $groups = [];
+    foreach ($payload['groups'] as $key => $label) {
+      $key = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $key));
+      $label = trim((string) $label);
+      if ($key !== '' && $label !== '') {
+        $groups[$key] = $label;
+      }
+    }
+    $payload['groups'] = $groups !== [] ? $groups : cms_attachment_default_groups();
+  }
   cms_set_setting($pdo, 'attachment_registration', json_encode($payload, JSON_UNESCAPED_UNICODE));
 }
 

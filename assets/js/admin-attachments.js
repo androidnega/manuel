@@ -1,32 +1,34 @@
 (function () {
   'use strict';
 
-  document.querySelectorAll('[data-attachment-toggle]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var item = btn.closest('[data-attachment-item]');
-      var panel = item ? item.querySelector('[data-attachment-panel]') : null;
-      if (!panel) {
-        return;
-      }
-      var isOpen = item.classList.contains('is-open');
+  function setOpen(item, open) {
+    var btn = item.querySelector('[data-attachment-toggle]');
+    var panel = item.querySelector('[data-attachment-panel]');
+    var chevron = item.querySelector('[data-attachment-chevron]');
+    if (!btn || !panel) {
+      return;
+    }
+    panel.hidden = !open;
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    item.setAttribute('data-open', open ? 'true' : 'false');
+    if (chevron) {
+      chevron.style.transform = open ? 'rotate(180deg)' : '';
+    }
+  }
 
-      document.querySelectorAll('[data-attachment-item]').forEach(function (other) {
-        other.classList.remove('is-open');
-        var otherBtn = other.querySelector('[data-attachment-toggle]');
-        var otherPanel = other.querySelector('[data-attachment-panel]');
-        if (otherPanel) {
-          otherPanel.classList.add('hidden');
-        }
-        if (otherBtn) {
-          otherBtn.setAttribute('aria-expanded', 'false');
-        }
-      });
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest('[data-attachment-toggle]');
+    if (!btn) {
+      return;
+    }
 
-      if (!isOpen) {
-        panel.classList.remove('hidden');
-        item.classList.add('is-open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    });
+    var item = btn.closest('[data-attachment-item]');
+    var panel = item ? item.querySelector('[data-attachment-panel]') : null;
+    if (!item || !panel) {
+      return;
+    }
+
+    var willOpen = panel.hidden;
+    setOpen(item, willOpen);
   });
 })();

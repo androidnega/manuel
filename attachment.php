@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/data.php';
 
-$classGroups = cms_attachment_class_groups();
 $pdo = cms_db();
+$classGroups = cms_attachment_class_groups($pdo);
 $registrationConfig = cms_attachment_registration_config($pdo);
 $registrationOpen = cms_attachment_registration_is_open($pdo);
 $sent = false;
@@ -71,8 +71,9 @@ $labelClass = 'text-xs font-bold text-body';
             Use this form to register your industrial attachment placement details. Select the correct class group so records stay separated.
           </p>
           <ul class="mt-5 space-y-3 text-xs sm:text-sm text-body leading-relaxed">
-            <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span>BTECH IT GROUP A — morning class students</span></li>
-            <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span>BTECH I.T GROUP E — evening class students</span></li>
+            <?php foreach ($classGroups as $label): ?>
+              <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span><?= htmlspecialchars(strtoupper($label)) ?></span></li>
+            <?php endforeach; ?>
             <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span>Use your official index number exactly as issued</span></li>
           </ul>
         </aside>

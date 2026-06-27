@@ -1,5 +1,5 @@
 <?php
-$classGroups = cms_attachment_class_groups();
+$classGroups = cms_attachment_class_groups($pdo);
 $registrationConfig = cms_attachment_registration_config($pdo);
 $registrationOpen = cms_attachment_registration_is_open($pdo);
 $closesLocal = '';
@@ -118,6 +118,46 @@ $inputClass = 'mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 
       </label>
 
       <button type="submit" class="<?= $btnPrimary ?>"><?= admin_icon('save') ?> Save registration settings</button>
+    </form>
+
+    <form method="post" action="<?= url('login') ?>" class="max-w-xl space-y-4 rounded-2xl border border-line bg-white p-5">
+      <input type="hidden" name="action" value="save_attachment_groups" />
+      <p class="text-[11px] font-extrabold uppercase tracking-[0.14em] text-blue">Class groups</p>
+      <p class="text-sm leading-relaxed text-body">Groups listed here appear on the public registration form automatically.</p>
+
+      <div class="divide-y divide-line rounded-xl border border-line">
+        <?php foreach ($classGroups as $key => $label): ?>
+          <?php $groupCount = cms_attachment_group_count($pdo, $key); ?>
+          <div class="flex flex-wrap items-center gap-2 px-3 py-2.5">
+            <input
+              type="text"
+              name="group_label[<?= htmlspecialchars($key) ?>]"
+              value="<?= htmlspecialchars($label) ?>"
+              class="min-w-0 flex-1 rounded-lg border border-line bg-white px-2.5 py-1.5 text-sm text-ink outline-none focus:border-blue focus:ring-[3px] focus:ring-blue/10"
+              required
+            />
+            <span class="text-[11px] text-body"><?= $groupCount ?> registered</span>
+            <?php if (count($classGroups) > 1 && $groupCount === 0): ?>
+              <label class="inline-flex items-center gap-1 text-[11px] font-bold text-red-600">
+                <input type="checkbox" name="remove_group[]" value="<?= htmlspecialchars($key) ?>" class="rounded border-line" />
+                Remove
+              </label>
+            <?php endif; ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+      <label class="block">
+        <span class="text-xs font-bold text-body">Add new group</span>
+        <input
+          type="text"
+          name="new_group_label"
+          placeholder="e.g. BTECH IT GROUP B"
+          class="<?= $inputClass ?> normal-case"
+        />
+      </label>
+
+      <button type="submit" class="<?= $btnPrimary ?>"><?= admin_icon('save') ?> Save class groups</button>
     </form>
 
   <?php else: ?>

@@ -109,7 +109,7 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   $export = preg_replace('/[^a-z]/', '', (string) $_GET['export']);
   $id = (int) ($_GET['id'] ?? 0);
   $filterGroup = preg_replace('/[^a-z_]/', '', (string) ($_GET['group'] ?? ''));
-  $classGroups = cms_attachment_class_groups();
+  $classGroups = cms_attachment_class_groups($pdo);
   $rows = [];
 
   if ($id > 0) {
@@ -133,7 +133,7 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   }
 
   $dateStamp = date('Y-m-d');
-  $groups = cms_attachment_class_groups();
+  $groups = cms_attachment_class_groups($pdo);
   $docTitle = 'INDUSTRIAL ATTACHMENT REGISTER';
   $docSubtitle = 'ALL CLASS GROUPS';
   if ($filterGroup !== '' && isset($groups[$filterGroup])) {

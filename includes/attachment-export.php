@@ -16,7 +16,7 @@ function cms_attachment_row_labels(): array
 
 function cms_attachment_format_row(array $row): array
 {
-  $groups = cms_attachment_class_groups();
+  $groups = cms_attachment_class_groups(cms_db());
   $groupKey = $row['class_group'] ?? '';
   $groupLabel = $groups[$groupKey] ?? $groupKey;
   $created = !empty($row['created_at']) ? date('M j, Y g:i A', strtotime($row['created_at'])) : '';
