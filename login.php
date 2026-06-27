@@ -133,20 +133,25 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   }
 
   $dateStamp = date('Y-m-d');
+  $groups = cms_attachment_class_groups();
+  $docTitle = 'INDUSTRIAL ATTACHMENT REGISTER';
+  $docSubtitle = 'ALL CLASS GROUPS';
+  if ($filterGroup !== '' && isset($groups[$filterGroup])) {
+    $docSubtitle = strtoupper($groups[$filterGroup]);
+  }
+  if ($id > 0 && !empty($rows[0])) {
+    $docTitle = 'STUDENT ATTACHMENT RECORD';
+    $docSubtitle = strtoupper($rows[0]['full_name'] ?? '');
+  }
+
   if ($export === 'csv') {
     $suffix = $id > 0 ? 'student-' . $id : ($filterGroup !== '' ? $filterGroup : 'all');
-    cms_attachment_export_csv($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.csv');
+    $csvTitle = $docTitle . ($docSubtitle !== '' ? ' — ' . $docSubtitle : '');
+    cms_attachment_export_csv($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.csv', $csvTitle);
   }
   if ($export === 'pdf') {
-    $groups = cms_attachment_class_groups();
-    $title = 'Industrial Attachment Register';
-    if ($id > 0 && !empty($rows[0])) {
-      $title = 'Student Record — ' . ($rows[0]['full_name'] ?? '');
-    } elseif ($filterGroup !== '' && isset($groups[$filterGroup])) {
-      $title = 'Industrial Attachment — ' . $groups[$filterGroup];
-    }
     $suffix = $id > 0 ? 'student-' . $id : ($filterGroup !== '' ? $filterGroup : 'all');
-    cms_attachment_export_pdf($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.pdf', $title);
+    cms_attachment_export_pdf($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.pdf', $docTitle, $docSubtitle);
   }
 }
 ?>
