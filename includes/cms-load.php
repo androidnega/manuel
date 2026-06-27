@@ -103,6 +103,32 @@ function cms_save_quote_request(array $data): void
   ]);
 }
 
+function cms_save_industrial_attachment(array $data): void
+{
+  $pdo = cms_db();
+  $stmt = $pdo->prepare('INSERT INTO industrial_attachments (
+    full_name, index_number, contact, company_name, location, official_position, class_group, created_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+  $stmt->execute([
+    $data['full_name'],
+    $data['index_number'],
+    $data['contact'],
+    $data['company_name'],
+    $data['location'],
+    $data['official_position'],
+    $data['class_group'],
+    date('c'),
+  ]);
+}
+
+function cms_attachment_index_exists(string $indexNumber, string $classGroup): bool
+{
+  $pdo = cms_db();
+  $stmt = $pdo->prepare('SELECT COUNT(*) FROM industrial_attachments WHERE index_number = ? AND class_group = ?');
+  $stmt->execute([$indexNumber, $classGroup]);
+  return (int) $stmt->fetchColumn() > 0;
+}
+
 cms_bootstrap();
 
 if (!defined('CMS_SKIP_ANALYTICS')) {

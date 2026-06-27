@@ -83,6 +83,7 @@ if ($view === '') {
 }
 $messagesUnread = cms_unread_count($pdo);
 $quotesUnread = cms_unread_quote_requests_count($pdo);
+$attachmentsUnread = cms_unread_attachments_count($pdo);
 require_once __DIR__ . '/includes/admin-icons.php';
 
 $adminTitles = [
@@ -95,12 +96,59 @@ $adminTitles = [
   'messages' => 'Messages',
   'settings' => 'Settings',
   'quoterequests' => 'Quote requests',
+  'attachments' => 'Industrial attachments',
   'news' => 'News',
   'newsedit' => 'Edit news post',
   'gallery' => 'Design gallery',
   'homehero' => 'Home hero slideshow',
 ];
 $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
+
+if ($view === 'attachments' && isset($_GET['export'])) {
+  require_once __DIR__ . '/includes/attachment-export.php';
+  $export = preg_replace('/[^a-z]/', '', (string) $_GET['export']);
+  $id = (int) ($_GET['id'] ?? 0);
+  $filterGroup = preg_replace('/[^a-z_]/', '', (string) ($_GET['group'] ?? ''));
+  $classGroups = cms_attachment_class_groups();
+  $rows = [];
+
+  if ($id > 0) {
+    $stmt = $pdo->prepare('SELECT * FROM industrial_attachments WHERE id = ?');
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+    if ($row) {
+      $rows = [$row];
+    }
+  } else {
+    $sql = 'SELECT * FROM industrial_attachments';
+    $params = [];
+    if ($filterGroup !== '' && isset($classGroups[$filterGroup])) {
+      $sql .= ' WHERE class_group = ?';
+      $params[] = $filterGroup;
+    }
+    $sql .= ' ORDER BY class_group ASC, full_name ASC';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $rows = $stmt->fetchAll();
+  }
+
+  $dateStamp = date('Y-m-d');
+  if ($export === 'csv') {
+    $suffix = $id > 0 ? 'student-' . $id : ($filterGroup !== '' ? $filterGroup : 'all');
+    cms_attachment_export_csv($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.csv');
+  }
+  if ($export === 'pdf') {
+    $groups = cms_attachment_class_groups();
+    $title = 'Industrial Attachment Register';
+    if ($id > 0 && !empty($rows[0])) {
+      $title = 'Student Record — ' . ($rows[0]['full_name'] ?? '');
+    } elseif ($filterGroup !== '' && isset($groups[$filterGroup])) {
+      $title = 'Industrial Attachment — ' . $groups[$filterGroup];
+    }
+    $suffix = $id > 0 ? 'student-' . $id : ($filterGroup !== '' ? $filterGroup : 'all');
+    cms_attachment_export_pdf($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.pdf', $title);
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" data-theme="light">

@@ -1,5 +1,5 @@
 <?php
-/** @var string $view @var array $user @var string $adminPageTitle @var int $messagesUnread @var int $quotesUnread @var string $flash @var string $flashType */
+/** @var string $view @var array $user @var string $adminPageTitle @var int $messagesUnread @var int $quotesUnread @var int $attachmentsUnread @var string $flash @var string $flashType */
 $maintenance = cms_maintenance_config($pdo);
 $adminNavItems = [
   ['section' => 'dashboard', 'href' => url('login'), 'label' => 'Dashboard', 'icon' => 'dashboard'],
@@ -11,6 +11,7 @@ $adminNavItems = [
   ['section' => 'news', 'href' => url('login') . '?p=news', 'label' => 'News', 'icon' => 'news'],
   ['section' => 'messages', 'href' => url('login') . '?p=messages', 'label' => 'Messages', 'icon' => 'messages', 'badge' => $messagesUnread],
   ['section' => 'quoterequests', 'href' => url('login') . '?p=quoterequests', 'label' => 'Quote requests', 'icon' => 'quote', 'badge' => $quotesUnread],
+  ['section' => 'attachments', 'href' => url('login') . '?p=attachments', 'label' => 'Industrial attachments', 'icon' => 'attachments', 'badge' => $attachmentsUnread],
   ['section' => 'settings', 'href' => url('login') . '?p=settings', 'label' => 'Settings', 'icon' => 'settings'],
 ];
 ?>
@@ -30,7 +31,7 @@ $adminNavItems = [
         <?= $active ? 'aria-current="page"' : '' ?>
       >
         <?= admin_icon($item['icon']) ?>
-        <?php if (in_array($item['section'], ['messages', 'quoterequests'], true)): ?>
+        <?php if (in_array($item['section'], ['messages', 'quoterequests', 'attachments'], true)): ?>
         <span class="flex flex-1 items-center justify-between gap-2">
           <?= htmlspecialchars($item['label']) ?>
           <?php if (!empty($item['badge'])): ?><span class="rounded-full bg-blue px-2 py-0.5 text-[10px] font-extrabold text-white"><?= (int) $item['badge'] ?></span><?php endif; ?>

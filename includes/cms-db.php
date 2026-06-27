@@ -90,6 +90,20 @@ function cms_migrate(PDO $pdo): void
     created_at TEXT NOT NULL
   )');
   $pdo->exec('CREATE INDEX IF NOT EXISTS idx_page_views_date ON page_views(view_date)');
+  $pdo->exec('CREATE TABLE IF NOT EXISTS industrial_attachments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    index_number TEXT NOT NULL,
+    contact TEXT NOT NULL,
+    company_name TEXT NOT NULL,
+    location TEXT NOT NULL,
+    official_position TEXT NOT NULL,
+    class_group TEXT NOT NULL,
+    is_read INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  )');
+  $pdo->exec('CREATE INDEX IF NOT EXISTS idx_industrial_attachments_group ON industrial_attachments(class_group)');
+  $pdo->exec('CREATE INDEX IF NOT EXISTS idx_industrial_attachments_created ON industrial_attachments(created_at)');
   $pdo->exec('CREATE TABLE IF NOT EXISTS page_views_daily (
     page_slug TEXT NOT NULL,
     view_date TEXT NOT NULL,
@@ -328,9 +342,22 @@ function cms_unread_quote_requests_count(PDO $pdo): int
   return (int) $pdo->query('SELECT COUNT(*) FROM quote_requests WHERE is_read = 0')->fetchColumn();
 }
 
+function cms_unread_attachments_count(PDO $pdo): int
+{
+  return (int) $pdo->query('SELECT COUNT(*) FROM industrial_attachments WHERE is_read = 0')->fetchColumn();
+}
+
+function cms_attachment_class_groups(): array
+{
+  return [
+    'group_a' => 'BTECH IT GROUP A',
+    'group_e' => 'BTECH I.T GROUP E',
+  ];
+}
+
 function cms_inbox_unread_count(PDO $pdo): int
 {
-  return cms_unread_count($pdo) + cms_unread_quote_requests_count($pdo);
+  return cms_unread_count($pdo) + cms_unread_quote_requests_count($pdo) + cms_unread_attachments_count($pdo);
 }
 
 function cms_json_list(?string $json, array $fallback): array

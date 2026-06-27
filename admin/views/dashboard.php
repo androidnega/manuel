@@ -32,6 +32,14 @@ $trendUp = $stats['trend_pct'] >= 0;
     <p class="admin-stat__value"><?= count($pages) ?></p>
     <p class="admin-stat__meta"><?= $teamCount ?> team members</p>
   </a>
+  <?php
+  $attachmentTotal = (int) $pdo->query('SELECT COUNT(*) FROM industrial_attachments')->fetchColumn();
+  ?>
+  <a href="<?= url('login') ?>?p=attachments" class="admin-card admin-stat">
+    <p class="admin-stat__label">Attachments</p>
+    <p class="admin-stat__value"><?= (int) ($attachmentsUnread ?? 0) ?> <span class="text-sm font-bold text-body">new</span></p>
+    <p class="admin-stat__meta"><?= $attachmentTotal ?> registered</p>
+  </a>
 </div>
 
 <div class="admin-grid admin-grid--2-lg mt-6">

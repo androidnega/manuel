@@ -153,6 +153,18 @@ if ($action === 'quote_delete') {
   admin_redirect(url('login') . '?p=quoterequests', 'Quote request deleted.');
 }
 
+if ($action === 'attachment_read') {
+  $id = (int) ($_POST['id'] ?? 0);
+  $pdo->prepare('UPDATE industrial_attachments SET is_read = 1 WHERE id = ?')->execute([$id]);
+  admin_redirect(url('login') . '?p=attachments', 'Marked as read.');
+}
+
+if ($action === 'attachment_delete') {
+  $id = (int) ($_POST['id'] ?? 0);
+  $pdo->prepare('DELETE FROM industrial_attachments WHERE id = ?')->execute([$id]);
+  admin_redirect(url('login') . '?p=attachments', 'Registration deleted.');
+}
+
 if ($action === 'save_maintenance') {
   $enabled = !empty($_POST['maintenance_enabled']);
   $endsRaw = trim($_POST['maintenance_ends_at'] ?? '');

@@ -43,6 +43,7 @@ function admin_icon(string $name): string
     'back' => 'fa-arrow-left',
     'login' => 'fa-right-to-bracket',
     'quote' => 'fa-file-invoice-dollar',
+    'attachments' => 'fa-graduation-cap',
     'news' => 'fa-newspaper',
     'gallery' => 'fa-images',
     'homehero' => 'fa-panorama',
