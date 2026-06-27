@@ -10,15 +10,18 @@ function cms_attachment_row_labels(): array
     'location' => 'Location',
     'official_position' => "Official's Position",
     'class_group' => 'Class Group',
+    'level' => 'Level',
     'created_at' => 'Submitted',
   ];
 }
 
 function cms_attachment_format_row(array $row): array
 {
-  $groups = cms_attachment_class_groups(cms_db());
+  $groups = cms_attachment_groups(cms_db());
   $groupKey = $row['class_group'] ?? '';
-  $groupLabel = $groups[$groupKey] ?? $groupKey;
+  $group = $groups[$groupKey] ?? null;
+  $groupLabel = $group ? ($group['label'] ?? $groupKey) : $groupKey;
+  $level = $group ? trim((string) ($group['level'] ?? '')) : '';
   $created = !empty($row['created_at']) ? date('M j, Y g:i A', strtotime($row['created_at'])) : '';
 
   return [
@@ -29,6 +32,7 @@ function cms_attachment_format_row(array $row): array
     'location' => strtoupper($row['location'] ?? ''),
     'official_position' => strtoupper($row['official_position'] ?? ''),
     'class_group' => strtoupper($groupLabel),
+    'level' => strtoupper($level),
     'created_at' => strtoupper($created),
   ];
 }

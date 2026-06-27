@@ -1,5 +1,6 @@
 <?php
 $classGroups = cms_attachment_class_groups($pdo);
+$attachmentGroups = cms_attachment_groups($pdo);
 $registrationConfig = cms_attachment_registration_config($pdo);
 $registrationOpen = cms_attachment_registration_is_open($pdo);
 $closesLocal = '';
@@ -16,7 +17,9 @@ if ($tab !== 'settings') {
 }
 
 $filterGroup = preg_replace('/[^a-z_]/', '', (string) ($_GET['group'] ?? ''));
-$filterLabel = $filterGroup !== '' && isset($classGroups[$filterGroup]) ? $classGroups[$filterGroup] : '';
+$filterLabel = $filterGroup !== '' && isset($attachmentGroups[$filterGroup])
+  ? cms_attachment_group_display($attachmentGroups[$filterGroup])
+  : '';
 
 $sql = 'SELECT * FROM industrial_attachments';
 $params = [];
@@ -126,18 +129,26 @@ $inputClass = 'mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 
       <p class="text-sm leading-relaxed text-body">Groups listed here appear on the public registration form automatically.</p>
 
       <div class="divide-y divide-line rounded-xl border border-line">
-        <?php foreach ($classGroups as $key => $label): ?>
+        <?php foreach ($attachmentGroups as $key => $group): ?>
           <?php $groupCount = cms_attachment_group_count($pdo, $key); ?>
           <div class="flex flex-wrap items-center gap-2 px-3 py-2.5">
             <input
               type="text"
               name="group_label[<?= htmlspecialchars($key) ?>]"
-              value="<?= htmlspecialchars($label) ?>"
+              value="<?= htmlspecialchars($group['label']) ?>"
+              placeholder="Group name"
               class="min-w-0 flex-1 rounded-lg border border-line bg-white px-2.5 py-1.5 text-sm text-ink outline-none focus:border-blue focus:ring-[3px] focus:ring-blue/10"
               required
             />
+            <input
+              type="text"
+              name="group_level[<?= htmlspecialchars($key) ?>]"
+              value="<?= htmlspecialchars($group['level']) ?>"
+              placeholder="Level e.g. L-200"
+              class="w-28 rounded-lg border border-line bg-white px-2.5 py-1.5 text-sm uppercase text-ink outline-none focus:border-blue focus:ring-[3px] focus:ring-blue/10"
+            />
             <span class="text-[11px] text-body"><?= $groupCount ?> registered</span>
-            <?php if (count($classGroups) > 1 && $groupCount === 0): ?>
+            <?php if (count($attachmentGroups) > 1 && $groupCount === 0): ?>
               <label class="inline-flex items-center gap-1 text-[11px] font-bold text-red-600">
                 <input type="checkbox" name="remove_group[]" value="<?= htmlspecialchars($key) ?>" class="rounded border-line" />
                 Remove
@@ -147,15 +158,27 @@ $inputClass = 'mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 
         <?php endforeach; ?>
       </div>
 
-      <label class="block">
-        <span class="text-xs font-bold text-body">Add new group</span>
-        <input
-          type="text"
-          name="new_group_label"
-          placeholder="e.g. BTECH IT GROUP B"
-          class="<?= $inputClass ?> normal-case"
-        />
-      </label>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label class="block">
+          <span class="text-xs font-bold text-body">Add new group</span>
+          <input
+            type="text"
+            name="new_group_label"
+            placeholder="e.g. BTECH IT GROUP B"
+            class="<?= $inputClass ?> normal-case"
+          />
+        </label>
+        <label class="block">
+          <span class="text-xs font-bold text-body">Level</span>
+          <input
+            type="text"
+            name="new_group_level"
+            placeholder="e.g. L-200"
+            value="L-200"
+            class="<?= $inputClass ?> uppercase"
+          />
+        </label>
+      </div>
 
       <button type="submit" class="<?= $btnPrimary ?>"><?= admin_icon('save') ?> Save class groups</button>
     </form>

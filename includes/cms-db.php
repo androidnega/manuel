@@ -356,31 +356,81 @@ function cms_unread_attachments_count(PDO $pdo): int
 function cms_attachment_default_groups(): array
 {
   return [
-    'group_a' => 'BTECH IT GROUP A',
-    'group_e' => 'BTECH I.T GROUP E',
+    'group_a' => ['label' => 'BTECH IT GROUP A', 'level' => 'L-200'],
+    'group_e' => ['label' => 'BTECH I.T GROUP E', 'level' => 'L-200'],
   ];
 }
 
-function cms_attachment_class_groups(?PDO $pdo = null): array
+function cms_attachment_normalize_group_entry(mixed $value): ?array
 {
-  if ($pdo === null) {
-    $pdo = cms_db();
+  if (is_array($value)) {
+    $label = trim((string) ($value['label'] ?? ''));
+    $level = trim((string) ($value['level'] ?? ''));
+  } else {
+    $label = trim((string) $value);
+    $level = '';
   }
+  if ($label === '') {
+    return null;
+  }
+  return [
+    'label' => $label,
+    'level' => $level !== '' ? strtoupper($level) : '',
+  ];
+}
+
+function cms_attachment_normalize_groups(mixed $groups): array
+{
   $defaults = cms_attachment_default_groups();
-  $config = cms_attachment_registration_config($pdo);
-  $groups = $config['groups'] ?? [];
   if (!is_array($groups) || $groups === []) {
     return $defaults;
   }
   $out = [];
-  foreach ($groups as $key => $label) {
+  foreach ($groups as $key => $value) {
     $key = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $key));
-    $label = trim((string) $label);
-    if ($key !== '' && $label !== '') {
-      $out[$key] = $label;
+    if ($key === '') {
+      continue;
+    }
+    $entry = cms_attachment_normalize_group_entry($value);
+    if ($entry !== null) {
+      $out[$key] = $entry;
     }
   }
   return $out !== [] ? $out : $defaults;
+}
+
+function cms_attachment_groups(?PDO $pdo = null): array
+{
+  if ($pdo === null) {
+    $pdo = cms_db();
+  }
+  $config = cms_attachment_registration_config($pdo);
+  return cms_attachment_normalize_groups($config['groups'] ?? []);
+}
+
+function cms_attachment_class_groups(?PDO $pdo = null): array
+{
+  $out = [];
+  foreach (cms_attachment_groups($pdo) as $key => $group) {
+    $out[$key] = $group['label'];
+  }
+  return $out;
+}
+
+function cms_attachment_group_display(array $group): string
+{
+  $label = strtoupper($group['label'] ?? '');
+  $level = trim((string) ($group['level'] ?? ''));
+  if ($level !== '') {
+    return $label . ' — ' . strtoupper($level);
+  }
+  return $label;
+}
+
+function cms_attachment_group_by_key(?PDO $pdo, string $groupKey): ?array
+{
+  $groups = cms_attachment_groups($pdo);
+  return $groups[$groupKey] ?? null;
 }
 
 function cms_attachment_group_key(string $label, array $existing): string
@@ -447,15 +497,7 @@ function cms_save_attachment_registration_config(PDO $pdo, array $config): void
   $current = cms_attachment_registration_config($pdo);
   $payload = array_merge(cms_attachment_registration_defaults(), $current, $config);
   if (isset($payload['groups']) && is_array($payload['groups'])) {
-    $groups = [];
-    foreach ($payload['groups'] as $key => $label) {
-      $key = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $key));
-      $label = trim((string) $label);
-      if ($key !== '' && $label !== '') {
-        $groups[$key] = $label;
-      }
-    }
-    $payload['groups'] = $groups !== [] ? $groups : cms_attachment_default_groups();
+    $payload['groups'] = cms_attachment_normalize_groups($payload['groups']);
   }
   cms_set_setting($pdo, 'attachment_registration', json_encode($payload, JSON_UNESCAPED_UNICODE));
 }

@@ -189,15 +189,20 @@ if ($action === 'save_attachment_registration') {
 
 if ($action === 'save_attachment_groups') {
   $config = cms_attachment_registration_config($pdo);
-  $groups = $config['groups'] ?? cms_attachment_default_groups();
+  $groups = cms_attachment_normalize_groups($config['groups'] ?? []);
   $labels = is_array($_POST['group_label'] ?? null) ? $_POST['group_label'] : [];
+  $levels = is_array($_POST['group_level'] ?? null) ? $_POST['group_level'] : [];
   $remove = is_array($_POST['remove_group'] ?? null) ? $_POST['remove_group'] : [];
 
   foreach ($labels as $key => $label) {
     $key = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $key));
     $label = trim((string) $label);
+    $level = strtoupper(trim((string) ($levels[$key] ?? ($groups[$key]['level'] ?? ''))));
     if ($key !== '' && isset($groups[$key]) && $label !== '') {
-      $groups[$key] = cms_form_upper($label);
+      $groups[$key] = [
+        'label' => cms_form_upper($label),
+        'level' => $level,
+      ];
     }
   }
 
@@ -215,7 +220,11 @@ if ($action === 'save_attachment_groups') {
   $newLabel = trim((string) ($_POST['new_group_label'] ?? ''));
   if ($newLabel !== '') {
     $newKey = cms_attachment_group_key($newLabel, $groups);
-    $groups[$newKey] = cms_form_upper($newLabel);
+    $newLevel = strtoupper(trim((string) ($_POST['new_group_level'] ?? '')));
+    $groups[$newKey] = [
+      'label' => cms_form_upper($newLabel),
+      'level' => $newLevel !== '' ? $newLevel : 'L-200',
+    ];
   }
 
   cms_save_attachment_registration_config($pdo, ['groups' => $groups]);

@@ -133,11 +133,11 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   }
 
   $dateStamp = date('Y-m-d');
-  $groups = cms_attachment_class_groups($pdo);
+  $groups = cms_attachment_groups($pdo);
   $docTitle = 'INDUSTRIAL ATTACHMENT REGISTER';
   $docSubtitle = 'ALL CLASS GROUPS';
   if ($filterGroup !== '' && isset($groups[$filterGroup])) {
-    $docSubtitle = strtoupper($groups[$filterGroup]);
+    $docSubtitle = cms_attachment_group_display($groups[$filterGroup]);
   }
   if ($id > 0 && !empty($rows[0])) {
     $docTitle = 'STUDENT ATTACHMENT RECORD';

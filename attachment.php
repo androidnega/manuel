@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/data.php';
 
 $pdo = cms_db();
+$attachmentGroups = cms_attachment_groups($pdo);
 $classGroups = cms_attachment_class_groups($pdo);
 $registrationConfig = cms_attachment_registration_config($pdo);
 $registrationOpen = cms_attachment_registration_is_open($pdo);
@@ -26,7 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       || !isset($classGroups[$classGroup])) {
       $error = 'Please complete all required fields and select your class group.';
     } elseif (cms_attachment_index_exists($indexNumber, $classGroup)) {
-      $error = 'This index number is already registered for ' . $classGroups[$classGroup] . '. Contact your class rep if you need to update your details.';
+      $groupInfo = $attachmentGroups[$classGroup] ?? null;
+      $groupName = $groupInfo ? cms_attachment_group_display($groupInfo) : ($classGroups[$classGroup] ?? $classGroup);
+      $error = 'This index number is already registered for ' . $groupName . '. Contact your class rep if you need to update your details.';
     } else {
       cms_save_industrial_attachment([
         'full_name' => $fullName,
@@ -71,8 +74,8 @@ $labelClass = 'text-xs font-bold text-body';
             Use this form to register your industrial attachment placement details. Select the correct class group so records stay separated.
           </p>
           <ul class="mt-5 space-y-3 text-xs sm:text-sm text-body leading-relaxed">
-            <?php foreach ($classGroups as $label): ?>
-              <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span><?= htmlspecialchars(strtoupper($label)) ?></span></li>
+            <?php foreach ($attachmentGroups as $group): ?>
+              <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span><?= htmlspecialchars(cms_attachment_group_display($group)) ?></span></li>
             <?php endforeach; ?>
             <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span>Use your official index number exactly as issued</span></li>
           </ul>
@@ -95,8 +98,8 @@ $labelClass = 'text-xs font-bold text-body';
               <label class="<?= $labelClass ?>">Class group *</label>
               <select class="<?= $inputClass ?> mt-1" name="class_group" required>
                 <option value="">Select your class group</option>
-                <?php foreach ($classGroups as $val => $label): ?>
-                  <option value="<?= htmlspecialchars($val) ?>" <?= ($post['class_group'] ?? '') === $val ? 'selected' : '' ?>><?= htmlspecialchars($label) ?></option>
+                <?php foreach ($attachmentGroups as $val => $group): ?>
+                  <option value="<?= htmlspecialchars($val) ?>" <?= ($post['class_group'] ?? '') === $val ? 'selected' : '' ?>><?= htmlspecialchars(cms_attachment_group_display($group)) ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
