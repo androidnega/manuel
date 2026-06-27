@@ -58,7 +58,7 @@ $labelClass = 'text-xs font-bold text-body';
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <?php if ($sent): ?>
         <p class="mb-6 rounded-2xl bg-mint/10 border border-mint/20 text-mint text-sm font-semibold px-5 py-4 reveal">
-          Registration submitted successfully. Your industrial attachment details have been recorded for your class group.
+          Registration submitted successfully. Your industrial attachment details have been recorded.
         </p>
       <?php elseif ($error): ?>
         <p class="mb-6 rounded-2xl bg-red-50 text-red-700 text-sm font-semibold px-5 py-4 reveal"><?= htmlspecialchars($error) ?></p>

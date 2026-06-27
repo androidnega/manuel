@@ -161,13 +161,13 @@ if ($action === 'quote_delete') {
 if ($action === 'attachment_read') {
   $id = (int) ($_POST['id'] ?? 0);
   $pdo->prepare('UPDATE industrial_attachments SET is_read = 1 WHERE id = ?')->execute([$id]);
-  admin_redirect(url('login') . '?p=attachments', 'Marked as read.');
+  admin_redirect(url('login') . '?p=attachments&tab=list', 'Marked as read.');
 }
 
 if ($action === 'attachment_delete') {
   $id = (int) ($_POST['id'] ?? 0);
   $pdo->prepare('DELETE FROM industrial_attachments WHERE id = ?')->execute([$id]);
-  admin_redirect(url('login') . '?p=attachments', 'Registration deleted.');
+  admin_redirect(url('login') . '?p=attachments&tab=list', 'Registration deleted.');
 }
 
 if ($action === 'save_attachment_registration') {
@@ -184,7 +184,7 @@ if ($action === 'save_attachment_registration') {
     'closes_at' => $closesAt,
     'closed_message' => $message !== '' ? $message : cms_attachment_registration_defaults()['closed_message'],
   ]);
-  admin_redirect(url('login') . '?p=attachments', 'Registration settings saved.');
+  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Registration settings saved.');
 }
 
 if ($action === 'save_maintenance') {

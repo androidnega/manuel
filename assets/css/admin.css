@@ -446,3 +446,145 @@ body.admin-dashboard {
 body.admin-shell-lock {
   overflow: hidden;
 }
+
+/* Industrial attachments admin */
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.admin-tabs__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid #eaecf0;
+  background: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #475467;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.admin-tabs__btn:hover {
+  border-color: #d0d5dd;
+  color: #101828;
+}
+
+.admin-tabs__btn.is-active {
+  background: #0b1e3a;
+  border-color: #0b1e3a;
+  color: #fff;
+}
+
+.admin-attachments-settings {
+  max-width: 40rem;
+}
+
+.admin-attachments-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-attachments-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.admin-attachments-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.admin-attachments-table-wrap {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.admin-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid #eaecf0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-table th {
+  background: #f9fafb;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #475467;
+  white-space: nowrap;
+}
+
+.admin-table tr.is-unread td {
+  background: rgb(255 122 0 / 0.04);
+}
+
+.admin-attachments-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+}
+
+.admin-attachments-row-actions form {
+  display: inline;
+}
+
+.admin-attachments-cards {
+  display: none;
+  gap: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .admin-attachments-table-wrap {
+    display: none;
+  }
+
+  .admin-attachments-cards {
+    display: grid;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-tabs__btn {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+  }
+
+  .admin-attachments-toolbar__actions {
+    width: 100%;
+  }
+
+  .admin-attachments-toolbar__actions .admin-btn {
+    flex: 1 1 auto;
+  }
+}
