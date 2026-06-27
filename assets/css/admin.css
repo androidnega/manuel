@@ -519,9 +519,185 @@ body.admin-shell-lock {
   -webkit-overflow-scrolling: touch;
 }
 
+.admin-attachments-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 72rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8125rem;
+}
+
+.admin-attachments-table col.col-num { width: 2.5rem; }
+.admin-attachments-table col.col-name { width: 11%; }
+.admin-attachments-table col.col-index { width: 9%; }
+.admin-attachments-table col.col-group { width: 10%; }
+.admin-attachments-table col.col-contact { width: 9%; }
+.admin-attachments-table col.col-company { width: 12%; }
+.admin-attachments-table col.col-location { width: 11%; }
+.admin-attachments-table col.col-official { width: 10%; }
+.admin-attachments-table col.col-submitted { width: 9%; }
+.admin-attachments-table col.col-actions { width: 8.5rem; }
+
+.admin-attachments-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f9fafb;
+  box-shadow: 0 1px 0 #eaecf0;
+}
+
+.admin-attachments-table th,
+.admin-attachments-table td {
+  padding: 0.75rem 0.65rem;
+  border-bottom: 1px solid #eaecf0;
+  text-align: left;
+  vertical-align: middle;
+  line-height: 1.45;
+}
+
+.admin-attachments-table th {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #475467;
+  white-space: nowrap;
+}
+
+.admin-attachments-table tbody tr:nth-child(even) td {
+  background: #fcfcfd;
+}
+
+.admin-attachments-table tbody tr:hover td {
+  background: #f4f7fb;
+}
+
+.admin-attachments-table tr.is-unread td {
+  background: rgb(255 122 0 / 0.06);
+}
+
+.admin-attachments-table tr.is-unread:hover td {
+  background: rgb(255 122 0 / 0.1);
+}
+
+.admin-attachments-table .cell-num {
+  text-align: center;
+  font-weight: 800;
+  color: #475467;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.admin-attachments-name {
+  display: block;
+  font-weight: 800;
+  color: #101828;
+  word-break: break-word;
+}
+
+.admin-attachments-index {
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0b1e3a;
+  word-break: break-all;
+}
+
+.admin-attachments-badge {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #0b1e3a;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.admin-attachments-table .cell-contact,
+.admin-attachments-table .cell-company,
+.admin-attachments-table .cell-location,
+.admin-attachments-table .cell-official {
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.admin-attachments-date {
+  display: block;
+  font-weight: 700;
+  color: #101828;
+  white-space: nowrap;
+}
+
+.admin-attachments-time {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.6875rem;
+  color: #667085;
+  white-space: nowrap;
+}
+
+.admin-attachments-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  min-width: 7.5rem;
+}
+
+.admin-attachments-actions form {
+  display: contents;
+}
+
+.admin-attachments-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.75rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #eaecf0;
+  border-radius: 0.5rem;
+  background: #fff;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #475467;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.admin-attachments-action:hover {
+  border-color: #d0d5dd;
+  background: #f9fafb;
+  color: #101828;
+}
+
+.admin-attachments-action--export {
+  color: #0b1e3a;
+}
+
+.admin-attachments-action--read {
+  color: #12b76a;
+  border-color: rgb(18 183 106 / 0.25);
+  background: rgb(18 183 106 / 0.06);
+}
+
+.admin-attachments-action--delete {
+  color: #d92d20;
+  border-color: rgb(217 45 32 / 0.2);
+  background: rgb(217 45 32 / 0.05);
+}
+
+.admin-attachments-table .cell-actions {
+  padding-right: 0.75rem;
+}
+
 .admin-table {
   width: 100%;
-  min-width: 960px;
   border-collapse: collapse;
   font-size: 0.8125rem;
 }

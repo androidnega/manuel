@@ -137,18 +137,30 @@ if ($filterGroup !== '' && isset($classGroups[$filterGroup])) {
     <div class="admin-card admin-attachments-table-wrap">
       <div class="admin-table-scroll">
         <table class="admin-table admin-attachments-table">
+          <colgroup>
+            <col class="col-num" />
+            <col class="col-name" />
+            <col class="col-index" />
+            <col class="col-group" />
+            <col class="col-contact" />
+            <col class="col-company" />
+            <col class="col-location" />
+            <col class="col-official" />
+            <col class="col-submitted" />
+            <col class="col-actions" />
+          </colgroup>
           <thead>
             <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Index</th>
-              <th>Contact</th>
-              <th>Company</th>
-              <th>Location</th>
-              <th>Official</th>
-              <th>Group</th>
-              <th>Submitted</th>
-              <th>Actions</th>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Index number</th>
+              <th scope="col">Class group</th>
+              <th scope="col">Contact</th>
+              <th scope="col">Company</th>
+              <th scope="col">Location</th>
+              <th scope="col">Official's position</th>
+              <th scope="col">Submitted</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -156,32 +168,36 @@ if ($filterGroup !== '' && isset($classGroups[$filterGroup])) {
               <?php
               $groupLabel = $classGroups[$row['class_group']] ?? $row['class_group'];
               $unread = !$row['is_read'];
+              $submittedTs = strtotime($row['created_at']);
               ?>
               <tr class="<?= $unread ? 'is-unread' : '' ?>">
-                <td data-label="#"><?= $i + 1 ?></td>
-                <td data-label="Name"><strong><?= htmlspecialchars($row['full_name']) ?></strong></td>
-                <td data-label="Index"><?= htmlspecialchars($row['index_number']) ?></td>
-                <td data-label="Contact"><?= htmlspecialchars($row['contact']) ?></td>
-                <td data-label="Company"><?= htmlspecialchars($row['company_name']) ?></td>
-                <td data-label="Location"><?= htmlspecialchars($row['location']) ?></td>
-                <td data-label="Official"><?= htmlspecialchars($row['official_position']) ?></td>
-                <td data-label="Group"><?= htmlspecialchars($groupLabel) ?></td>
-                <td data-label="Submitted"><?= htmlspecialchars(date('M j, Y g:i A', strtotime($row['created_at']))) ?></td>
-                <td data-label="Actions">
-                  <div class="admin-attachments-row-actions">
-                    <a href="<?= url('login') ?>?p=attachments&amp;export=csv&amp;id=<?= (int) $row['id'] ?>" class="admin-link">Excel</a>
-                    <a href="<?= url('login') ?>?p=attachments&amp;export=pdf&amp;id=<?= (int) $row['id'] ?>" class="admin-link">PDF</a>
+                <td class="cell-num"><?= $i + 1 ?></td>
+                <td class="cell-name"><span class="admin-attachments-name"><?= htmlspecialchars(strtoupper($row['full_name'])) ?></span></td>
+                <td class="cell-index"><span class="admin-attachments-index"><?= htmlspecialchars(strtoupper($row['index_number'])) ?></span></td>
+                <td class="cell-group"><span class="admin-attachments-badge"><?= htmlspecialchars(strtoupper($groupLabel)) ?></span></td>
+                <td class="cell-contact"><?= htmlspecialchars(strtoupper($row['contact'])) ?></td>
+                <td class="cell-company"><?= htmlspecialchars(strtoupper($row['company_name'])) ?></td>
+                <td class="cell-location"><?= htmlspecialchars(strtoupper($row['location'])) ?></td>
+                <td class="cell-official"><?= htmlspecialchars(strtoupper($row['official_position'])) ?></td>
+                <td class="cell-submitted">
+                  <span class="admin-attachments-date"><?= htmlspecialchars(date('M j, Y', $submittedTs)) ?></span>
+                  <span class="admin-attachments-time"><?= htmlspecialchars(date('g:i A', $submittedTs)) ?></span>
+                </td>
+                <td class="cell-actions">
+                  <div class="admin-attachments-actions">
+                    <a href="<?= url('login') ?>?p=attachments&amp;export=csv&amp;id=<?= (int) $row['id'] ?>" class="admin-attachments-action admin-attachments-action--export">Excel</a>
+                    <a href="<?= url('login') ?>?p=attachments&amp;export=pdf&amp;id=<?= (int) $row['id'] ?>" class="admin-attachments-action admin-attachments-action--export">PDF</a>
                     <?php if ($unread): ?>
                       <form method="post" action="<?= url('login') ?>">
                         <input type="hidden" name="action" value="attachment_read" />
                         <input type="hidden" name="id" value="<?= (int) $row['id'] ?>" />
-                        <button type="submit" class="admin-link text-mint">Read</button>
+                        <button type="submit" class="admin-attachments-action admin-attachments-action--read">Read</button>
                       </form>
                     <?php endif; ?>
                     <form method="post" action="<?= url('login') ?>" onsubmit="return confirm('Delete this registration?');">
                       <input type="hidden" name="action" value="attachment_delete" />
                       <input type="hidden" name="id" value="<?= (int) $row['id'] ?>" />
-                      <button type="submit" class="admin-link text-red-600">Delete</button>
+                      <button type="submit" class="admin-attachments-action admin-attachments-action--delete">Delete</button>
                     </form>
                   </div>
                 </td>
@@ -198,16 +214,16 @@ if ($filterGroup !== '' && isset($classGroups[$filterGroup])) {
         <article class="admin-card <?= $row['is_read'] ? '' : 'ring-2 ring-blue/20' ?>">
           <div class="flex flex-wrap items-start justify-between gap-2">
             <div class="min-w-0">
-              <h3 class="font-extrabold text-sm"><?= htmlspecialchars($row['full_name']) ?></h3>
-              <p class="text-xs text-body mt-0.5"><?= htmlspecialchars($row['index_number']) ?> · <?= htmlspecialchars($groupLabel) ?></p>
+              <h3 class="font-extrabold text-sm"><?= htmlspecialchars(strtoupper($row['full_name'])) ?></h3>
+              <p class="text-xs text-body mt-0.5"><?= htmlspecialchars(strtoupper($row['index_number'])) ?> · <?= htmlspecialchars(strtoupper($groupLabel)) ?></p>
             </div>
             <p class="text-[11px] text-body shrink-0"><?= htmlspecialchars(date('M j, Y g:i A', strtotime($row['created_at']))) ?></p>
           </div>
           <dl class="mt-3 grid grid-cols-1 xs:grid-cols-2 gap-2 text-xs">
-            <div><dt class="font-bold text-body">Contact</dt><dd class="text-ink break-words"><?= htmlspecialchars($row['contact']) ?></dd></div>
-            <div><dt class="font-bold text-body">Company</dt><dd class="text-ink break-words"><?= htmlspecialchars($row['company_name']) ?></dd></div>
-            <div><dt class="font-bold text-body">Location</dt><dd class="text-ink break-words"><?= htmlspecialchars($row['location']) ?></dd></div>
-            <div><dt class="font-bold text-body">Official</dt><dd class="text-ink break-words"><?= htmlspecialchars($row['official_position']) ?></dd></div>
+            <div><dt class="font-bold text-body">Contact</dt><dd class="text-ink break-words"><?= htmlspecialchars(strtoupper($row['contact'])) ?></dd></div>
+            <div><dt class="font-bold text-body">Company</dt><dd class="text-ink break-words"><?= htmlspecialchars(strtoupper($row['company_name'])) ?></dd></div>
+            <div><dt class="font-bold text-body">Location</dt><dd class="text-ink break-words"><?= htmlspecialchars(strtoupper($row['location'])) ?></dd></div>
+            <div><dt class="font-bold text-body">Official</dt><dd class="text-ink break-words"><?= htmlspecialchars(strtoupper($row['official_position'])) ?></dd></div>
           </dl>
           <div class="mt-3 flex flex-wrap gap-2 border-t border-line pt-3">
             <a href="<?= url('login') ?>?p=attachments&amp;export=csv&amp;id=<?= (int) $row['id'] ?>" class="admin-link">Excel</a>
