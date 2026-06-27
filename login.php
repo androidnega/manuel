@@ -136,12 +136,16 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   $groups = cms_attachment_groups($pdo);
   $docTitle = 'INDUSTRIAL ATTACHMENT REGISTER';
   $docSubtitle = 'ALL CLASS GROUPS';
+  $docLevel = '';
   if ($filterGroup !== '' && isset($groups[$filterGroup])) {
-    $docSubtitle = cms_attachment_group_display($groups[$filterGroup]);
+    $docSubtitle = strtoupper($groups[$filterGroup]['label'] ?? '');
+    $docLevel = strtoupper(trim((string) ($groups[$filterGroup]['level'] ?? '')));
   }
   if ($id > 0 && !empty($rows[0])) {
     $docTitle = 'STUDENT ATTACHMENT RECORD';
     $docSubtitle = strtoupper($rows[0]['full_name'] ?? '');
+    $formatted = cms_attachment_format_row($rows[0]);
+    $docLevel = $formatted['level'] ?? '';
   }
 
   if ($export === 'csv') {
@@ -151,7 +155,7 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   }
   if ($export === 'pdf') {
     $suffix = $id > 0 ? 'student-' . $id : ($filterGroup !== '' ? $filterGroup : 'all');
-    cms_attachment_export_pdf($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.pdf', $docTitle, $docSubtitle);
+    cms_attachment_export_pdf($rows, 'industrial-attachments-' . $suffix . '-' . $dateStamp . '.pdf', $docTitle, $docSubtitle, $docLevel);
   }
   exit;
 }

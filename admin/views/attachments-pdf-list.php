@@ -1,5 +1,5 @@
 <?php
-/** @var array<int, array<string, mixed>> $rows @var string $docTitle @var string $docSubtitle */
+/** @var array<int, array<string, mixed>> $rows @var string $docTitle @var string $docSubtitle @var string $docLevel */
 $formattedRows = [];
 foreach ($rows as $i => $row) {
   $formatted = cms_attachment_format_row($row);
@@ -13,6 +13,9 @@ $generatedAt = date('M j, Y g:i A');
   <h1 class="doc-title"><?= htmlspecialchars(strtoupper($docTitle)) ?></h1>
   <?php if ($docSubtitle !== ''): ?>
     <p class="doc-subtitle"><?= htmlspecialchars(strtoupper($docSubtitle)) ?></p>
+  <?php endif; ?>
+  <?php if ($docLevel !== ''): ?>
+    <p class="doc-level"><?= htmlspecialchars(strtoupper($docLevel)) ?></p>
   <?php endif; ?>
   <p class="doc-meta">Generated <?= htmlspecialchars($generatedAt) ?> · <?= $totalRecords ?> record<?= $totalRecords === 1 ? '' : 's' ?></p>
 </div>
@@ -33,7 +36,6 @@ $generatedAt = date('M j, Y g:i A');
         <th class="col-location">Location</th>
         <th class="col-official">Official</th>
         <th class="col-group">Group</th>
-        <th class="col-level">Lvl</th>
       </tr>
     </thead>
     <tbody>
@@ -47,7 +49,6 @@ $generatedAt = date('M j, Y g:i A');
           <td class="col-location uppercase"><?= htmlspecialchars($formatted['location']) ?></td>
           <td class="col-official uppercase"><?= htmlspecialchars($formatted['official_position']) ?></td>
           <td class="col-group uppercase"><?= htmlspecialchars($formatted['class_group']) ?></td>
-          <td class="col-level uppercase"><?= htmlspecialchars($formatted['level']) ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>

@@ -12,7 +12,7 @@ function cms_attachment_pdf_styles(): string
   return file_get_contents($path) ?: '';
 }
 
-function cms_attachment_render_pdf_html(array $rows, string $docTitle, string $docSubtitle, bool $landscape = true): string
+function cms_attachment_render_pdf_html(array $rows, string $docTitle, string $docSubtitle, bool $landscape = true, string $docLevel = ''): string
 {
   $isSingle = count($rows) === 1;
   $bodyClass = 'font-sans text-ink' . ($isSingle ? ' page-portrait' : '');
@@ -55,10 +55,10 @@ function cms_attachment_dompdf_available(): bool
   return $available;
 }
 
-function cms_attachment_export_pdf(array $rows, string $filename, string $title, string $subtitle = ''): void
+function cms_attachment_export_pdf(array $rows, string $filename, string $title, string $subtitle = '', string $level = ''): void
 {
   $isSingle = count($rows) === 1;
-  $html = cms_attachment_render_pdf_html($rows, $title, $subtitle, !$isSingle);
+  $html = cms_attachment_render_pdf_html($rows, $title, $subtitle, !$isSingle, $level);
 
   if (!cms_attachment_dompdf_available()) {
     header('Content-Type: text/html; charset=UTF-8');

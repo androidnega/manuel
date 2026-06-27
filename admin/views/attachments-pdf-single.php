@@ -1,14 +1,18 @@
 <?php
-/** @var array<string, mixed> $row @var string $docTitle @var string $docSubtitle */
+/** @var array<string, mixed> $row @var string $docTitle @var string $docSubtitle @var string $docLevel */
 $formatted = cms_attachment_format_row($row);
 $labels = cms_attachment_row_labels();
+unset($labels['level']);
 $generatedAt = date('M j, Y g:i A');
-$groupLine = trim($formatted['class_group'] . ($formatted['level'] !== '' ? ' · ' . $formatted['level'] : ''));
+$groupLine = trim($formatted['class_group']);
 ?>
 <div class="doc-header">
   <h1 class="doc-title"><?= htmlspecialchars(strtoupper($docTitle)) ?></h1>
   <?php if ($docSubtitle !== ''): ?>
     <p class="doc-subtitle"><?= htmlspecialchars(strtoupper($docSubtitle)) ?></p>
+  <?php endif; ?>
+  <?php if ($docLevel !== ''): ?>
+    <p class="doc-level"><?= htmlspecialchars(strtoupper($docLevel)) ?></p>
   <?php endif; ?>
   <p class="doc-meta">Generated <?= htmlspecialchars($generatedAt) ?></p>
 </div>
