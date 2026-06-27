@@ -8,6 +8,22 @@
 
   var showAfter = 420;
   var ticking = false;
+  var minWater = 26;
+  var maxWater = 82;
+
+  function scrollProgress() {
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) {
+      return 0;
+    }
+    return Math.min(1, Math.max(0, window.scrollY / docHeight));
+  }
+
+  function updateWaterLevel() {
+    var progress = scrollProgress();
+    var level = minWater + (maxWater - minWater) * progress;
+    btn.style.setProperty('--btt-water-level', level.toFixed(1) + '%');
+  }
 
   function toggleVisible() {
     var show = window.scrollY > showAfter;
@@ -23,6 +39,7 @@
     ticking = true;
     requestAnimationFrame(function () {
       toggleVisible();
+      updateWaterLevel();
       ticking = false;
     });
   }
@@ -54,5 +71,7 @@
   });
 
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
   toggleVisible();
+  updateWaterLevel();
 })();

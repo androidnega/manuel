@@ -52,6 +52,13 @@ function cms_bootstrap(): void
   $homePages = cms_get_list($pdo, 'homePages', $homePages);
   $headerNav = cms_nav_from_list(cms_get_list($pdo, 'headerNav', cms_nav_to_list($headerNav)));
   $footerNav = cms_nav_from_list(cms_get_list($pdo, 'footerNav', cms_nav_to_list($footerNav)));
+  if (!cms_attachment_registration_is_open($pdo)) {
+    $homePages = array_values(array_filter(
+      $homePages,
+      static fn(array $page): bool => ($page['href'] ?? '') !== 'attachment.php'
+    ));
+    unset($footerNav['Attachment register']);
+  }
   $teamMembers = cms_team_members($pdo);
 }
 
@@ -126,7 +133,7 @@ function cms_save_industrial_attachment(array $data): void
 function cms_attachment_index_exists(string $indexNumber, string $classGroup): bool
 {
   $pdo = cms_db();
-  $stmt = $pdo->prepare('SELECT COUNT(*) FROM industrial_attachments WHERE index_number = ? AND class_group = ?');
+  $stmt = $pdo->prepare('SELECT COUNT(*) FROM industrial_attachments WHERE UPPER(index_number) = UPPER(?) AND class_group = ?');
   $stmt->execute([$indexNumber, $classGroup]);
   return (int) $stmt->fetchColumn() > 0;
 }

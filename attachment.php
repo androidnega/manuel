@@ -2,37 +2,44 @@
 require_once __DIR__ . '/includes/data.php';
 
 $classGroups = cms_attachment_class_groups();
+$pdo = cms_db();
+$registrationConfig = cms_attachment_registration_config($pdo);
+$registrationOpen = cms_attachment_registration_is_open($pdo);
 $sent = false;
 $error = '';
 $post = $_POST;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $fullName = trim($post['full_name'] ?? '');
-  $indexNumber = strtoupper(trim($post['index_number'] ?? ''));
-  $contact = trim($post['contact'] ?? '');
-  $companyName = trim($post['company_name'] ?? '');
-  $location = trim($post['location'] ?? '');
-  $officialPosition = trim($post['official_position'] ?? '');
-  $classGroup = $post['class_group'] ?? '';
-
-  if ($fullName === '' || $indexNumber === '' || $contact === '' || $companyName === ''
-    || $location === '' || $officialPosition === ''
-    || !isset($classGroups[$classGroup])) {
-    $error = 'Please complete all required fields and select your class group.';
-  } elseif (cms_attachment_index_exists($indexNumber, $classGroup)) {
-    $error = 'This index number is already registered for ' . $classGroups[$classGroup] . '. Contact your class rep if you need to update your details.';
+  if (!$registrationOpen) {
+    $error = $registrationConfig['closed_message'];
   } else {
-    cms_save_industrial_attachment([
-      'full_name' => $fullName,
-      'index_number' => $indexNumber,
-      'contact' => $contact,
-      'company_name' => $companyName,
-      'location' => $location,
-      'official_position' => $officialPosition,
-      'class_group' => $classGroup,
-    ]);
-    $sent = true;
-    $post = [];
+    $fullName = trim($post['full_name'] ?? '');
+    $indexNumber = trim($post['index_number'] ?? '');
+    $contact = trim($post['contact'] ?? '');
+    $companyName = trim($post['company_name'] ?? '');
+    $location = trim($post['location'] ?? '');
+    $officialPosition = trim($post['official_position'] ?? '');
+    $classGroup = $post['class_group'] ?? '';
+
+    if ($fullName === '' || $indexNumber === '' || $contact === '' || $companyName === ''
+      || $location === '' || $officialPosition === ''
+      || !isset($classGroups[$classGroup])) {
+      $error = 'Please complete all required fields and select your class group.';
+    } elseif (cms_attachment_index_exists($indexNumber, $classGroup)) {
+      $error = 'This index number is already registered for ' . $classGroups[$classGroup] . '. Contact your class rep if you need to update your details.';
+    } else {
+      cms_save_industrial_attachment([
+        'full_name' => $fullName,
+        'index_number' => $indexNumber,
+        'contact' => $contact,
+        'company_name' => $companyName,
+        'location' => $location,
+        'official_position' => $officialPosition,
+        'class_group' => $classGroup,
+      ]);
+      $sent = true;
+      $post = [];
+    }
   }
 }
 
@@ -43,7 +50,7 @@ $heroDesc = 'Submit your company and placement details for second semester indus
 include 'includes/header.php';
 include 'includes/page-hero.php';
 
-$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 $labelClass = 'text-xs font-bold text-body';
 ?>
 <main>
@@ -74,7 +81,14 @@ $labelClass = 'text-xs font-bold text-body';
           <p class="text-xs font-extrabold text-blue uppercase tracking-[0.2em]">Registration form</p>
           <p class="mt-3 text-[0.9375rem] leading-relaxed text-body">Fill in your personal and company details below. All fields are required.</p>
 
-          <?php if (!$sent): ?>
+          <?php if (!$registrationOpen): ?>
+            <p class="mt-6 rounded-2xl bg-amber/10 border border-amber/20 text-amber text-sm font-semibold px-5 py-4">
+              <?= htmlspecialchars($registrationConfig['closed_message']) ?>
+            </p>
+            <?php if (!empty($registrationConfig['closes_at'])): ?>
+              <p class="mt-3 text-xs text-body">Registration closed on <?= htmlspecialchars(date('M j, Y g:i A', strtotime($registrationConfig['closes_at']))) ?>.</p>
+            <?php endif; ?>
+          <?php elseif (!$sent): ?>
           <form class="mt-6 space-y-4" method="post" action="<?= page_url('attachment.php') ?>">
             <div>
               <label class="<?= $labelClass ?>">Class group *</label>

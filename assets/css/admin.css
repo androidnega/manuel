@@ -303,6 +303,7 @@ body.admin-dashboard {
   padding: 0.55rem 0.75rem;
   font-size: 0.875rem;
   color: #101828;
+  text-transform: none;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }

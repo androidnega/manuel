@@ -61,11 +61,11 @@ include 'includes/page-hero.php';
           <p class="mt-3 text-[0.9375rem] leading-relaxed text-body"><?= htmlspecialchars($pageBody['intro_right'] ?? '') ?></p>
           <form class="mt-5 flex flex-col flex-grow w-full gap-3" method="post" action="<?= page_url('contact.php') ?>">
             <div class="grid sm:grid-cols-2 gap-3 w-full">
-              <input class="w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" name="name" placeholder="Your name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required />
-              <input class="w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required />
+              <input class="w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" name="name" placeholder="Your name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required />
+              <input class="w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required />
             </div>
-            <input class="w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" name="subject" placeholder="Subject" value="<?= htmlspecialchars($_POST['subject'] ?? '') ?>" />
-            <textarea class="w-full flex-grow min-h-[140px] rounded-xl border border-line bg-cloud px-3 py-3 text-sm outline-none focus:border-blue focus:ring-2 focus:ring-blue/10 resize-y" name="message" placeholder="Tell me about the project" required><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+            <input class="w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" name="subject" placeholder="Subject" value="<?= htmlspecialchars($_POST['subject'] ?? '') ?>" />
+            <textarea class="w-full flex-grow min-h-[140px] rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10 resize-y" name="message" placeholder="Tell me about the project" required><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
             <button type="submit" class="w-full rounded-xl bg-blue text-white py-3 text-sm font-extrabold hover:bg-blue/90 shadow-sleek-sm transition-all">Send Message</button>
           </form>
         </div>

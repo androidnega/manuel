@@ -165,6 +165,23 @@ if ($action === 'attachment_delete') {
   admin_redirect(url('login') . '?p=attachments', 'Registration deleted.');
 }
 
+if ($action === 'save_attachment_registration') {
+  $closesRaw = trim($_POST['attachment_closes_at'] ?? '');
+  $closesAt = '';
+  if ($closesRaw !== '') {
+    $ts = strtotime($closesRaw);
+    if ($ts !== false) {
+      $closesAt = date('c', $ts);
+    }
+  }
+  $message = trim($_POST['attachment_closed_message'] ?? '');
+  cms_save_attachment_registration_config($pdo, [
+    'closes_at' => $closesAt,
+    'closed_message' => $message !== '' ? $message : cms_attachment_registration_defaults()['closed_message'],
+  ]);
+  admin_redirect(url('login') . '?p=attachments', 'Registration settings saved.');
+}
+
 if ($action === 'save_maintenance') {
   $enabled = !empty($_POST['maintenance_enabled']);
   $endsRaw = trim($_POST['maintenance_ends_at'] ?? '');

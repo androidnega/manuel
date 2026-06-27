@@ -214,9 +214,14 @@ function cms_delete_news_post(PDO $pdo, int $id): void
 
 function cms_newsletter_subscribe(PDO $pdo, string $email): array
 {
-  $email = strtolower(trim($email));
+  $email = trim($email);
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     return ['ok' => false, 'message' => 'Please enter a valid email address.'];
+  }
+  $exists = $pdo->prepare('SELECT COUNT(*) FROM newsletter_subscribers WHERE LOWER(email) = LOWER(?)');
+  $exists->execute([$email]);
+  if ((int) $exists->fetchColumn() > 0) {
+    return ['ok' => true, 'message' => 'You are already subscribed.', 'new' => false];
   }
   try {
     $pdo->prepare('INSERT INTO newsletter_subscribers (email, created_at) VALUES (?, ?)')

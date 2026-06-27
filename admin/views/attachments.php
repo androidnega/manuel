@@ -1,5 +1,14 @@
 <?php
 $classGroups = cms_attachment_class_groups();
+$registrationConfig = cms_attachment_registration_config($pdo);
+$registrationOpen = cms_attachment_registration_is_open($pdo);
+$closesLocal = '';
+if (!empty($registrationConfig['closes_at'])) {
+  $ts = strtotime($registrationConfig['closes_at']);
+  if ($ts !== false) {
+    $closesLocal = date('Y-m-d\TH:i', $ts);
+  }
+}
 $filterGroup = preg_replace('/[^a-z_]/', '', (string) ($_GET['group'] ?? ''));
 $filterLabel = $filterGroup !== '' && isset($classGroups[$filterGroup]) ? $classGroups[$filterGroup] : '';
 
@@ -31,6 +40,39 @@ if ($filterGroup !== '' && isset($classGroups[$filterGroup])) {
 <div class="admin-intro">
   <p class="admin-intro__text">Industrial attachment registrations for end of second semester. Filter by class group and download Excel or PDF records.</p>
 </div>
+
+<form method="post" action="<?= url('login') ?>" class="admin-card max-w-xl space-y-4 mb-4">
+  <input type="hidden" name="action" value="save_attachment_registration" />
+  <p class="admin-card__title">Registration link</p>
+  <p class="text-sm text-body">
+    <?php if ($registrationOpen): ?>
+      <span class="inline-flex items-center gap-1.5 text-mint font-bold">● Open</span>
+      <?php if ($closesLocal !== ''): ?>
+        — closes <?= htmlspecialchars(date('M j, Y g:i A', strtotime($registrationConfig['closes_at']))) ?>
+      <?php else: ?>
+        — no closing date set
+      <?php endif; ?>
+    <?php else: ?>
+      <span class="inline-flex items-center gap-1.5 text-red-600 font-bold">● Closed</span>
+      <?php if ($closesLocal !== ''): ?>
+        — closed since <?= htmlspecialchars(date('M j, Y g:i A', strtotime($registrationConfig['closes_at']))) ?>
+      <?php endif; ?>
+    <?php endif; ?>
+  </p>
+
+  <label class="admin-field">
+    <span class="admin-field__label">Close registration at (optional)</span>
+    <input type="datetime-local" name="attachment_closes_at" value="<?= htmlspecialchars($closesLocal) ?>" class="admin-input" />
+    <span class="mt-1 block text-xs text-body">Leave empty to keep registration open. After this date, the form and homepage register button are hidden.</span>
+  </label>
+
+  <label class="admin-field">
+    <span class="admin-field__label">Message when closed</span>
+    <textarea name="attachment_closed_message" rows="2" class="admin-textarea"><?= htmlspecialchars($registrationConfig['closed_message']) ?></textarea>
+  </label>
+
+  <button type="submit" class="admin-btn admin-btn--primary"><?= admin_icon('save') ?> Save registration settings</button>
+</form>
 
 <div class="admin-card mb-4">
   <div class="flex flex-wrap items-center justify-between gap-3">

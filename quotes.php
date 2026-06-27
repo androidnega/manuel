@@ -78,7 +78,7 @@ $pageBody = $cms['body'];
 include 'includes/header.php';
 include 'includes/page-hero.php';
 
-$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 $labelClass = 'text-xs font-bold text-body';
 ?>
 <main>

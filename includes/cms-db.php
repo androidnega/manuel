@@ -361,6 +361,44 @@ function cms_attachment_class_groups(): array
   ];
 }
 
+function cms_attachment_registration_defaults(): array
+{
+  return [
+    'closes_at' => '',
+    'closed_message' => 'Registration for industrial attachment is now closed. Contact your class representative if you still need help.',
+  ];
+}
+
+function cms_attachment_registration_config(PDO $pdo): array
+{
+  $raw = cms_get_setting($pdo, 'attachment_registration', '');
+  $data = $raw !== '' ? json_decode($raw, true) : [];
+  if (!is_array($data)) {
+    $data = [];
+  }
+  return array_merge(cms_attachment_registration_defaults(), $data);
+}
+
+function cms_attachment_registration_is_open(PDO $pdo): bool
+{
+  $config = cms_attachment_registration_config($pdo);
+  $closesAt = trim($config['closes_at'] ?? '');
+  if ($closesAt === '') {
+    return true;
+  }
+  $end = strtotime($closesAt);
+  if ($end === false) {
+    return true;
+  }
+  return time() < $end;
+}
+
+function cms_save_attachment_registration_config(PDO $pdo, array $config): void
+{
+  $payload = array_merge(cms_attachment_registration_defaults(), $config);
+  cms_set_setting($pdo, 'attachment_registration', json_encode($payload, JSON_UNESCAPED_UNICODE));
+}
+
 function cms_inbox_unread_count(PDO $pdo): int
 {
   return cms_unread_count($pdo) + cms_unread_quote_requests_count($pdo) + cms_unread_attachments_count($pdo);

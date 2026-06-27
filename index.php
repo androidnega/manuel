@@ -23,6 +23,7 @@ $showHomeLoader = true;
 $pdo = cms_db();
 $homeHeroSlides = cms_home_hero_public($pdo);
 $homeHeroInterval = cms_home_hero_interval_ms($pdo);
+$attachmentRegistrationOpen = cms_attachment_registration_is_open($pdo);
 $pageStyles = ['assets/css/home-hero-slideshow.css'];
 $pageScripts = ['assets/js/home-hero-slideshow.js'];
 include 'includes/header.php';
@@ -54,9 +55,11 @@ include 'includes/header.php';
           </ul>
 
           <div class="reveal reveal-delay-3 mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
+            <?php if ($attachmentRegistrationOpen): ?>
             <a href="<?= page_url('attachment.php') ?>" class="inline-flex items-center justify-center gap-2 rounded-full bg-mint text-white px-6 py-3 text-sm font-extrabold hover:bg-mint/90 shadow-sleek-sm transition-all hover:-translate-y-0.5">
               Register attachment <?= icon('arrow-right', 'w-4 h-4') ?>
             </a>
+            <?php endif; ?>
             <a href="<?= page_url('contact.php') ?>" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue text-white px-6 py-3 text-sm font-extrabold hover:bg-blue/90 shadow-sleek-sm transition-all hover:-translate-y-0.5">
               Let’s work <?= icon('arrow-right', 'w-4 h-4') ?>
             </a>

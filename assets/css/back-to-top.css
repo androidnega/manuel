@@ -13,6 +13,7 @@
   cursor: pointer;
   overflow: hidden;
   background: #0b1e3a;
+  --btt-water-level: 28%;
   box-shadow:
     0 14px 32px -12px rgb(11 30 58 / 0.45),
     0 0 0 1px rgb(255 255 255 / 0.08) inset;
@@ -59,9 +60,10 @@
   right: 0;
   bottom: 0;
   z-index: 1;
-  height: 58%;
+  height: var(--btt-water-level, 28%);
   overflow: hidden;
   pointer-events: none;
+  transition: height 0.18s ease-out;
 }
 
 .btt__wave {
@@ -191,6 +193,10 @@
   .btt__icon {
     transition: none;
     animation: none !important;
+  }
+
+  .btt__waves {
+    transition: none;
   }
 
   .btt.is-visible {
