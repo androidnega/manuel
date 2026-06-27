@@ -34,16 +34,16 @@ $timelines = [
 $post = $_POST;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $name = trim($post['name'] ?? '');
-  $email = trim($post['email'] ?? '');
-  $phone = trim($post['phone'] ?? '');
-  $organization = trim($post['organization'] ?? '');
-  $projectName = trim($post['project_name'] ?? '');
+  $name = cms_form_upper($post['name'] ?? '');
+  $email = cms_form_upper($post['email'] ?? '');
+  $phone = cms_form_upper($post['phone'] ?? '');
+  $organization = cms_form_upper($post['organization'] ?? '');
+  $projectName = cms_form_upper($post['project_name'] ?? '');
   $projectType = $post['project_type'] ?? '';
   $budgetRange = $post['budget_range'] ?? '';
   $timeline = $post['timeline'] ?? '';
-  $description = trim($post['description'] ?? '');
-  $referral = trim($post['referral'] ?? '');
+  $description = cms_form_upper($post['description'] ?? '');
+  $referral = cms_form_upper($post['referral'] ?? '');
 
   if ($name === '' || $email === '' || $projectName === '' || $description === ''
     || !filter_var($email, FILTER_VALIDATE_EMAIL)
@@ -78,7 +78,7 @@ $pageBody = $cms['body'];
 include 'includes/header.php';
 include 'includes/page-hero.php';
 
-$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm uppercase outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 $labelClass = 'text-xs font-bold text-body';
 ?>
 <main>

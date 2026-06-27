@@ -225,7 +225,7 @@ function cms_newsletter_subscribe(PDO $pdo, string $email): array
   }
   try {
     $pdo->prepare('INSERT INTO newsletter_subscribers (email, created_at) VALUES (?, ?)')
-      ->execute([$email, date('c')]);
+      ->execute([strtoupper(trim($email)), date('c')]);
     return ['ok' => true, 'message' => 'Subscribed successfully.', 'new' => true];
   } catch (PDOException $e) {
     if (str_contains($e->getMessage(), 'UNIQUE')) {

@@ -84,11 +84,22 @@ function cms_page(string $slug, array $defaults): array
   ];
 }
 
+function cms_form_upper(string $value): string
+{
+  return strtoupper(trim($value));
+}
+
 function cms_save_contact_message(string $name, string $email, string $subject, string $message): void
 {
   $pdo = cms_db();
   $stmt = $pdo->prepare('INSERT INTO contact_messages (name, email, subject, message, created_at) VALUES (?, ?, ?, ?, ?)');
-  $stmt->execute([$name, $email, $subject, $message, date('c')]);
+  $stmt->execute([
+    cms_form_upper($name),
+    cms_form_upper($email),
+    cms_form_upper($subject),
+    cms_form_upper($message),
+    date('c'),
+  ]);
 }
 
 function cms_save_quote_request(array $data): void
@@ -98,16 +109,16 @@ function cms_save_quote_request(array $data): void
     name, email, phone, organization, project_name, project_type, budget_range, timeline, description, referral, created_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
   $stmt->execute([
-    $data['name'],
-    $data['email'],
-    $data['phone'] ?: null,
-    $data['organization'] ?: null,
-    $data['project_name'],
-    $data['project_type'],
-    $data['budget_range'],
-    $data['timeline'],
-    $data['description'],
-    $data['referral'] ?: null,
+    cms_form_upper($data['name']),
+    cms_form_upper($data['email']),
+    cms_form_upper($data['phone'] ?? '') ?: null,
+    cms_form_upper($data['organization'] ?? '') ?: null,
+    cms_form_upper($data['project_name']),
+    cms_form_upper($data['project_type']),
+    cms_form_upper($data['budget_range']),
+    cms_form_upper($data['timeline']),
+    cms_form_upper($data['description']),
+    cms_form_upper($data['referral'] ?? '') ?: null,
     date('c'),
   ]);
 }
@@ -119,12 +130,12 @@ function cms_save_industrial_attachment(array $data): void
     full_name, index_number, contact, company_name, location, official_position, class_group, created_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
   $stmt->execute([
-    $data['full_name'],
-    $data['index_number'],
-    $data['contact'],
-    $data['company_name'],
-    $data['location'],
-    $data['official_position'],
+    cms_form_upper($data['full_name']),
+    cms_form_upper($data['index_number']),
+    cms_form_upper($data['contact']),
+    cms_form_upper($data['company_name']),
+    cms_form_upper($data['location']),
+    cms_form_upper($data['official_position']),
     $data['class_group'],
     date('c'),
   ]);

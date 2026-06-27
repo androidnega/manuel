@@ -13,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (!$registrationOpen) {
     $error = $registrationConfig['closed_message'];
   } else {
-    $fullName = trim($post['full_name'] ?? '');
-    $indexNumber = trim($post['index_number'] ?? '');
-    $contact = trim($post['contact'] ?? '');
-    $companyName = trim($post['company_name'] ?? '');
-    $location = trim($post['location'] ?? '');
-    $officialPosition = trim($post['official_position'] ?? '');
+    $fullName = cms_form_upper($post['full_name'] ?? '');
+    $indexNumber = cms_form_upper($post['index_number'] ?? '');
+    $contact = cms_form_upper($post['contact'] ?? '');
+    $companyName = cms_form_upper($post['company_name'] ?? '');
+    $location = cms_form_upper($post['location'] ?? '');
+    $officialPosition = cms_form_upper($post['official_position'] ?? '');
     $classGroup = $post['class_group'] ?? '';
 
     if ($fullName === '' || $indexNumber === '' || $contact === '' || $companyName === ''
@@ -50,7 +50,7 @@ $heroDesc = 'Submit your company and placement details for second semester indus
 include 'includes/header.php';
 include 'includes/page-hero.php';
 
-$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm normal-case outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+$inputClass = 'w-full rounded-xl border border-line bg-cloud px-3 py-3 text-sm uppercase outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 $labelClass = 'text-xs font-bold text-body';
 ?>
 <main>

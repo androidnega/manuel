@@ -21,6 +21,7 @@
   <?php include __DIR__ . '/site-lock-foot.php'; ?>
   <script src="<?= asset('assets/js/lazy-media.js') ?>"></script>
   <script src="<?= asset('assets/js/back-to-top.js') ?>"></script>
+  <script src="<?= asset('assets/js/form-uppercase.js') ?>"></script>
   <script src="<?= asset('assets/js/theme.js') ?>"></script>
   <?php if (!empty($showHomeLoader)): ?>
   <script src="<?= asset('assets/js/home-loader.js') ?>"></script>

@@ -15,6 +15,11 @@ function admin_redirect(string $path, string $flash = '', string $type = 'ok'): 
   exit;
 }
 
+function admin_upper(string $value): string
+{
+  return cms_form_upper($value);
+}
+
 if ($action === 'save_page') {
   $slug = $_POST['slug'] ?? '';
   $allowed = ['home', 'projects', 'services', 'quotes', 'designs', 'about', 'contact'];
@@ -24,15 +29,15 @@ if ($action === 'save_page') {
   $body = [];
   foreach ($_POST as $k => $v) {
     if (str_starts_with($k, 'body_')) {
-      $body[substr($k, 5)] = trim((string) $v);
+      $body[substr($k, 5)] = admin_upper((string) $v);
     }
   }
   cms_save_page(
     $pdo,
     $slug,
-    trim($_POST['hero_label'] ?? ''),
-    trim($_POST['hero_title'] ?? ''),
-    trim($_POST['hero_desc'] ?? ''),
+    admin_upper($_POST['hero_label'] ?? ''),
+    admin_upper($_POST['hero_title'] ?? ''),
+    admin_upper($_POST['hero_desc'] ?? ''),
     $body
   );
   admin_redirect(url('login') . '?p=page&slug=' . urlencode($slug), 'Page saved.');
@@ -55,11 +60,11 @@ if ($action === 'save_list') {
 
 if ($action === 'save_site') {
   $site = [
-    'name' => trim($_POST['name'] ?? ''),
-    'title' => trim($_POST['title'] ?? ''),
-    'tagline' => trim($_POST['tagline'] ?? ''),
-    'email' => trim($_POST['email'] ?? ''),
-    'phone' => trim($_POST['phone'] ?? ''),
+    'name' => admin_upper($_POST['name'] ?? ''),
+    'title' => admin_upper($_POST['title'] ?? ''),
+    'tagline' => admin_upper($_POST['tagline'] ?? ''),
+    'email' => admin_upper($_POST['email'] ?? ''),
+    'phone' => admin_upper($_POST['phone'] ?? ''),
     'website' => trim($_POST['website'] ?? ''),
     'whatsapp' => trim($_POST['whatsapp'] ?? ''),
   ];
@@ -69,9 +74,9 @@ if ($action === 'save_site') {
 
 if ($action === 'save_team') {
   $id = (int) ($_POST['id'] ?? 0);
-  $name = trim($_POST['name'] ?? '');
-  $role = trim($_POST['role'] ?? '');
-  $bio = trim($_POST['bio'] ?? '');
+  $name = admin_upper($_POST['name'] ?? '');
+  $role = admin_upper($_POST['role'] ?? '');
+  $bio = admin_upper($_POST['bio'] ?? '');
   $sort = (int) ($_POST['sort_order'] ?? 0);
   if ($name === '' || $role === '') {
     admin_redirect(url('login') . '?p=team', 'Name and role are required.', 'err');
@@ -174,7 +179,7 @@ if ($action === 'save_attachment_registration') {
       $closesAt = date('c', $ts);
     }
   }
-  $message = trim($_POST['attachment_closed_message'] ?? '');
+  $message = cms_form_upper(trim($_POST['attachment_closed_message'] ?? ''));
   cms_save_attachment_registration_config($pdo, [
     'closes_at' => $closesAt,
     'closed_message' => $message !== '' ? $message : cms_attachment_registration_defaults()['closed_message'],
@@ -195,8 +200,8 @@ if ($action === 'save_maintenance') {
   $config = [
     'enabled' => $enabled,
     'ends_at' => $endsAt,
-    'title' => trim($_POST['maintenance_title'] ?? '') ?: cms_maintenance_defaults()['title'],
-    'caption' => trim($_POST['maintenance_caption'] ?? '') ?: cms_maintenance_defaults()['caption'],
+    'title' => admin_upper(trim($_POST['maintenance_title'] ?? '')) ?: cms_maintenance_defaults()['title'],
+    'caption' => admin_upper(trim($_POST['maintenance_caption'] ?? '')) ?: cms_maintenance_defaults()['caption'],
   ];
   cms_save_maintenance_config($pdo, $config);
   $msg = $enabled ? 'Update mode is on — visitors see the countdown page.' : 'Update mode is off — site is live.';

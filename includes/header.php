@@ -12,6 +12,7 @@
   <?php include __DIR__ . '/head-meta.php'; ?>
   <?php include __DIR__ . '/site-lock-head.php'; ?>
   <?php include __DIR__ . '/back-to-top-head.php'; ?>
+  <link rel="stylesheet" href="<?= asset('assets/css/form-uppercase.css') ?>" />
   <?php include __DIR__ . '/lazy-media-head.php'; ?>
   <?php if (!empty($showHomeLoader)): ?>
   <link rel="stylesheet" href="<?= asset('assets/css/home-loader.css') ?>" />
