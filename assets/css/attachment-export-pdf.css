@@ -201,6 +201,10 @@ body {
   text-transform: uppercase;
 }
 
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
 .empty-state {
   border: 1px dashed #d0d5dd;
   border-radius: 10px;

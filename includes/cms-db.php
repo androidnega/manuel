@@ -113,6 +113,8 @@ function cms_migrate(PDO $pdo): void
 
   cms_ensure_admin_user($pdo);
 
+  cms_attachment_migrate_companies_json($pdo);
+
   require_once __DIR__ . '/cms-content.php';
   cms_content_migrate($pdo);
 }
@@ -457,6 +459,158 @@ function cms_attachment_group_count(PDO $pdo, string $groupKey): int
   $stmt = $pdo->prepare('SELECT COUNT(*) FROM industrial_attachments WHERE class_group = ?');
   $stmt->execute([$groupKey]);
   return (int) $stmt->fetchColumn();
+}
+
+function cms_attachment_max_companies(): int
+{
+  return 3;
+}
+
+function cms_attachment_migrate_companies_json(PDO $pdo): void
+{
+  $cols = $pdo->query('PRAGMA table_info(industrial_attachments)')->fetchAll(PDO::FETCH_ASSOC);
+  $hasJson = false;
+  foreach ($cols as $col) {
+    if (($col['name'] ?? '') === 'companies_json') {
+      $hasJson = true;
+      break;
+    }
+  }
+  if (!$hasJson) {
+    $pdo->exec('ALTER TABLE industrial_attachments ADD COLUMN companies_json TEXT');
+  }
+
+  $stmt = $pdo->query('SELECT id, company_name, location, official_position, companies_json FROM industrial_attachments');
+  $update = $pdo->prepare('UPDATE industrial_attachments SET companies_json = ? WHERE id = ?');
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if (($row['companies_json'] ?? '') !== '') {
+      continue;
+    }
+    $update->execute([
+      cms_attachment_companies_encode([[
+        'name' => $row['company_name'] ?? '',
+        'location' => $row['location'] ?? '',
+        'official_position' => $row['official_position'] ?? '',
+      ]]),
+      (int) $row['id'],
+    ]);
+  }
+}
+
+function cms_attachment_normalize_company(mixed $company): ?array
+{
+  if (!is_array($company)) {
+    return null;
+  }
+  $name = cms_form_upper($company['name'] ?? '');
+  $location = cms_form_upper($company['location'] ?? '');
+  $official = cms_form_upper($company['official_position'] ?? $company['official'] ?? '');
+  if ($name === '' && $location === '' && $official === '') {
+    return null;
+  }
+  return [
+    'name' => $name,
+    'location' => $location,
+    'official_position' => $official,
+  ];
+}
+
+function cms_attachment_normalize_companies_list(mixed $companies): array
+{
+  if (!is_array($companies)) {
+    return [];
+  }
+  $out = [];
+  foreach ($companies as $company) {
+    $entry = cms_attachment_normalize_company($company);
+    if ($entry === null || $entry['name'] === '') {
+      continue;
+    }
+    $out[] = $entry;
+    if (count($out) >= cms_attachment_max_companies()) {
+      break;
+    }
+  }
+  return $out;
+}
+
+function cms_attachment_companies_encode(array $companies): string
+{
+  return json_encode(cms_attachment_normalize_companies_list($companies), JSON_UNESCAPED_UNICODE) ?: '[]';
+}
+
+function cms_attachment_companies_from_row(array $row): array
+{
+  $raw = trim((string) ($row['companies_json'] ?? ''));
+  if ($raw !== '') {
+    $decoded = json_decode($raw, true);
+    if (is_array($decoded)) {
+      $companies = cms_attachment_normalize_companies_list($decoded);
+      if ($companies !== []) {
+        return $companies;
+      }
+    }
+  }
+
+  return cms_attachment_normalize_companies_list([[
+    'name' => $row['company_name'] ?? '',
+    'location' => $row['location'] ?? '',
+    'official_position' => $row['official_position'] ?? '',
+  ]]);
+}
+
+function cms_attachment_primary_company_fields(array $companies): array
+{
+  $first = $companies[0] ?? ['name' => '', 'location' => '', 'official_position' => ''];
+  return [
+    'company_name' => $first['name'],
+    'location' => $first['location'],
+    'official_position' => $first['official_position'],
+  ];
+}
+
+function cms_attachment_find_by_index(PDO $pdo, string $indexNumber, string $classGroup): ?array
+{
+  $indexNumber = trim($indexNumber);
+  $classGroup = trim($classGroup);
+  if ($indexNumber === '' || $classGroup === '') {
+    return null;
+  }
+  $stmt = $pdo->prepare('SELECT * FROM industrial_attachments WHERE UPPER(index_number) = UPPER(?) AND class_group = ? LIMIT 1');
+  $stmt->execute([$indexNumber, $classGroup]);
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $row ?: null;
+}
+
+function cms_attachment_get_by_id(PDO $pdo, int $id): ?array
+{
+  if ($id <= 0) {
+    return null;
+  }
+  $stmt = $pdo->prepare('SELECT * FROM industrial_attachments WHERE id = ? LIMIT 1');
+  $stmt->execute([$id]);
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $row ?: null;
+}
+
+function cms_attachment_validate_companies(array $companies, bool $requireAtLeastOne = true): ?string
+{
+  if ($requireAtLeastOne && $companies === []) {
+    return 'Add at least one company (maximum ' . cms_attachment_max_companies() . ').';
+  }
+  if (count($companies) > cms_attachment_max_companies()) {
+    return 'You can register up to ' . cms_attachment_max_companies() . ' companies only.';
+  }
+  foreach ($companies as $i => $company) {
+    $num = $i + 1;
+    if ($company['name'] === '') {
+      return 'Company ' . $num . ' name is required.';
+    }
+    if ($company['location'] === '' || $company['official_position'] === '') {
+      return 'Complete location and official position for company ' . $num . '.';
+    }
+  }
+  return null;
 }
 
 function cms_attachment_registration_defaults(): array

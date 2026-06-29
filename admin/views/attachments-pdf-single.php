@@ -1,8 +1,7 @@
 <?php
 /** @var array<string, mixed> $row @var string $docTitle @var string $docSubtitle @var string $docLevel */
 $formatted = cms_attachment_format_row($row);
-$labels = cms_attachment_row_labels();
-unset($labels['level']);
+$companies = $formatted['companies'] ?? cms_attachment_companies_from_row($row);
 $generatedAt = date('M j, Y g:i A');
 $groupLine = trim($formatted['class_group']);
 ?>
@@ -22,10 +21,44 @@ $groupLine = trim($formatted['class_group']);
 <?php endif; ?>
 
 <table class="detail-grid">
-  <?php foreach ($labels as $key => $label): ?>
-    <tr>
-      <th><?= htmlspecialchars(strtoupper($label)) ?></th>
-      <td class="<?= $key === 'index_number' ? 'font-mono uppercase' : 'uppercase' ?>"><?= htmlspecialchars($formatted[$key] ?? '') ?></td>
-    </tr>
-  <?php endforeach; ?>
+  <tr>
+    <th>Name</th>
+    <td class="uppercase"><?= htmlspecialchars($formatted['full_name']) ?></td>
+  </tr>
+  <tr>
+    <th>Index number</th>
+    <td class="font-mono uppercase"><?= htmlspecialchars($formatted['index_number']) ?></td>
+  </tr>
+  <tr>
+    <th>Contact</th>
+    <td class="uppercase"><?= htmlspecialchars($formatted['contact']) ?></td>
+  </tr>
+  <tr>
+    <th>Class group</th>
+    <td class="uppercase"><?= htmlspecialchars($formatted['class_group']) ?></td>
+  </tr>
+  <tr>
+    <th>Submitted</th>
+    <td class="uppercase"><?= htmlspecialchars($formatted['created_at']) ?></td>
+  </tr>
 </table>
+
+<?php foreach ($companies as $i => $company): ?>
+  <table class="detail-grid" style="margin-top: 12px;">
+    <tr>
+      <th colspan="2" style="color: #ff7a00; padding-top: 14px;">Company <?= $i + 1 ?></th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td class="uppercase"><?= htmlspecialchars(strtoupper($company['name'])) ?></td>
+    </tr>
+    <tr>
+      <th>Location</th>
+      <td class="uppercase"><?= htmlspecialchars(strtoupper($company['location'])) ?></td>
+    </tr>
+    <tr>
+      <th>Official</th>
+      <td class="uppercase"><?= htmlspecialchars(strtoupper($company['official_position'])) ?></td>
+    </tr>
+  </table>
+<?php endforeach; ?>

@@ -39,6 +39,11 @@
       $unread = !$row['is_read'];
       $detailId = 'attachment-detail-' . (int) $row['id'];
       $submittedTs = strtotime($row['created_at']);
+      $rowCompanies = cms_attachment_companies_from_row($row);
+      $companyPreview = $rowCompanies[0]['name'] ?? strtoupper($row['company_name']);
+      if (count($rowCompanies) > 1) {
+        $companyPreview .= ' (+' . (count($rowCompanies) - 1) . ')';
+      }
       ?>
       <details
         id="<?= htmlspecialchars($detailId) ?>"
@@ -47,6 +52,7 @@
         <summary class="flex cursor-pointer list-none items-center gap-2 px-3 py-2 text-left text-sm hover:bg-cloud [&::-webkit-details-marker]:hidden">
           <span class="w-5 shrink-0 text-[11px] font-bold text-body"><?= $i + 1 ?></span>
           <span class="min-w-0 flex-1 truncate font-bold text-ink"><?= htmlspecialchars(strtoupper($row['full_name'])) ?></span>
+          <span class="hidden min-w-0 flex-1 truncate text-[11px] text-body lg:inline"><?= htmlspecialchars(strtoupper($companyPreview)) ?></span>
           <span class="hidden shrink-0 font-mono text-[11px] text-deep sm:inline"><?= htmlspecialchars(strtoupper($row['index_number'])) ?></span>
           <span class="hidden shrink-0 text-[10px] font-bold uppercase text-body md:inline"><?= htmlspecialchars($groupLabel) ?></span>
           <span class="shrink-0 text-[11px] text-body"><?= htmlspecialchars(date('M j', $submittedTs)) ?></span>
@@ -58,9 +64,16 @@
             <div><dt class="font-bold uppercase tracking-wide text-body">Index</dt><dd class="font-mono text-ink"><?= htmlspecialchars(strtoupper($row['index_number'])) ?></dd></div>
             <div><dt class="font-bold uppercase tracking-wide text-body">Group</dt><dd class="text-ink"><?= htmlspecialchars($groupLabel) ?></dd></div>
             <div><dt class="font-bold uppercase tracking-wide text-body">Contact</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($row['contact'])) ?></dd></div>
-            <div><dt class="font-bold uppercase tracking-wide text-body">Company</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($row['company_name'])) ?></dd></div>
-            <div><dt class="font-bold uppercase tracking-wide text-body">Location</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($row['location'])) ?></dd></div>
-            <div><dt class="font-bold uppercase tracking-wide text-body">Official</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($row['official_position'])) ?></dd></div>
+            <?php foreach ($rowCompanies as $ci => $company): ?>
+              <div class="sm:col-span-2 rounded-lg border border-line bg-white px-3 py-2">
+                <p class="text-[10px] font-extrabold uppercase tracking-wide text-blue">Company <?= $ci + 1 ?></p>
+                <dl class="mt-2 grid gap-1.5 sm:grid-cols-3">
+                  <div><dt class="font-bold uppercase tracking-wide text-body">Name</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($company['name'])) ?></dd></div>
+                  <div><dt class="font-bold uppercase tracking-wide text-body">Location</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($company['location'])) ?></dd></div>
+                  <div><dt class="font-bold uppercase tracking-wide text-body">Official</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($company['official_position'])) ?></dd></div>
+                </dl>
+              </div>
+            <?php endforeach; ?>
             <div class="sm:col-span-2"><dt class="font-bold uppercase tracking-wide text-body">Submitted</dt><dd class="text-ink"><?= htmlspecialchars(date('M j, Y g:i A', $submittedTs)) ?></dd></div>
           </dl>
           <div class="mt-2 flex flex-wrap gap-1.5 border-t border-line pt-2">

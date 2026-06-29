@@ -123,22 +123,55 @@ function cms_save_quote_request(array $data): void
   ]);
 }
 
-function cms_save_industrial_attachment(array $data): void
+function cms_save_industrial_attachment(array $data, array $companies = []): void
 {
+  if ($companies === []) {
+    $companies = [[
+      'name' => $data['company_name'] ?? '',
+      'location' => $data['location'] ?? '',
+      'official_position' => $data['official_position'] ?? '',
+    ]];
+  }
+  $companies = cms_attachment_normalize_companies_list($companies);
+  $primary = cms_attachment_primary_company_fields($companies);
+
   $pdo = cms_db();
   $stmt = $pdo->prepare('INSERT INTO industrial_attachments (
-    full_name, index_number, contact, company_name, location, official_position, class_group, created_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+    full_name, index_number, contact, company_name, location, official_position, class_group, companies_json, created_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
   $stmt->execute([
     cms_form_upper($data['full_name']),
     cms_form_upper($data['index_number']),
     cms_form_upper($data['contact']),
-    cms_form_upper($data['company_name']),
-    cms_form_upper($data['location']),
-    cms_form_upper($data['official_position']),
+    $primary['company_name'],
+    $primary['location'],
+    $primary['official_position'],
     $data['class_group'],
+    cms_attachment_companies_encode($companies),
     date('c'),
   ]);
+}
+
+function cms_update_industrial_attachment_companies(int $id, array $companies): bool
+{
+  $pdo = cms_db();
+  $existing = cms_attachment_get_by_id($pdo, $id);
+  if (!$existing) {
+    return false;
+  }
+  $companies = cms_attachment_normalize_companies_list($companies);
+  $primary = cms_attachment_primary_company_fields($companies);
+  $stmt = $pdo->prepare('UPDATE industrial_attachments SET
+    company_name = ?, location = ?, official_position = ?, companies_json = ?
+    WHERE id = ?');
+  $stmt->execute([
+    $primary['company_name'],
+    $primary['location'],
+    $primary['official_position'],
+    cms_attachment_companies_encode($companies),
+    $id,
+  ]);
+  return true;
 }
 
 function cms_attachment_index_exists(string $indexNumber, string $classGroup): bool

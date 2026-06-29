@@ -15,6 +15,17 @@ function cms_attachment_row_labels(): array
   ];
 }
 
+function cms_attachment_company_export_labels(): array
+{
+  $labels = [];
+  for ($i = 1; $i <= cms_attachment_max_companies(); $i++) {
+    $labels['company_' . $i] = 'Company ' . $i;
+    $labels['location_' . $i] = 'Location ' . $i;
+    $labels['official_' . $i] = 'Official ' . $i;
+  }
+  return $labels;
+}
+
 function cms_attachment_format_row(array $row): array
 {
   $groups = cms_attachment_groups(cms_db());
@@ -23,18 +34,40 @@ function cms_attachment_format_row(array $row): array
   $groupLabel = $group ? ($group['label'] ?? $groupKey) : $groupKey;
   $level = $group ? trim((string) ($group['level'] ?? '')) : '';
   $created = !empty($row['created_at']) ? date('M j, Y g:i A', strtotime($row['created_at'])) : '';
+  $companies = cms_attachment_companies_from_row($row);
 
-  return [
+  $formatted = [
     'full_name' => strtoupper($row['full_name'] ?? ''),
     'index_number' => strtoupper($row['index_number'] ?? ''),
     'contact' => strtoupper($row['contact'] ?? ''),
-    'company_name' => strtoupper($row['company_name'] ?? ''),
-    'location' => strtoupper($row['location'] ?? ''),
-    'official_position' => strtoupper($row['official_position'] ?? ''),
+    'company_name' => '',
+    'location' => '',
+    'official_position' => '',
     'class_group' => strtoupper($groupLabel),
     'level' => strtoupper($level),
     'created_at' => strtoupper($created),
   ];
+
+  if ($companies !== []) {
+    $first = $companies[0];
+    $formatted['company_name'] = $first['name'];
+    $formatted['location'] = $first['location'];
+    $formatted['official_position'] = $first['official_position'];
+  }
+
+  for ($i = 1; $i <= cms_attachment_max_companies(); $i++) {
+    $company = $companies[$i - 1] ?? null;
+    $formatted['company_' . $i] = strtoupper($company['name'] ?? '');
+    $formatted['location_' . $i] = strtoupper($company['location'] ?? '');
+    $formatted['official_' . $i] = strtoupper($company['official_position'] ?? '');
+  }
+
+  $formatted['companies'] = $companies;
+  $formatted['companies_display'] = strtoupper(implode("\n", array_map(static function (array $company): string {
+    return $company['name'];
+  }, $companies)));
+
+  return $formatted;
 }
 
 function cms_attachment_export_csv(array $rows, string $filename, string $title = ''): void
@@ -52,15 +85,22 @@ function cms_attachment_export_csv(array $rows, string $filename, string $title 
     fputcsv($out, []);
   }
 
-  $labels = cms_attachment_row_labels();
+  $baseLabels = cms_attachment_row_labels();
+  unset($baseLabels['company_name'], $baseLabels['location'], $baseLabels['official_position']);
+  $labels = array_merge(['num' => '#'], $baseLabels, cms_attachment_company_export_labels());
+  fputcsv($out, array_values($labels));
+
   $keys = array_keys($labels);
-  fputcsv($out, array_merge(['#'], array_values($labels)));
 
   foreach ($rows as $i => $row) {
     $formatted = cms_attachment_format_row($row);
-    $line = [(string) ($i + 1)];
+    $line = [];
     foreach ($keys as $key) {
-      $line[] = $formatted[$key] ?? '';
+      if ($key === 'num') {
+        $line[] = (string) ($i + 1);
+      } else {
+        $line[] = $formatted[$key] ?? '';
+      }
     }
     fputcsv($out, $line);
   }

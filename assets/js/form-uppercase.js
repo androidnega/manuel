@@ -33,6 +33,8 @@
     maintenance_ends_at: true,
     published_at: true,
     password: true,
+    companies_json: true,
+    existing_id: true,
   };
 
   function shouldUppercase(el) {
