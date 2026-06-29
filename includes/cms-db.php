@@ -29,6 +29,8 @@ function cms_migrate(PDO $pdo): void
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT \'super\',
+    class_group TEXT,
     created_at TEXT NOT NULL
   )');
   $pdo->exec('CREATE TABLE IF NOT EXISTS pages (
@@ -113,6 +115,7 @@ function cms_migrate(PDO $pdo): void
 
   cms_ensure_admin_user($pdo);
 
+  cms_admin_users_migrate($pdo);
   cms_attachment_migrate_companies_json($pdo);
 
   require_once __DIR__ . '/cms-content.php';
@@ -124,8 +127,8 @@ function cms_ensure_admin_user(PDO $pdo): void
   $hash = password_hash('admin123', PASSWORD_DEFAULT);
   $count = (int) $pdo->query('SELECT COUNT(*) FROM admin_users')->fetchColumn();
   if ($count === 0) {
-    $pdo->prepare('INSERT INTO admin_users (username, password_hash, created_at) VALUES (?, ?, ?)')
-      ->execute(['admin', $hash, date('c')]);
+    $pdo->prepare('INSERT INTO admin_users (username, password_hash, role, created_at) VALUES (?, ?, ?, ?)')
+      ->execute(['admin', $hash, 'super', date('c')]);
     return;
   }
   $ver = $pdo->query("SELECT setting_value FROM site_settings WHERE setting_key = 'admin_cred_version'")->fetchColumn();
@@ -350,9 +353,101 @@ function cms_unread_quote_requests_count(PDO $pdo): int
   return (int) $pdo->query('SELECT COUNT(*) FROM quote_requests WHERE is_read = 0')->fetchColumn();
 }
 
-function cms_unread_attachments_count(PDO $pdo): int
+function cms_unread_attachments_count(PDO $pdo, ?string $classGroup = null): int
 {
+  if ($classGroup !== null && $classGroup !== '') {
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM industrial_attachments WHERE is_read = 0 AND class_group = ?');
+    $stmt->execute([$classGroup]);
+    return (int) $stmt->fetchColumn();
+  }
   return (int) $pdo->query('SELECT COUNT(*) FROM industrial_attachments WHERE is_read = 0')->fetchColumn();
+}
+
+function cms_admin_users_migrate(PDO $pdo): void
+{
+  $cols = $pdo->query('PRAGMA table_info(admin_users)')->fetchAll(PDO::FETCH_ASSOC);
+  $names = array_column($cols, 'name');
+  if (!in_array('role', $names, true)) {
+    $pdo->exec("ALTER TABLE admin_users ADD COLUMN role TEXT NOT NULL DEFAULT 'super'");
+  }
+  if (!in_array('class_group', $names, true)) {
+    $pdo->exec('ALTER TABLE admin_users ADD COLUMN class_group TEXT');
+  }
+  $pdo->exec("UPDATE admin_users SET role = 'super' WHERE role IS NULL OR role = ''");
+}
+
+function cms_class_admin_users(PDO $pdo): array
+{
+  $stmt = $pdo->query("SELECT id, username, class_group, created_at FROM admin_users WHERE role = 'class' ORDER BY username ASC");
+  return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+}
+
+function cms_create_class_admin_user(PDO $pdo, string $username, string $password, string $classGroup): ?string
+{
+  $username = strtolower(trim($username));
+  $classGroup = preg_replace('/[^a-z0-9_]/', '', strtolower(trim($classGroup)));
+  $groups = cms_attachment_class_groups($pdo);
+  if ($username === '') {
+    return 'Username is required.';
+  }
+  if (!preg_match('/^[a-z0-9._-]{3,32}$/', $username)) {
+    return 'Username must be 3–32 characters (letters, numbers, dot, dash, underscore).';
+  }
+  if (strlen($password) < 8) {
+    return 'Password must be at least 8 characters.';
+  }
+  if ($classGroup === '' || !isset($groups[$classGroup])) {
+    return 'Select a valid class group.';
+  }
+  $check = $pdo->prepare('SELECT COUNT(*) FROM admin_users WHERE username = ?');
+  $check->execute([$username]);
+  if ((int) $check->fetchColumn() > 0) {
+    return 'That username is already taken.';
+  }
+  $stmt = $pdo->prepare('INSERT INTO admin_users (username, password_hash, role, class_group, created_at) VALUES (?, ?, ?, ?, ?)');
+  $stmt->execute([
+    $username,
+    password_hash($password, PASSWORD_DEFAULT),
+    'class',
+    $classGroup,
+    date('c'),
+  ]);
+  return null;
+}
+
+function cms_delete_class_admin_user(PDO $pdo, int $id, int $currentUserId): ?string
+{
+  if ($id <= 0) {
+    return 'Invalid user.';
+  }
+  if ($id === $currentUserId) {
+    return 'You cannot delete your own account while signed in.';
+  }
+  $stmt = $pdo->prepare('SELECT id, role FROM admin_users WHERE id = ?');
+  $stmt->execute([$id]);
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  if (!$row || ($row['role'] ?? '') !== 'class') {
+    return 'Class account not found.';
+  }
+  $pdo->prepare('DELETE FROM admin_users WHERE id = ?')->execute([$id]);
+  return null;
+}
+
+function cms_reset_class_admin_password(PDO $pdo, int $id, string $password): ?string
+{
+  if (strlen($password) < 8) {
+    return 'Password must be at least 8 characters.';
+  }
+  $stmt = $pdo->prepare("SELECT id FROM admin_users WHERE id = ? AND role = 'class'");
+  $stmt->execute([$id]);
+  if (!$stmt->fetch()) {
+    return 'Class account not found.';
+  }
+  $pdo->prepare('UPDATE admin_users SET password_hash = ? WHERE id = ?')->execute([
+    password_hash($password, PASSWORD_DEFAULT),
+    $id,
+  ]);
+  return null;
 }
 
 function cms_attachment_default_groups(): array

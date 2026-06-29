@@ -4,6 +4,7 @@ auth_require();
 $pdo = cms_db();
 $action = $_POST['action'] ?? '';
 $redirect = url('login');
+$currentUser = auth_user();
 
 function admin_redirect(string $path, string $flash = '', string $type = 'ok'): void
 {
@@ -18,6 +19,11 @@ function admin_redirect(string $path, string $flash = '', string $type = 'ok'): 
 function admin_upper(string $value): string
 {
   return cms_form_upper($value);
+}
+
+$classUserActions = ['attachment_read', 'attachment_delete'];
+if ($currentUser && auth_is_class_user($currentUser) && !in_array($action, $classUserActions, true)) {
+  admin_redirect(url('login') . '?p=attachments', 'You do not have permission for that action.', 'err');
 }
 
 if ($action === 'save_page') {
@@ -160,17 +166,24 @@ if ($action === 'quote_delete') {
 
 if ($action === 'attachment_read') {
   $id = (int) ($_POST['id'] ?? 0);
+  if (!auth_attachment_row_allowed($pdo, $id)) {
+    admin_redirect(url('login') . '?p=attachments&tab=list', 'You cannot manage that registration.', 'err');
+  }
   $pdo->prepare('UPDATE industrial_attachments SET is_read = 1 WHERE id = ?')->execute([$id]);
   admin_redirect(url('login') . '?p=attachments&tab=list', 'Marked as read.');
 }
 
 if ($action === 'attachment_delete') {
   $id = (int) ($_POST['id'] ?? 0);
+  if (!auth_attachment_row_allowed($pdo, $id)) {
+    admin_redirect(url('login') . '?p=attachments&tab=list', 'You cannot delete that registration.', 'err');
+  }
   $pdo->prepare('DELETE FROM industrial_attachments WHERE id = ?')->execute([$id]);
   admin_redirect(url('login') . '?p=attachments&tab=list', 'Registration deleted.');
 }
 
 if ($action === 'save_attachment_registration') {
+  auth_require_super();
   $closesRaw = trim($_POST['attachment_closes_at'] ?? '');
   $closesAt = '';
   if ($closesRaw !== '') {
@@ -188,6 +201,7 @@ if ($action === 'save_attachment_registration') {
 }
 
 if ($action === 'save_attachment_groups') {
+  auth_require_super();
   $config = cms_attachment_registration_config($pdo);
   $groups = cms_attachment_normalize_groups($config['groups'] ?? []);
   $labels = is_array($_POST['group_label'] ?? null) ? $_POST['group_label'] : [];
@@ -229,6 +243,38 @@ if ($action === 'save_attachment_groups') {
 
   cms_save_attachment_registration_config($pdo, ['groups' => $groups]);
   admin_redirect(url('login') . '?p=attachments&tab=settings', 'Class groups updated. The registration form has been refreshed.');
+}
+
+if ($action === 'create_class_user') {
+  auth_require_super();
+  $error = cms_create_class_admin_user(
+    $pdo,
+    (string) ($_POST['class_username'] ?? ''),
+    (string) ($_POST['class_password'] ?? ''),
+    (string) ($_POST['class_group'] ?? '')
+  );
+  if ($error !== null) {
+    admin_redirect(url('login') . '?p=attachments&tab=settings', $error, 'err');
+  }
+  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Class rep account created.');
+}
+
+if ($action === 'delete_class_user') {
+  auth_require_super();
+  $error = cms_delete_class_admin_user($pdo, (int) ($_POST['user_id'] ?? 0), (int) ($currentUser['id'] ?? 0));
+  if ($error !== null) {
+    admin_redirect(url('login') . '?p=attachments&tab=settings', $error, 'err');
+  }
+  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Class rep account deleted.');
+}
+
+if ($action === 'reset_class_user_password') {
+  auth_require_super();
+  $error = cms_reset_class_admin_password($pdo, (int) ($_POST['user_id'] ?? 0), (string) ($_POST['class_password'] ?? ''));
+  if ($error !== null) {
+    admin_redirect(url('login') . '?p=attachments&tab=settings', $error, 'err');
+  }
+  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Password updated.');
 }
 
 if ($action === 'save_maintenance') {

@@ -9,7 +9,7 @@ require_once __DIR__ . '/includes/data.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'login') {
   if (auth_login(trim($_POST['username'] ?? ''), $_POST['password'] ?? '')) {
-    header('Location: ' . redirect_url('login'));
+    header('Location: ' . auth_login_redirect_url());
     exit;
   }
   $loginError = 'Invalid username or password.';
@@ -83,8 +83,14 @@ if ($view === '') {
 }
 $messagesUnread = cms_unread_count($pdo);
 $quotesUnread = cms_unread_quote_requests_count($pdo);
-$attachmentsUnread = cms_unread_attachments_count($pdo);
+$scopeGroup = auth_user_class_group($user);
+$attachmentsUnread = cms_unread_attachments_count($pdo, $scopeGroup);
 require_once __DIR__ . '/includes/admin-icons.php';
+
+if (auth_is_class_user($user) && $view !== 'attachments') {
+  header('Location: ' . url('login') . '?p=attachments');
+  exit;
+}
 
 $adminTitles = [
   'dashboard' => 'Dashboard',
@@ -103,6 +109,9 @@ $adminTitles = [
   'homehero' => 'Home hero slideshow',
 ];
 $adminPageTitle = $adminTitles[$view] ?? 'Dashboard';
+if ($view === 'attachments' && auth_is_class_user($user)) {
+  $adminPageTitle = 'My class list';
+}
 
 if ($view === 'attachments' && isset($_GET['export'])) {
   require_once __DIR__ . '/includes/attachment-export.php';
@@ -112,11 +121,17 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   $classGroups = cms_attachment_class_groups($pdo);
   $rows = [];
 
-  if ($id > 0) {
+  if ($scopeGroup !== null) {
+    $filterGroup = $scopeGroup;
+  }
+
+  if (auth_is_class_user($user) && $scopeGroup === null) {
+    $rows = [];
+  } elseif ($id > 0) {
     $stmt = $pdo->prepare('SELECT * FROM industrial_attachments WHERE id = ?');
     $stmt->execute([$id]);
     $row = $stmt->fetch();
-    if ($row) {
+    if ($row && ($scopeGroup === null || ($row['class_group'] ?? '') === $scopeGroup)) {
       $rows = [$row];
     }
   } else {
@@ -125,6 +140,9 @@ if ($view === 'attachments' && isset($_GET['export'])) {
     if ($filterGroup !== '' && isset($classGroups[$filterGroup])) {
       $sql .= ' WHERE class_group = ?';
       $params[] = $filterGroup;
+    } elseif ($scopeGroup !== null) {
+      $sql .= ' WHERE class_group = ?';
+      $params[] = $scopeGroup;
     }
     $sql .= ' ORDER BY class_group ASC, full_name ASC';
     $stmt = $pdo->prepare($sql);

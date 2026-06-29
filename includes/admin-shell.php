@@ -1,19 +1,23 @@
 <?php
-/** @var string $view @var array $user @var string $adminPageTitle @var int $messagesUnread @var int $quotesUnread @var int $attachmentsUnread @var string $flash @var string $flashType */
+/** @var string $view @var array $user @var string $adminPageTitle @var int $messagesUnread @var int $quotesUnread @var int $attachmentsUnread @var string $flash @var string $flashType @var ?string $scopeGroup */
 $maintenance = cms_maintenance_config($pdo);
 $adminNavItems = [
-  ['section' => 'dashboard', 'href' => url('login'), 'label' => 'Dashboard', 'icon' => 'dashboard'],
-  ['section' => 'homehero', 'href' => url('login') . '?p=homehero', 'label' => 'Home hero', 'icon' => 'homehero'],
-  ['section' => 'pages', 'href' => url('login') . '?p=pages', 'label' => 'Pages', 'icon' => 'pages'],
-  ['section' => 'lists', 'href' => url('login') . '?p=lists', 'label' => 'Lists & data', 'icon' => 'lists'],
-  ['section' => 'gallery', 'href' => url('login') . '?p=gallery', 'label' => 'Design gallery', 'icon' => 'gallery'],
-  ['section' => 'team', 'href' => url('login') . '?p=team', 'label' => 'Team', 'icon' => 'team'],
-  ['section' => 'news', 'href' => url('login') . '?p=news', 'label' => 'News', 'icon' => 'news'],
-  ['section' => 'messages', 'href' => url('login') . '?p=messages', 'label' => 'Messages', 'icon' => 'messages', 'badge' => $messagesUnread],
-  ['section' => 'quoterequests', 'href' => url('login') . '?p=quoterequests', 'label' => 'Quote requests', 'icon' => 'quote', 'badge' => $quotesUnread],
-  ['section' => 'attachments', 'href' => url('login') . '?p=attachments', 'label' => 'Industrial attachments', 'icon' => 'attachments', 'badge' => $attachmentsUnread],
-  ['section' => 'settings', 'href' => url('login') . '?p=settings', 'label' => 'Settings', 'icon' => 'settings'],
+  ['section' => 'dashboard', 'href' => url('login'), 'label' => 'Dashboard', 'icon' => 'dashboard', 'roles' => ['super']],
+  ['section' => 'homehero', 'href' => url('login') . '?p=homehero', 'label' => 'Home hero', 'icon' => 'homehero', 'roles' => ['super']],
+  ['section' => 'pages', 'href' => url('login') . '?p=pages', 'label' => 'Pages', 'icon' => 'pages', 'roles' => ['super']],
+  ['section' => 'lists', 'href' => url('login') . '?p=lists', 'label' => 'Lists & data', 'icon' => 'lists', 'roles' => ['super']],
+  ['section' => 'gallery', 'href' => url('login') . '?p=gallery', 'label' => 'Design gallery', 'icon' => 'gallery', 'roles' => ['super']],
+  ['section' => 'team', 'href' => url('login') . '?p=team', 'label' => 'Team', 'icon' => 'team', 'roles' => ['super']],
+  ['section' => 'news', 'href' => url('login') . '?p=news', 'label' => 'News', 'icon' => 'news', 'roles' => ['super']],
+  ['section' => 'messages', 'href' => url('login') . '?p=messages', 'label' => 'Messages', 'icon' => 'messages', 'badge' => $messagesUnread, 'roles' => ['super']],
+  ['section' => 'quoterequests', 'href' => url('login') . '?p=quoterequests', 'label' => 'Quote requests', 'icon' => 'quote', 'badge' => $quotesUnread, 'roles' => ['super']],
+  ['section' => 'attachments', 'href' => url('login') . '?p=attachments', 'label' => auth_is_class_user($user) ? 'My class list' : 'Industrial attachments', 'icon' => 'attachments', 'badge' => $attachmentsUnread, 'roles' => ['super', 'class']],
+  ['section' => 'settings', 'href' => url('login') . '?p=settings', 'label' => 'Settings', 'icon' => 'settings', 'roles' => ['super']],
 ];
+$userRole = auth_is_class_user($user) ? 'class' : 'super';
+$adminNavItems = array_values(array_filter($adminNavItems, static function (array $item) use ($userRole): bool {
+  return in_array($userRole, $item['roles'] ?? ['super'], true);
+}));
 ?>
 <div class="admin-shell">
   <div id="adminOverlay" class="admin-overlay" aria-hidden="true"></div>
@@ -45,7 +49,7 @@ $adminNavItems = [
     <div class="mt-auto border-t border-line pt-4 text-xs text-body">
       <p class="admin-nav-link">
         <?= admin_icon('user') ?>
-        <span>Logged in as <strong class="text-ink"><?= htmlspecialchars($user['username']) ?></strong></span>
+        <span>Logged in as <strong class="text-ink"><?= htmlspecialchars($user['username']) ?></strong><?php if (auth_is_class_user($user) && $scopeGroup): ?><?php $scopeLabel = cms_attachment_groups($pdo)[$scopeGroup] ?? null; ?> · <span class="text-blue"><?= htmlspecialchars($scopeLabel ? cms_attachment_group_display($scopeLabel) : strtoupper($scopeGroup)) ?></span><?php endif; ?></span>
       </p>
     </div>
   </aside>

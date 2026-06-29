@@ -3,6 +3,16 @@ $classGroups = cms_attachment_class_groups($pdo);
 $attachmentGroups = cms_attachment_groups($pdo);
 $registrationConfig = cms_attachment_registration_config($pdo);
 $registrationOpen = cms_attachment_registration_is_open($pdo);
+$isClassUser = auth_is_class_user($user ?? null);
+$scopeGroup = auth_user_class_group($user ?? null);
+$classAdminUsers = auth_is_super($user ?? null) ? cms_class_admin_users($pdo) : [];
+
+if ($scopeGroup !== null) {
+  if (isset($attachmentGroups[$scopeGroup])) {
+    $attachmentGroups = [$scopeGroup => $attachmentGroups[$scopeGroup]];
+    $classGroups = [$scopeGroup => $classGroups[$scopeGroup] ?? $attachmentGroups[$scopeGroup]['label']];
+  }
+}
 $closesLocal = '';
 if (!empty($registrationConfig['closes_at'])) {
   $ts = strtotime($registrationConfig['closes_at']);
@@ -12,11 +22,16 @@ if (!empty($registrationConfig['closes_at'])) {
 }
 
 $tab = preg_replace('/[^a-z]/', '', (string) ($_GET['tab'] ?? 'list'));
-if ($tab !== 'settings') {
+if ($isClassUser) {
+  $tab = 'list';
+} elseif ($tab !== 'settings') {
   $tab = 'list';
 }
 
 $filterGroup = preg_replace('/[^a-z_]/', '', (string) ($_GET['group'] ?? ''));
+if ($scopeGroup !== null) {
+  $filterGroup = $scopeGroup;
+}
 $filterLabel = $filterGroup !== '' && isset($attachmentGroups[$filterGroup])
   ? cms_attachment_group_display($attachmentGroups[$filterGroup])
   : '';
@@ -69,10 +84,17 @@ $btnDangerSm = 'inline-flex items-center justify-center gap-1.5 rounded-xl borde
 $inputClass = 'mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none transition focus:border-blue focus:ring-[3px] focus:ring-blue/10';
 ?>
 <div class="mb-6">
-  <p class="max-w-2xl text-sm leading-relaxed text-body">Industrial attachment registrations for end of second semester.</p>
+  <p class="max-w-2xl text-sm leading-relaxed text-body">
+    <?php if ($isClassUser && $filterLabel !== ''): ?>
+      View, manage, and download registrations for <strong class="text-ink"><?= htmlspecialchars($filterLabel) ?></strong> only.
+    <?php else: ?>
+      Industrial attachment registrations for end of second semester.
+    <?php endif; ?>
+  </p>
 </div>
 
 <div class="space-y-4">
+  <?php if (!$isClassUser): ?>
   <div class="flex flex-wrap gap-2" role="tablist" aria-label="Industrial attachments">
     <a
       href="<?= htmlspecialchars($listBase) ?>"
@@ -87,6 +109,7 @@ $inputClass = 'mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 
       <?= $tab === 'settings' ? 'aria-current="page"' : '' ?>
     >Settings</a>
   </div>
+  <?php endif; ?>
 
   <?php if ($tab === 'settings'): ?>
     <form method="post" action="<?= url('login') ?>" class="max-w-xl space-y-4 rounded-2xl border border-line bg-white p-5">
@@ -182,6 +205,8 @@ $inputClass = 'mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 
 
       <button type="submit" class="<?= $btnPrimary ?>"><?= admin_icon('save') ?> Save class groups</button>
     </form>
+
+    <?php include __DIR__ . '/attachments-class-users.php'; ?>
 
   <?php else: ?>
     <?php include __DIR__ . '/attachments-list.php'; ?>

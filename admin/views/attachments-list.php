@@ -1,8 +1,8 @@
 <?php
-/** @var array $classGroups @var array $attachmentGroups @var array $records @var array $counts @var int $totalCount @var string $listBase @var string $exportBase @var string $filterGroup @var string $filterLabel @var callable $filterClass @var string $btnGhostSm @var string $btnSuccessSm @var string $btnDangerSm */
+/** @var array $classGroups @var array $attachmentGroups @var array $records @var array $counts @var int $totalCount @var string $listBase @var string $exportBase @var string $filterGroup @var string $filterLabel @var callable $filterClass @var string $btnGhostSm @var string $btnSuccessSm @var string $btnDangerSm @var bool $isClassUser */
 ?>
 <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-body">
-  <p><span class="font-bold text-ink"><?= $totalCount ?></span> total<?php if ($totalCount > 0): ?> · <?php
+  <p><span class="font-bold text-ink"><?= $totalCount ?></span><?= $isClassUser ? ' in your class' : ' total' ?><?php if (!$isClassUser && $totalCount > 0): ?> · <?php
     $parts = [];
     foreach ($attachmentGroups as $key => $group) {
       $parts[] = htmlspecialchars(cms_attachment_group_display($group)) . ' ' . $counts[$key];
@@ -17,6 +17,7 @@
   <?php endif; ?>
 </div>
 
+<?php if (!$isClassUser): ?>
 <div class="flex flex-wrap gap-1.5">
   <a href="<?= htmlspecialchars($listBase) ?>" class="<?= $filterClass($filterGroup === '') ?>">All (<?= $totalCount ?>)</a>
   <?php foreach ($attachmentGroups as $key => $group): ?>
@@ -25,6 +26,9 @@
     </a>
   <?php endforeach; ?>
 </div>
+<?php elseif ($filterLabel !== ''): ?>
+  <p class="text-xs font-bold uppercase tracking-wide text-body"><?= htmlspecialchars($filterLabel) ?></p>
+<?php endif; ?>
 
 <?php if (!$records): ?>
   <p class="rounded-lg border border-dashed border-line px-4 py-8 text-center text-sm text-body">
