@@ -15,17 +15,6 @@ function cms_attachment_row_labels(): array
   ];
 }
 
-function cms_attachment_company_export_labels(): array
-{
-  $labels = [];
-  for ($i = 1; $i <= cms_attachment_max_companies(); $i++) {
-    $labels['company_' . $i] = 'Company ' . $i;
-    $labels['location_' . $i] = 'Location ' . $i;
-    $labels['official_' . $i] = 'Official ' . $i;
-  }
-  return $labels;
-}
-
 function cms_attachment_company_field_list(array $companies, string $field): string
 {
   $values = [];
