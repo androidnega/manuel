@@ -303,34 +303,14 @@ body.admin-dashboard {
   padding: 0.55rem 0.75rem;
   font-size: 0.875rem;
   color: #101828;
-  text-transform: uppercase;
+  text-transform: none;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Login / user credentials — never force caps (display or value) */
-.admin-input--plain,
-.admin-input[type='password'],
-.admin-input[type='datetime-local'],
-.admin-input[type='date'],
-.admin-input[type='time'],
-.admin-input[type='number'],
-.admin-input[name='username'],
-.admin-input[name='class_username'],
-.admin-input.no-uppercase,
-.admin-input[data-case-sensitive='1'],
-.admin-textarea[name='json'],
-.admin-textarea[name='content_html'],
-.admin-input[name='json'],
-.admin-input[name='cover_image'],
-.admin-input[name='modal_image'],
-.admin-input[name='image'],
-.admin-input[name='slug'],
-.admin-input[name='attachment_closes_at'],
-.admin-input[name='maintenance_ends_at'],
-.admin-input[name='published_at'],
-.admin-select {
-  text-transform: none !important;
+.admin-input--caps,
+.admin-textarea--caps {
+  text-transform: uppercase;
 }
 
 .admin-input:focus,

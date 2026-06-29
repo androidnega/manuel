@@ -320,7 +320,12 @@ function page_url(string $page): string
 
 function asset(string $path): string
 {
-  return htmlspecialchars(url($path), ENT_QUOTES, 'UTF-8');
+  $file = dirname(__DIR__) . '/' . ltrim($path, '/');
+  $url = url($path);
+  if (is_file($file)) {
+    $url .= (str_contains($url, '?') ? '&' : '?') . 'v=' . filemtime($file);
+  }
+  return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 }
 
 function isCurrentPage(string $page): bool
