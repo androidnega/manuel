@@ -177,15 +177,16 @@
           '"' +
           disabledAttr +
           ' placeholder="e.g. ACCRA" /></div>' +
-          '<div><label class="text-xs font-bold text-body">Official\'s position' +
+          '<div class="sm:col-span-2"><label class="text-xs font-bold text-body">Letter recipient\'s position' +
           (locked ? '' : ' *') +
-          '</label><input class="company-detail-input mt-1 w-full rounded-xl border border-line bg-white px-3 py-2.5 text-sm uppercase outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" data-field="official_position" data-index="' +
+          '</label><p class="mt-0.5 text-[11px] leading-snug text-body">The person who will receive your attachment letter at this company — usually the Manager or Human Resource Manager.</p>' +
+          '<input class="company-detail-input mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 text-sm uppercase outline-none focus:border-blue focus:ring-2 focus:ring-blue/10" data-field="official_position" data-index="' +
           index +
           '" value="' +
           escapeHtml(upper(company.official_position)) +
           '"' +
           disabledAttr +
-          ' placeholder="e.g. IT MANAGER" /></div>' +
+          ' placeholder="e.g. HUMAN RESOURCE MANAGER" /></div>' +
           '</div></div>'
         );
       })
@@ -461,7 +462,7 @@
       for (var i = 0; i < newOnes.length; i++) {
         if (!newOnes[i].location || !newOnes[i].official_position) {
           e.preventDefault();
-          setLookupStatus('<p>Complete location and official position for each new company.</p>', 'bg-red-50 text-red-700');
+          setLookupStatus('<p>Complete location and letter recipient position for each new company.</p>', 'bg-red-50 text-red-700');
           return;
         }
       }
@@ -480,7 +481,7 @@
     for (var j = 0; j < list.length; j++) {
       if (!list[j].location || !list[j].official_position) {
         e.preventDefault();
-        setLookupStatus('<p>Complete location and official position for company ' + (j + 1) + '.</p>', 'bg-red-50 text-red-700');
+        setLookupStatus('<p>Complete location and letter recipient position for company ' + (j + 1) + '.</p>', 'bg-red-50 text-red-700');
         return;
       }
     }

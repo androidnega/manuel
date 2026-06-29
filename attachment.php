@@ -110,6 +110,7 @@ $labelClass = 'text-xs font-bold text-body';
               <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span><?= htmlspecialchars(cms_attachment_group_display($group)) ?></span></li>
             <?php endforeach; ?>
             <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span>Already registered? Enter class + index to add optional companies</span></li>
+            <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span>For each company, add the location and the position of the person receiving your letter (e.g. Manager or HR Manager)</span></li>
             <li class="flex gap-2"><span class="text-blue font-extrabold shrink-0">•</span><span>Type a company name and press comma to add it</span></li>
           </ul>
         </aside>

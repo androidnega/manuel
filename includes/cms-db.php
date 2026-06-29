@@ -714,7 +714,7 @@ function cms_attachment_validate_companies(array $companies, bool $requireAtLeas
       return 'Company ' . $num . ' name is required.';
     }
     if ($company['location'] === '' || $company['official_position'] === '') {
-      return 'Complete location and official position for company ' . $num . '.';
+      return 'Complete location and letter recipient position for company ' . $num . '.';
     }
   }
   return null;

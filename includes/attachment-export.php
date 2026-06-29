@@ -8,7 +8,7 @@ function cms_attachment_row_labels(): array
     'contact' => 'Contact',
     'company_name' => 'Company Name',
     'location' => 'Location',
-    'official_position' => "Official's Position",
+    'official_position' => "Letter Recipient's Position",
     'class_group' => 'Class Group',
     'level' => 'Level',
     'created_at' => 'Submitted',

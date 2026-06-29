@@ -74,7 +74,7 @@
                 <dl class="mt-2 grid gap-1.5 sm:grid-cols-3">
                   <div><dt class="font-bold uppercase tracking-wide text-body">Name</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($company['name'])) ?></dd></div>
                   <div><dt class="font-bold uppercase tracking-wide text-body">Location</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($company['location'])) ?></dd></div>
-                  <div><dt class="font-bold uppercase tracking-wide text-body">Official</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($company['official_position'])) ?></dd></div>
+                  <div><dt class="font-bold uppercase tracking-wide text-body">Letter recipient</dt><dd class="text-ink"><?= htmlspecialchars(strtoupper($company['official_position'])) ?></dd></div>
                 </dl>
               </div>
             <?php endforeach; ?>

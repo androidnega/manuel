@@ -103,6 +103,13 @@ body {
   text-transform: uppercase;
 }
 
+.doc-subtitle--group {
+  white-space: nowrap;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+}
+
 .doc-level {
   margin: 4px 0 0;
   font-size: 11px;

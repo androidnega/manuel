@@ -11,11 +11,8 @@ $generatedAt = date('M j, Y g:i A');
 ?>
 <div class="doc-header">
   <h1 class="doc-title"><?= htmlspecialchars(strtoupper($docTitle)) ?></h1>
-  <?php if ($docSubtitle !== ''): ?>
-    <p class="doc-subtitle"><?= htmlspecialchars(strtoupper($docSubtitle)) ?></p>
-  <?php endif; ?>
-  <?php if ($docLevel !== ''): ?>
-    <p class="doc-level"><?= htmlspecialchars(strtoupper($docLevel)) ?></p>
+  <?php if ($docSubtitle !== '' || $docLevel !== ''): ?>
+    <p class="doc-subtitle doc-subtitle--group"><?= htmlspecialchars(cms_attachment_pdf_group_header_line($docSubtitle, $docLevel)) ?></p>
   <?php endif; ?>
   <p class="doc-meta">Generated <?= htmlspecialchars($generatedAt) ?> · <?= $totalRecords ?> record<?= $totalRecords === 1 ? '' : 's' ?></p>
 </div>
@@ -34,7 +31,7 @@ $generatedAt = date('M j, Y g:i A');
         <th class="col-contact">Contact</th>
         <th class="col-company">Company</th>
         <th class="col-location">Location</th>
-        <th class="col-official">Official</th>
+        <th class="col-official">Letter recipient</th>
         <th class="col-group">Group</th>
       </tr>
     </thead>

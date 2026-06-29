@@ -6,17 +6,14 @@ $groupLine = trim($formatted['class_group']);
 ?>
 <div class="doc-header">
   <h1 class="doc-title"><?= htmlspecialchars(strtoupper($docTitle)) ?></h1>
-  <?php if ($docSubtitle !== ''): ?>
-    <p class="doc-subtitle"><?= htmlspecialchars(strtoupper($docSubtitle)) ?></p>
-  <?php endif; ?>
-  <?php if ($docLevel !== ''): ?>
-    <p class="doc-level"><?= htmlspecialchars(strtoupper($docLevel)) ?></p>
+  <?php if ($docSubtitle !== '' || $docLevel !== ''): ?>
+    <p class="doc-subtitle doc-subtitle--group"><?= htmlspecialchars(cms_attachment_pdf_group_header_line($docSubtitle, $docLevel)) ?></p>
   <?php endif; ?>
   <p class="doc-meta">Generated <?= htmlspecialchars($generatedAt) ?></p>
 </div>
 
 <?php if ($groupLine !== ''): ?>
-  <p style="margin: 0 0 12px;"><span class="badge uppercase"><?= htmlspecialchars($groupLine) ?></span></p>
+  <p style="margin: 0 0 12px;"><span class="badge uppercase"><?= htmlspecialchars(cms_attachment_pdf_group_header_line($groupLine, $formatted['level'] ?? '')) ?></span></p>
 <?php endif; ?>
 
 <table class="detail-grid">
@@ -45,7 +42,7 @@ $groupLine = trim($formatted['class_group']);
     <td><?= $formatted['locations_tags_html'] ?? cms_attachment_export_tags_html($formatted['locations_list'] ?? [], 'location') ?></td>
   </tr>
   <tr>
-    <th>Officials</th>
+    <th>Letter recipients</th>
     <td><?= $formatted['officials_tags_html'] ?? cms_attachment_export_tags_html($formatted['officials_list'] ?? [], 'official') ?></td>
   </tr>
   <tr>

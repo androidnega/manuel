@@ -12,6 +12,16 @@ function cms_attachment_pdf_styles(): string
   return file_get_contents($path) ?: '';
 }
 
+function cms_attachment_pdf_group_header_line(string $subtitle, string $level = ''): string
+{
+  $subtitle = strtoupper(trim($subtitle));
+  $level = strtoupper(trim($level));
+  if ($subtitle !== '' && $level !== '') {
+    return $subtitle . ' — ' . $level;
+  }
+  return $subtitle !== '' ? $subtitle : $level;
+}
+
 function cms_attachment_render_pdf_html(array $rows, string $docTitle, string $docSubtitle, bool $landscape = true, string $docLevel = ''): string
 {
   $isSingle = count($rows) === 1;
