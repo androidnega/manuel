@@ -45,9 +45,9 @@ $generatedAt = date('M j, Y g:i A');
           <td class="col-name font-bold uppercase"><?= htmlspecialchars($formatted['full_name']) ?></td>
           <td class="col-index font-mono uppercase"><?= htmlspecialchars($formatted['index_number']) ?></td>
           <td class="col-contact uppercase"><?= htmlspecialchars($formatted['contact']) ?></td>
-          <td class="col-company uppercase whitespace-pre-line"><?= htmlspecialchars($formatted['companies_display']) ?></td>
-          <td class="col-location uppercase"><?= htmlspecialchars($formatted['location']) ?></td>
-          <td class="col-official uppercase"><?= htmlspecialchars($formatted['official_position']) ?></td>
+          <td class="col-company uppercase"><?= htmlspecialchars($formatted['companies_display']) ?></td>
+          <td class="col-location uppercase"><?= htmlspecialchars($formatted['locations_display']) ?></td>
+          <td class="col-official uppercase"><?= htmlspecialchars($formatted['officials_display']) ?></td>
           <td class="col-group uppercase"><?= htmlspecialchars($formatted['class_group']) ?></td>
         </tr>
       <?php endforeach; ?>

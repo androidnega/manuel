@@ -26,6 +26,18 @@ function cms_attachment_company_export_labels(): array
   return $labels;
 }
 
+function cms_attachment_company_field_list(array $companies, string $field): string
+{
+  $values = [];
+  foreach ($companies as $company) {
+    $value = strtoupper(trim((string) ($company[$field] ?? '')));
+    if ($value !== '') {
+      $values[] = $value;
+    }
+  }
+  return implode(', ', $values);
+}
+
 function cms_attachment_format_row(array $row): array
 {
   $groups = cms_attachment_groups(cms_db());
@@ -49,10 +61,9 @@ function cms_attachment_format_row(array $row): array
   ];
 
   if ($companies !== []) {
-    $first = $companies[0];
-    $formatted['company_name'] = $first['name'];
-    $formatted['location'] = $first['location'];
-    $formatted['official_position'] = $first['official_position'];
+    $formatted['company_name'] = cms_attachment_company_field_list($companies, 'name');
+    $formatted['location'] = cms_attachment_company_field_list($companies, 'location');
+    $formatted['official_position'] = cms_attachment_company_field_list($companies, 'official_position');
   }
 
   for ($i = 1; $i <= cms_attachment_max_companies(); $i++) {
@@ -63,9 +74,9 @@ function cms_attachment_format_row(array $row): array
   }
 
   $formatted['companies'] = $companies;
-  $formatted['companies_display'] = strtoupper(implode("\n", array_map(static function (array $company): string {
-    return $company['name'];
-  }, $companies)));
+  $formatted['companies_display'] = $formatted['company_name'];
+  $formatted['locations_display'] = $formatted['location'];
+  $formatted['officials_display'] = $formatted['official_position'];
 
   return $formatted;
 }
@@ -85,9 +96,7 @@ function cms_attachment_export_csv(array $rows, string $filename, string $title 
     fputcsv($out, []);
   }
 
-  $baseLabels = cms_attachment_row_labels();
-  unset($baseLabels['company_name'], $baseLabels['location'], $baseLabels['official_position']);
-  $labels = array_merge(['num' => '#'], $baseLabels, cms_attachment_company_export_labels());
+  $labels = array_merge(['num' => '#'], cms_attachment_row_labels());
   fputcsv($out, array_values($labels));
 
   $keys = array_keys($labels);

@@ -41,12 +41,25 @@ $groupLine = trim($formatted['class_group']);
     <th>Submitted</th>
     <td class="uppercase"><?= htmlspecialchars($formatted['created_at']) ?></td>
   </tr>
+  <tr>
+    <th>Companies</th>
+    <td class="uppercase"><?= htmlspecialchars($formatted['companies_display']) ?></td>
+  </tr>
+  <tr>
+    <th>Locations</th>
+    <td class="uppercase"><?= htmlspecialchars($formatted['locations_display']) ?></td>
+  </tr>
+  <tr>
+    <th>Officials</th>
+    <td class="uppercase"><?= htmlspecialchars($formatted['officials_display']) ?></td>
+  </tr>
 </table>
 
-<?php foreach ($companies as $i => $company): ?>
+<?php if (count($companies) > 1): ?>
+  <?php foreach ($companies as $i => $company): ?>
   <table class="detail-grid" style="margin-top: 12px;">
     <tr>
-      <th colspan="2" style="color: #ff7a00; padding-top: 14px;">Company <?= $i + 1 ?></th>
+      <th colspan="2" style="color: #ff7a00; padding-top: 14px;">Company <?= $i + 1 ?> detail</th>
     </tr>
     <tr>
       <th>Name</th>
@@ -61,4 +74,5 @@ $groupLine = trim($formatted['class_group']);
       <td class="uppercase"><?= htmlspecialchars(strtoupper($company['official_position'])) ?></td>
     </tr>
   </table>
-<?php endforeach; ?>
+  <?php endforeach; ?>
+<?php endif; ?>
