@@ -15,16 +15,26 @@ function cms_attachment_row_labels(): array
   ];
 }
 
-function cms_attachment_company_field_list(array $companies, string $field): string
+function cms_attachment_company_export_fields(array $companies): array
 {
-  $values = [];
+  $names = [];
+  $locations = [];
+  $officials = [];
+
   foreach ($companies as $company) {
-    $value = strtoupper(trim((string) ($company[$field] ?? '')));
-    if ($value !== '') {
-      $values[] = $value;
-    }
+    $names[] = strtoupper(trim((string) ($company['name'] ?? '')));
+    $locations[] = strtoupper(trim((string) ($company['location'] ?? '')));
+    $officials[] = strtoupper(trim((string) ($company['official_position'] ?? '')));
   }
-  return implode(', ', $values);
+
+  return [
+    'company_name' => implode(', ', $names),
+    'location' => implode(', ', $locations),
+    'official_position' => implode(', ', $officials),
+    'companies_display' => implode(', ', $names),
+    'locations_display' => implode(', ', $locations),
+    'officials_display' => implode(', ', $officials),
+  ];
 }
 
 function cms_attachment_format_row(array $row): array
@@ -50,9 +60,7 @@ function cms_attachment_format_row(array $row): array
   ];
 
   if ($companies !== []) {
-    $formatted['company_name'] = cms_attachment_company_field_list($companies, 'name');
-    $formatted['location'] = cms_attachment_company_field_list($companies, 'location');
-    $formatted['official_position'] = cms_attachment_company_field_list($companies, 'official_position');
+    $formatted = array_merge($formatted, cms_attachment_company_export_fields($companies));
   }
 
   for ($i = 1; $i <= cms_attachment_max_companies(); $i++) {
@@ -63,9 +71,6 @@ function cms_attachment_format_row(array $row): array
   }
 
   $formatted['companies'] = $companies;
-  $formatted['companies_display'] = $formatted['company_name'];
-  $formatted['locations_display'] = $formatted['location'];
-  $formatted['officials_display'] = $formatted['official_position'];
 
   return $formatted;
 }
