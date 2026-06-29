@@ -14,7 +14,7 @@ $minPassword = cms_class_admin_min_password_length();
   <div class="grid gap-3 sm:grid-cols-2">
     <label class="admin-field">
       <span class="admin-field__label">Username</span>
-      <input type="text" name="class_username" required pattern="[a-zA-Z0-9._-]{3,32}" autocomplete="off" autocapitalize="off" spellcheck="false" class="admin-input no-uppercase" placeholder="e.g. neizer or NEIZER" />
+      <input type="text" name="class_username" required pattern="[a-zA-Z0-9._-]{3,32}" autocomplete="off" autocapitalize="off" spellcheck="false" data-case-sensitive="1" class="admin-input admin-input--plain" placeholder="e.g. neizer" />
       <span class="mt-1 block text-xs text-body">Use upper or lower case — it is saved exactly as you type.</span>
     </label>
     <label class="admin-field">

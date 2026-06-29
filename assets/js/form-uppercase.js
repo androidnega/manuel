@@ -47,7 +47,10 @@
     if (el.closest('[data-no-uppercase]')) {
       return false;
     }
-    if (el.classList.contains('no-uppercase')) {
+    if (el.getAttribute('data-case-sensitive') === '1') {
+      return false;
+    }
+    if (el.classList.contains('no-uppercase') || el.classList.contains('admin-input--plain')) {
       return false;
     }
     var tag = el.tagName;
@@ -89,7 +92,7 @@
   }
 
   function bindForm(form) {
-    if (!form || form.dataset.noUppercase === '1') {
+    if (!form || form.hasAttribute('data-no-uppercase') || form.dataset.noUppercase === '1') {
       return;
     }
     form.querySelectorAll('input, textarea').forEach(function (el) {

@@ -57,7 +57,7 @@ if (!$user):
       <input type="hidden" name="action" value="login" />
       <label class="admin-field">
         <span class="admin-field__label"><i class="fa-solid fa-user mr-1" aria-hidden="true"></i> Username</span>
-        <input name="username" required autocomplete="username" class="admin-input no-uppercase" autocapitalize="off" spellcheck="false" />
+        <input name="username" required autocomplete="username" class="admin-input admin-input--plain" data-case-sensitive="1" autocapitalize="off" spellcheck="false" />
       </label>
       <label class="admin-field">
         <span class="admin-field__label"><i class="fa-solid fa-key mr-1" aria-hidden="true"></i> Password</span>
@@ -194,7 +194,6 @@ if ($view === 'attachments' && isset($_GET['export'])) {
   <?php include __DIR__ . '/includes/tailwind-cdn.php'; ?>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <?php require __DIR__ . '/includes/admin-head.php'; ?>
-  <link rel="stylesheet" href="<?= asset('assets/css/form-uppercase.css') ?>" />
 </head>
 <body class="font-sans text-ink admin-dashboard">
 <?php include __DIR__ . '/includes/admin-shell.php'; ?>
