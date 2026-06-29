@@ -92,6 +92,11 @@ if (auth_is_class_user($user) && $view !== 'attachments') {
   exit;
 }
 
+if (!auth_is_super($user) && $view === 'users') {
+  header('Location: ' . url('login') . '?p=attachments');
+  exit;
+}
+
 $adminTitles = [
   'dashboard' => 'Dashboard',
   'pages' => 'Pages',
@@ -103,6 +108,7 @@ $adminTitles = [
   'settings' => 'Settings',
   'quoterequests' => 'Quote requests',
   'attachments' => 'Industrial attachments',
+  'users' => 'Users',
   'news' => 'News',
   'newsedit' => 'Edit news post',
   'gallery' => 'Design gallery',

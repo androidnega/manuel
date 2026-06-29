@@ -376,6 +376,16 @@ function cms_admin_users_migrate(PDO $pdo): void
   $pdo->exec("UPDATE admin_users SET role = 'super' WHERE role IS NULL OR role = ''");
 }
 
+function cms_class_admin_min_password_length(): int
+{
+  return 4;
+}
+
+function cms_normalize_admin_username(string $username): string
+{
+  return trim($username);
+}
+
 function cms_class_admin_users(PDO $pdo): array
 {
   $stmt = $pdo->query("SELECT id, username, class_group, created_at FROM admin_users WHERE role = 'class' ORDER BY username ASC");
@@ -384,22 +394,23 @@ function cms_class_admin_users(PDO $pdo): array
 
 function cms_create_class_admin_user(PDO $pdo, string $username, string $password, string $classGroup): ?string
 {
-  $username = strtolower(trim($username));
+  $username = cms_normalize_admin_username($username);
   $classGroup = preg_replace('/[^a-z0-9_]/', '', strtolower(trim($classGroup)));
   $groups = cms_attachment_class_groups($pdo);
+  $minPassword = cms_class_admin_min_password_length();
   if ($username === '') {
     return 'Username is required.';
   }
-  if (!preg_match('/^[a-z0-9._-]{3,32}$/', $username)) {
+  if (!preg_match('/^[a-zA-Z0-9._-]{3,32}$/', $username)) {
     return 'Username must be 3–32 characters (letters, numbers, dot, dash, underscore).';
   }
-  if (strlen($password) < 8) {
-    return 'Password must be at least 8 characters.';
+  if (strlen($password) < $minPassword) {
+    return 'Password must be at least ' . $minPassword . ' characters.';
   }
   if ($classGroup === '' || !isset($groups[$classGroup])) {
     return 'Select a valid class group.';
   }
-  $check = $pdo->prepare('SELECT COUNT(*) FROM admin_users WHERE username = ?');
+  $check = $pdo->prepare('SELECT COUNT(*) FROM admin_users WHERE LOWER(username) = LOWER(?)');
   $check->execute([$username]);
   if ((int) $check->fetchColumn() > 0) {
     return 'That username is already taken.';
@@ -435,8 +446,9 @@ function cms_delete_class_admin_user(PDO $pdo, int $id, int $currentUserId): ?st
 
 function cms_reset_class_admin_password(PDO $pdo, int $id, string $password): ?string
 {
-  if (strlen($password) < 8) {
-    return 'Password must be at least 8 characters.';
+  $minPassword = cms_class_admin_min_password_length();
+  if (strlen($password) < $minPassword) {
+    return 'Password must be at least ' . $minPassword . ' characters.';
   }
   $stmt = $pdo->prepare("SELECT id FROM admin_users WHERE id = ? AND role = 'class'");
   $stmt->execute([$id]);

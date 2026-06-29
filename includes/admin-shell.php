@@ -12,6 +12,7 @@ $adminNavItems = [
   ['section' => 'messages', 'href' => url('login') . '?p=messages', 'label' => 'Messages', 'icon' => 'messages', 'badge' => $messagesUnread, 'roles' => ['super']],
   ['section' => 'quoterequests', 'href' => url('login') . '?p=quoterequests', 'label' => 'Quote requests', 'icon' => 'quote', 'badge' => $quotesUnread, 'roles' => ['super']],
   ['section' => 'attachments', 'href' => url('login') . '?p=attachments', 'label' => auth_is_class_user($user) ? 'My class list' : 'Industrial attachments', 'icon' => 'attachments', 'badge' => $attachmentsUnread, 'roles' => ['super', 'class']],
+  ['section' => 'users', 'href' => url('login') . '?p=users', 'label' => 'Users', 'icon' => 'users', 'roles' => ['super']],
   ['section' => 'settings', 'href' => url('login') . '?p=settings', 'label' => 'Settings', 'icon' => 'settings', 'roles' => ['super']],
 ];
 $userRole = auth_is_class_user($user) ? 'class' : 'super';

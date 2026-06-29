@@ -5,7 +5,6 @@ $registrationConfig = cms_attachment_registration_config($pdo);
 $registrationOpen = cms_attachment_registration_is_open($pdo);
 $isClassUser = auth_is_class_user($user ?? null);
 $scopeGroup = auth_user_class_group($user ?? null);
-$classAdminUsers = auth_is_super($user ?? null) ? cms_class_admin_users($pdo) : [];
 
 if ($scopeGroup !== null) {
   if (isset($attachmentGroups[$scopeGroup])) {
@@ -205,8 +204,6 @@ $inputClass = 'mt-1.5 w-full rounded-xl border border-line bg-white px-3 py-2.5 
 
       <button type="submit" class="<?= $btnPrimary ?>"><?= admin_icon('save') ?> Save class groups</button>
     </form>
-
-    <?php include __DIR__ . '/attachments-class-users.php'; ?>
 
   <?php else: ?>
     <?php include __DIR__ . '/attachments-list.php'; ?>

@@ -254,27 +254,27 @@ if ($action === 'create_class_user') {
     (string) ($_POST['class_group'] ?? '')
   );
   if ($error !== null) {
-    admin_redirect(url('login') . '?p=attachments&tab=settings', $error, 'err');
+    admin_redirect(url('login') . '?p=users', $error, 'err');
   }
-  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Class rep account created.');
+  admin_redirect(url('login') . '?p=users', 'Class rep account created.');
 }
 
 if ($action === 'delete_class_user') {
   auth_require_super();
   $error = cms_delete_class_admin_user($pdo, (int) ($_POST['user_id'] ?? 0), (int) ($currentUser['id'] ?? 0));
   if ($error !== null) {
-    admin_redirect(url('login') . '?p=attachments&tab=settings', $error, 'err');
+    admin_redirect(url('login') . '?p=users', $error, 'err');
   }
-  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Class rep account deleted.');
+  admin_redirect(url('login') . '?p=users', 'Class rep account deleted.');
 }
 
 if ($action === 'reset_class_user_password') {
   auth_require_super();
   $error = cms_reset_class_admin_password($pdo, (int) ($_POST['user_id'] ?? 0), (string) ($_POST['class_password'] ?? ''));
   if ($error !== null) {
-    admin_redirect(url('login') . '?p=attachments&tab=settings', $error, 'err');
+    admin_redirect(url('login') . '?p=users', $error, 'err');
   }
-  admin_redirect(url('login') . '?p=attachments&tab=settings', 'Password updated.');
+  admin_redirect(url('login') . '?p=users', 'Password updated.');
 }
 
 if ($action === 'save_maintenance') {

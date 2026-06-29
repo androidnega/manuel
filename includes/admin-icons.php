@@ -44,6 +44,7 @@ function admin_icon(string $name): string
     'login' => 'fa-right-to-bracket',
     'quote' => 'fa-file-invoice-dollar',
     'attachments' => 'fa-graduation-cap',
+    'users' => 'fa-user-group',
     'news' => 'fa-newspaper',
     'gallery' => 'fa-images',
     'homehero' => 'fa-panorama',

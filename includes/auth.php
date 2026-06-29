@@ -89,8 +89,12 @@ function auth_attachment_row_allowed(PDO $pdo, int $id, ?array $user = null): bo
 function auth_login(string $username, string $password): bool
 {
   auth_start();
+  $username = cms_normalize_admin_username($username);
+  if ($username === '') {
+    return false;
+  }
   $pdo = cms_db();
-  $stmt = $pdo->prepare('SELECT id, password_hash FROM admin_users WHERE username = ?');
+  $stmt = $pdo->prepare('SELECT id, password_hash FROM admin_users WHERE LOWER(username) = LOWER(?)');
   $stmt->execute([$username]);
   $row = $stmt->fetch();
   if (!$row || !password_verify($password, $row['password_hash'])) {
