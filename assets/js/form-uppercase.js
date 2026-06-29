@@ -33,6 +33,9 @@
     maintenance_ends_at: true,
     published_at: true,
     password: true,
+    username: true,
+    class_username: true,
+    class_password: true,
     companies_json: true,
     existing_id: true,
   };

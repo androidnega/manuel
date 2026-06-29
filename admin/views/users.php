@@ -14,12 +14,12 @@ $minPassword = cms_class_admin_min_password_length();
   <div class="grid gap-3 sm:grid-cols-2">
     <label class="admin-field">
       <span class="admin-field__label">Username</span>
-      <input type="text" name="class_username" required pattern="[a-zA-Z0-9._-]{3,32}" autocomplete="off" class="admin-input no-uppercase" placeholder="e.g. NEIZER or neizer" />
-      <span class="mt-1 block text-xs text-body">Upper or lower case is kept as you type it.</span>
+      <input type="text" name="class_username" required pattern="[a-zA-Z0-9._-]{3,32}" autocomplete="off" autocapitalize="off" spellcheck="false" class="admin-input no-uppercase" placeholder="e.g. neizer or NEIZER" />
+      <span class="mt-1 block text-xs text-body">Use upper or lower case — it is saved exactly as you type.</span>
     </label>
     <label class="admin-field">
       <span class="admin-field__label">Password</span>
-      <input type="password" name="class_password" required minlength="<?= $minPassword ?>" autocomplete="new-password" class="admin-input" placeholder="Min <?= $minPassword ?> characters" />
+      <input type="password" name="class_password" required minlength="<?= $minPassword ?>" autocomplete="new-password" autocapitalize="off" class="admin-input" placeholder="Min <?= $minPassword ?> characters" />
     </label>
   </div>
   <label class="admin-field">
@@ -61,7 +61,7 @@ $minPassword = cms_class_admin_min_password_length();
             <input type="hidden" name="user_id" value="<?= (int) $classUser['id'] ?>" />
             <label class="min-w-0 flex-1 admin-field mb-0">
               <span class="admin-field__label">Reset password</span>
-              <input type="password" name="class_password" required minlength="<?= $minPassword ?>" autocomplete="new-password" class="admin-input" placeholder="Min <?= $minPassword ?> characters" />
+              <input type="password" name="class_password" required minlength="<?= $minPassword ?>" autocomplete="new-password" autocapitalize="off" class="admin-input" placeholder="Min <?= $minPassword ?> characters" />
             </label>
             <button type="submit" class="admin-btn admin-btn--ghost admin-btn--sm">Update</button>
           </form>

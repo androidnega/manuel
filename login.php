@@ -57,7 +57,7 @@ if (!$user):
       <input type="hidden" name="action" value="login" />
       <label class="admin-field">
         <span class="admin-field__label"><i class="fa-solid fa-user mr-1" aria-hidden="true"></i> Username</span>
-        <input name="username" required autocomplete="username" class="admin-input" />
+        <input name="username" required autocomplete="username" class="admin-input no-uppercase" autocapitalize="off" spellcheck="false" />
       </label>
       <label class="admin-field">
         <span class="admin-field__label"><i class="fa-solid fa-key mr-1" aria-hidden="true"></i> Password</span>
