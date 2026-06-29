@@ -15,7 +15,7 @@ function cms_attachment_row_labels(): array
   ];
 }
 
-function cms_attachment_company_export_fields(array $companies): array
+function cms_attachment_company_values(array $companies): array
 {
   $names = [];
   $locations = [];
@@ -28,12 +28,70 @@ function cms_attachment_company_export_fields(array $companies): array
   }
 
   return [
-    'company_name' => implode(', ', $names),
-    'location' => implode(', ', $locations),
-    'official_position' => implode(', ', $officials),
-    'companies_display' => implode(', ', $names),
-    'locations_display' => implode(', ', $locations),
-    'officials_display' => implode(', ', $officials),
+    'names' => $names,
+    'locations' => $locations,
+    'officials' => $officials,
+  ];
+}
+
+function cms_attachment_export_cell_text(array $items): string
+{
+  $items = array_values(array_filter(array_map(static function ($value): string {
+    return strtoupper(trim((string) $value));
+  }, $items), static function (string $value): bool {
+    return $value !== '';
+  }));
+
+  if ($items === []) {
+    return '';
+  }
+  if (count($items) === 1) {
+    return $items[0];
+  }
+
+  return implode(', ', $items);
+}
+
+function cms_attachment_export_tags_html(array $items, string $variant = 'company'): string
+{
+  $variant = preg_replace('/[^a-z]/', '', strtolower($variant));
+  if ($variant === '') {
+    $variant = 'company';
+  }
+
+  $tags = [];
+  foreach ($items as $item) {
+    $item = strtoupper(trim((string) $item));
+    if ($item === '') {
+      continue;
+    }
+    $tags[] = '<span class="pdf-tag pdf-tag--' . $variant . '">' . htmlspecialchars($item, ENT_QUOTES, 'UTF-8') . '</span>';
+  }
+
+  if ($tags === []) {
+    return '<span class="pdf-tag pdf-tag--empty">—</span>';
+  }
+
+  return '<span class="pdf-tag-wrap">' . implode('', $tags) . '</span>';
+}
+
+function cms_attachment_company_export_fields(array $companies): array
+{
+  $values = cms_attachment_company_values($companies);
+
+  return [
+    'companies_list' => $values['names'],
+    'locations_list' => $values['locations'],
+    'officials_list' => $values['officials'],
+    'company_name' => cms_attachment_export_cell_text($values['names']),
+    'location' => cms_attachment_export_cell_text($values['locations']),
+    'official_position' => cms_attachment_export_cell_text($values['officials']),
+    'companies_display' => cms_attachment_export_cell_text($values['names']),
+    'locations_display' => cms_attachment_export_cell_text($values['locations']),
+    'officials_display' => cms_attachment_export_cell_text($values['officials']),
+    'companies_tags_html' => cms_attachment_export_tags_html($values['names'], 'company'),
+    'locations_tags_html' => cms_attachment_export_tags_html($values['locations'], 'location'),
+    'officials_tags_html' => cms_attachment_export_tags_html($values['officials'], 'official'),
   ];
 }
 

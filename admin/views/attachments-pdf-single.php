@@ -38,15 +38,15 @@ $groupLine = trim($formatted['class_group']);
   </tr>
   <tr>
     <th>Companies</th>
-    <td class="uppercase"><?= htmlspecialchars($formatted['companies_display']) ?></td>
+    <td><?= $formatted['companies_tags_html'] ?? cms_attachment_export_tags_html($formatted['companies_list'] ?? [], 'company') ?></td>
   </tr>
   <tr>
     <th>Locations</th>
-    <td class="uppercase"><?= htmlspecialchars($formatted['locations_display']) ?></td>
+    <td><?= $formatted['locations_tags_html'] ?? cms_attachment_export_tags_html($formatted['locations_list'] ?? [], 'location') ?></td>
   </tr>
   <tr>
     <th>Officials</th>
-    <td class="uppercase"><?= htmlspecialchars($formatted['officials_display']) ?></td>
+    <td><?= $formatted['officials_tags_html'] ?? cms_attachment_export_tags_html($formatted['officials_list'] ?? [], 'official') ?></td>
   </tr>
   <tr>
     <th>Submitted</th>

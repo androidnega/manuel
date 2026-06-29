@@ -252,3 +252,45 @@ body {
   font-size: 8px;
   font-weight: bold;
 }
+
+.pdf-tag-wrap {
+  display: block;
+  line-height: 1.7;
+}
+
+.pdf-tag {
+  display: inline-block;
+  margin: 0 4px 4px 0;
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-size: 7px;
+  font-weight: bold;
+  line-height: 1.35;
+  text-transform: uppercase;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.pdf-tag--company {
+  background-color: #fff4eb;
+  color: #0b1e3a;
+  border: 1px solid #ffd6b3;
+}
+
+.pdf-tag--location {
+  background-color: #eef4ff;
+  color: #0b1e3a;
+  border: 1px solid #c7d7fe;
+}
+
+.pdf-tag--official {
+  background-color: #ecfdf3;
+  color: #0b1e3a;
+  border: 1px solid #abefc6;
+}
+
+.pdf-tag--empty {
+  background-color: #f9fafb;
+  color: #667085;
+  border: 1px solid #eaecf0;
+}
